@@ -39,14 +39,14 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'Style Statement by Shakthi — Curated Jewelry for the Modern Collector',
-    template: '%s | Style Statement by Shakthi',
+    default: 'AURA — Curated Jewelry for the Modern Collector',
+    template: '%s | AURA',
   },
   description: 'Handcrafted jewelry with intention. Explore our curated collections of fine jewelry, shipped worldwide from Mumbai.',
   keywords: ['jewelry', 'fine jewelry', 'handcrafted', 'gold', 'diamonds', 'gemstones', 'mumbai'],
-  authors: [{ name: 'Style Statement by Shakthi' }],
-  creator: 'Style Statement by Shakthi',
-  publisher: 'Style Statement by Shakthi',
+  authors: [{ name: 'AURA' }],
+  creator: 'AURA',
+  publisher: 'AURA',
   formatDetection: {
     email: false,
     address: false,
@@ -57,21 +57,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: '/',
-    siteName: 'Style Statement by Shakthi',
-    title: 'Style Statement by Shakthi — Curated Jewelry for the Modern Collector',
+    siteName: 'AURA',
+    title: 'AURA — Curated Jewelry for the Modern Collector',
     description: 'Handcrafted jewelry with intention. Explore our curated collections.',
     images: [
       {
         url: '/og-default.svg',
         width: 1440,
         height: 720,
-        alt: 'Style Statement by Shakthi Jewelry',
+        alt: 'AURA Jewelry',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Style Statement by Shakthi — Curated Jewelry',
+    title: 'AURA — Curated Jewelry',
     description: 'Handcrafted jewelry with intention.',
     images: ['/og-default.svg'],
   },

@@ -71,7 +71,7 @@ model Product {
   title            String
   description      String          @default("")
   descriptionHtml  String          @db.Text
-  vendor           String          @default("Style Statement by Shakthi Atelier")
+  vendor           String          @default("AURA Atelier")
   productType      String          @default("Jewelry")
   tags             Json            @default("[]")
   availableForSale Boolean         @default(true)

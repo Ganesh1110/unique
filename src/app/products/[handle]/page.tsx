@@ -42,10 +42,10 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   return {
     title: product.title,
-    description: product.description || `Shop ${product.title} at Style Statement by Shakthi. ${formattedPrice}.`,
+    description: product.description || `Shop ${product.title} at AURA. ${formattedPrice}.`,
     openGraph: {
       title: product.title,
-      description: product.description || `Shop ${product.title} at Style Statement by Shakthi.`,
+      description: product.description || `Shop ${product.title} at AURA.`,
       images: product.images.edges.map(({ node }) => ({
         url: node.url,
         width: node.width,
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     twitter: {
       card: 'summary_large_image',
       title: product.title,
-      description: product.description || `Shop ${product.title} at Style Statement by Shakthi.`,
+      description: product.description || `Shop ${product.title} at AURA.`,
       images: product.images.edges[0]?.node.url ? [product.images.edges[0].node.url] : [],
     },
     other: {

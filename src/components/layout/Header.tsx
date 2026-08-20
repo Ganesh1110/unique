@@ -32,9 +32,9 @@ interface HeaderProps {
 }
 
 export function Header({
-  shopName = 'Style Statement by Shakthi',
+  shopName = 'AURA',
   freeShippingThreshold = '₹15,000',
-  shopEmail = 'hello@sss.com',
+  shopEmail = 'hello@aura.com',
   announcementText,
   announcementMarquee = true,
   announcementEnabled = true,
@@ -218,11 +218,8 @@ export function Header({
           <div className="relative z-overlay w-full max-w-xs sm:max-w-sm h-full bg-cream-50 p-6 overflow-y-auto animate-slide-in-left flex flex-col justify-between border-r border-neutral-950/10 mr-auto">
             <div>
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-950/10">
-                <span className="font-heading text-heading-lg tracking-tight text-neutral-950">
-                  <span className="flex items-baseline gap-1.5 font-semibold">
-                    <span>Style Statement</span>
-                    <span className="text-[9px] uppercase tracking-[0.2em] text-neutral-500">by Shakthi</span>
-                  </span>
+                <span className="font-heading text-heading-lg tracking-tight text-neutral-950 font-semibold">
+                  AURA
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}

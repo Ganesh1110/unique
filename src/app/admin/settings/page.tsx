@@ -15,8 +15,8 @@ interface ConfigRow {
 }
 
 const DEFAULT_CONFIG: ConfigRow[] = [
-  { key: 'store_name', label: 'Store Name', value: 'Style Statement by Shakthi', hint: 'Shown in the storefront header and metadata' },
-  { key: 'store_email', label: 'Store Email', value: 'hello@sss.com', hint: 'Used for order notifications and contact form' },
+  { key: 'store_name', label: 'Store Name', value: 'AURA', hint: 'Shown in the storefront header and metadata' },
+  { key: 'store_email', label: 'Store Email', value: 'hello@aura.com', hint: 'Used for order notifications and contact form' },
   { key: 'whatsapp_number', label: 'WhatsApp Phone Number', value: '+919876543210', hint: 'Phone number for WhatsApp concierge and product inquiry (with country code)' },
   { key: 'currency', label: 'Currency', value: 'INR (₹) - India', hint: 'Currency for pricing and inventory valuation' },
   { key: 'free_shipping_threshold', label: 'Free Shipping Above', value: '₹15,000', hint: 'Complimentary shipping above this cart value' },

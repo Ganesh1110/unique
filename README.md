@@ -1,6 +1,6 @@
-# Style Statement by Shakthi (SSS) — Headless E-Commerce & Admin Suite
+# AURA — Headless E-Commerce & Admin Suite
 
-A full-stack, luxury e-commerce platform and administrative store console built for **Style Statement by Shakthi Atelier**. Built on **Next.js 14 (App Router)**, **Prisma ORM**, and **MySQL**, this project features a high-performance customer storefront alongside a rich store owner console for managing multi-variant product catalogs, inventory movements, customer orders, and store settings.
+A full-stack, luxury e-commerce platform and administrative store console built for **AURA Atelier**. Built on **Next.js 14 (App Router)**, **Prisma ORM**, and **MySQL**, this project features a high-performance customer storefront alongside a rich store owner console for managing multi-variant product catalogs, inventory movements, customer orders, and store settings.
 
 ---
 

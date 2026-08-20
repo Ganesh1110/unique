@@ -27,7 +27,7 @@ const reviews = [
     location: 'Delhi',
     rating: 5,
     title: 'Timeless Elegance',
-    comment: 'I wear my Style Statement necklace daily. It pairs effortlessly with both formal saris and contemporary Western wear.',
+    comment: 'I wear my AURA necklace daily. It pairs effortlessly with both formal saris and contemporary Western wear.',
     product: 'Artisanal Gold Cuff',
   },
 ];

@@ -4,7 +4,7 @@ import { AccountPortal } from '@/components/account/AccountPortal';
 
 export const metadata: Metadata = {
   title: 'Account',
-  description: 'Sign in to your Style Statement by Shakthi account to manage orders, wishlist, and preferences.',
+  description: 'Sign in to your AURA account to manage orders, wishlist, and preferences.',
 };
 
 export default function AccountPage() {

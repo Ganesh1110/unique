@@ -315,7 +315,7 @@ export function AccountPortal() {
                   <div>
                     <h2 className="font-heading text-heading-lg text-neutral-950 mb-1">Create a New Client Account</h2>
                     <p className="text-body-sm text-neutral-600 mb-6">
-                      Join Style Statement by Shakthi to track purchases and save favorite jewelry.
+                      Join AURA to track purchases and save favorite jewelry.
                     </p>
                     <form onSubmit={handleSignUp} className="space-y-5">
                       <div className="space-y-2">
@@ -329,7 +329,7 @@ export function AccountPortal() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             className="input pl-11"
-                            placeholder="Shakthi Atelier"
+                            placeholder="AURA Atelier"
                           />
                         </div>
                       </div>

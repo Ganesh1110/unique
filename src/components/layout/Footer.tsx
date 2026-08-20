@@ -21,7 +21,7 @@ const socialLinks = [
   { name: 'Instagram', href: 'https://instagram.com', ariaLabel: 'Follow us on Instagram' },
 ];
 
-export function Footer({ menus, policies, shopName = 'Style Statement by Shakthi', shopEmail = 'hello@sss.com' }: FooterProps) {
+export function Footer({ menus, policies, shopName = 'AURA', shopEmail = 'hello@aura.com' }: FooterProps) {
   const mainMenu = menus.find((m) => m.handle === 'main-menu' || m.handle === 'footer');
   const footerMenus = mainMenu?.items.filter((item) => item.items && item.items.length > 0) || [];
 

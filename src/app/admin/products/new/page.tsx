@@ -42,7 +42,7 @@ export default function NewProductPage() {
   const [productType, setProductType] = useState('Necklace');
   const [customProductType, setCustomProductType] = useState('');
   const [subcategory, setSubcategory] = useState('');
-  const [vendor, setVendor] = useState('Style Statement by Shakthi');
+  const [vendor, setVendor] = useState('AURA');
   const [price, setPrice] = useState<number | ''>('');
   const [compareAtPrice, setCompareAtPrice] = useState<number | ''>('');
   const [currencyCode, setCurrencyCode] = useState<string>('INR');
@@ -196,7 +196,7 @@ export default function NewProductPage() {
       title: title.trim(),
       description: description.trim(),
       productType: finalProductType,
-      vendor: vendor.trim() || 'Style Statement by Shakthi',
+      vendor: vendor.trim() || 'AURA',
       price: Number(price),
       compareAtPrice: compareAtPrice ? Number(compareAtPrice) : undefined,
       currencyCode,
@@ -264,7 +264,7 @@ export default function NewProductPage() {
     title: title || 'Custom Jewelry Creation',
     description: description || 'Handcrafted fine jewelry crafted with intention.',
     descriptionHtml: `<p>${description}</p>`,
-    vendor: vendor || 'Style Statement by Shakthi',
+    vendor: vendor || 'AURA',
     productType: productType === 'Other' ? customProductType || 'Jewelry' : productType,
     tags: tagsInput.split(',').map((t) => t.trim()),
     availableForSale: previewTotalInventory > 0,
@@ -430,7 +430,7 @@ export default function NewProductPage() {
                         value={vendor}
                         onChange={(e) => setVendor(e.target.value)}
                         className="input"
-                        placeholder="Style Statement by Shakthi"
+                        placeholder="AURA"
                       />
                     </div>
                   </div>

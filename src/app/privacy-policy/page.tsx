@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <PolicyPage title="Privacy Policy" lastUpdated="June 2024">
-      <p>This Privacy Policy explains how Style Statement by Shakthi (&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;) collects, uses, and protects the personal information you share with us when you visit our site or place an order.</p>
+      <p>This Privacy Policy explains how AURA (&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;) collects, uses, and protects the personal information you share with us when you visit our site or place an order.</p>
       <h2>Information We Collect</h2>
       <p>We collect information you provide directly, such as your name, email address, shipping and billing address, and phone number, when you make a purchase or create an account. We also collect limited technical data such as browser type and device information to improve your experience.</p>
       <h2>How We Use Your Information</h2>

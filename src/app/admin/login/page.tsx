@@ -101,7 +101,7 @@ export default function AdminLoginPage() {
     <div className="flex flex-col min-h-screen bg-cream-50 items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8 space-y-2">
-          <span className="overline text-gold-600">Style Statement Atelier</span>
+          <span className="overline text-gold-600">AURA Atelier</span>
           <h1 className="font-heading text-display-md text-neutral-950">Store Management Gate</h1>
         </div>
 

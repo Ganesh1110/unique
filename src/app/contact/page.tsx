@@ -10,12 +10,12 @@ export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Get in touch with the Style Statement by Shakthi team. We are here to help with orders, sizing, care, and bespoke commissions.',
+  description: 'Get in touch with the AURA team. We are here to help with orders, sizing, care, and bespoke commissions.',
 };
 
 export default async function ContactPage() {
   const shop = await fetchShop();
-  const email = shop.email || 'hello@sss.com';
+  const email = shop.email || 'hello@aura.com';
 
   return (
     <div className="flex flex-col">

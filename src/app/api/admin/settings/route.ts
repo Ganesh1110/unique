@@ -24,7 +24,7 @@ async function readPayload() {
   const rows = await prisma.setting.findMany({ where: { key: { in: [...CONFIG_KEYS, 'low_stock_alerts', 'new_order_alerts'] } } });
   const map = new Map(rows.map((r) => [r.key, r.value]));
   const config: StoreConfigRow[] = [
-    { key: 'store_name', label: 'Store Name', value: map.get('store_name') || 'Style Statement by Shakthi', hint: 'Shown in the storefront header and metadata' },
+    { key: 'store_name', label: 'Store Name', value: map.get('store_name') || 'AURA', hint: 'Shown in the storefront header and metadata' },
     { key: 'store_email', label: 'Store Email', value: map.get('store_email') || '', hint: 'Used for order notifications and contact form' },
     { key: 'whatsapp_number', label: 'WhatsApp Phone Number', value: map.get('whatsapp_number') || '+919876543210', hint: 'Phone number for WhatsApp concierge and product inquiry (with country code)' },
     { key: 'currency', label: 'Currency', value: map.get('currency') || 'INR (₹) - India', hint: 'Currency for pricing and inventory valuation' },

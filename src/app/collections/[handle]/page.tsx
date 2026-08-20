@@ -80,10 +80,10 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
   }
   return {
     title: collection.title,
-    description: collection.description || `Shop the ${collection.title} collection at Style Statement by Shakthi.`,
+    description: collection.description || `Shop the ${collection.title} collection at AURA.`,
     openGraph: {
       title: collection.title,
-      description: collection.description || `Shop the ${collection.title} collection at Style Statement by Shakthi.`,
+      description: collection.description || `Shop the ${collection.title} collection at AURA.`,
       images: collection.image ? [{ url: collection.image.url, width: 1200, height: 630 }] : [],
     },
   };

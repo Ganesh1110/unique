@@ -74,7 +74,7 @@ export function StorefrontLayoutWrapper({
       {/* Floating WhatsApp Action Button */}
       {cleanPhone && (
         <a
-          href={`https://wa.me/${cleanPhone.replace('+', '')}?text=${encodeURIComponent('Hi! I have an inquiry about Style Statement by Shakthi.')}`}
+          href={`https://wa.me/${cleanPhone.replace('+', '')}?text=${encodeURIComponent('Hi! I have an inquiry about AURA.')}`}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 z-40 flex items-center justify-center h-13 w-13 rounded-full bg-emerald-600 text-white shadow-medium hover:bg-emerald-700 transition-all hover:scale-105"

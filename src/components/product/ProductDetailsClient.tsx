@@ -203,7 +203,7 @@ export function ProductDetailsClient({
                   onClick={async () => {
                     const shareData = {
                       title: product.title,
-                      text: `Check out ${product.title} at Style Statement by Shakthi`,
+                      text: `Check out ${product.title} at AURA`,
                       url: window.location.href,
                     };
                     if (typeof navigator !== 'undefined' && navigator.share) {

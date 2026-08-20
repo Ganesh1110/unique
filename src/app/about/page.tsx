@@ -6,7 +6,7 @@ import { fetchShop } from '@/lib/shopify';
 
 export const metadata: Metadata = {
   title: 'Our Story',
-  description: 'The story of Style Statement by Shakthi — handcrafted fine jewelry with intention, founded in Mumbai. Learn about our craft, our artisans, and our promise.',
+  description: 'The story of AURA — handcrafted fine jewelry with intention, founded in Mumbai. Learn about our craft, our artisans, and our promise.',
 };
 
 const values = [
@@ -32,7 +32,7 @@ export default async function AboutPage() {
             <div className="relative aspect-4-5 overflow-hidden">
               <OptimizedImage
                 src={shop.brand?.coverImage?.url || '/brand-story.svg'}
-                alt="Style Statement by Shakthi atelier"
+                alt="AURA atelier"
                 fill
                 priority
                 className="object-cover"
@@ -44,7 +44,7 @@ export default async function AboutPage() {
                 Crafted with Intention, Rooted in Mumbai
               </h1>
               <p className="text-body-lg text-neutral-600 mb-6">
-                {shop.brand?.shortDescription || 'Founded in Mumbai, Style Statement by Shakthi began with a simple belief: jewelry should be more than adornment. It should be a reflection of your journey.'}
+                {shop.brand?.shortDescription || 'Founded in Mumbai, AURA began with a simple belief: jewelry should be more than adornment. It should be a reflection of your journey.'}
               </p>
               <p className="text-body text-neutral-600 mb-6">
                 What started as a small family atelier has grown into a studio of master craftspeople — each with decades of experience in goldsmithing, stone-setting, and engraving. We still do things the slow way, because jewelry meant to be an heirloom deserves nothing less.
@@ -66,7 +66,7 @@ export default async function AboutPage() {
           <header className="max-w-2xl mx-auto text-center mb-12 lg:mb-16">
             <span className="overline mb-3 inline-block">What We Stand For</span>
             <h2 id="values-heading" className="font-heading text-display-md tracking-tight text-neutral-950 mb-4">
-              The Style Statement by Shakthi Promise
+              The AURA Promise
             </h2>
           </header>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

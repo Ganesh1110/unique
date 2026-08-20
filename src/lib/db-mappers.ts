@@ -184,7 +184,7 @@ export function articleRecordToArticle(a: DbArticle): Article {
 export function buildShop(settings: Setting[]): Shop {
   const get = (key: string, fallback = '') => settings.find((s) => s.key === key)?.value ?? fallback;
   return {
-    name: get('store_name', get('shop.name', 'Style Statement by Shakthi')),
+    name: get('store_name', get('shop.name', 'AURA')),
     description: get('shop.description', ''),
     brand: { logo: null, coverImage: null, shortDescription: get('shop.shortDescription', '') || null },
     primaryDomain: { url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000', host: (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/^https?:\/\//, '') },
@@ -199,7 +199,7 @@ export function buildShop(settings: Setting[]): Shop {
     },
     freeShippingThreshold: get('free_shipping_threshold', '₹15,000'),
     returnWindow: get('return_window', '14 days'),
-    email: get('store_email', 'hello@sss.com'),
+    email: get('store_email', 'hello@aura.com'),
     announcementText: get('announcement_text', 'Complimentary shipping on orders over ₹15,000'),
     announcementMarquee: get('announcement_marquee', 'true') === 'true',
     announcementEnabled: get('announcement_enabled', 'true') !== 'false',

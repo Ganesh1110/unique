@@ -184,7 +184,7 @@ export default async function HomePage() {
             <div className="relative aspect-4-5 overflow-hidden">
               <OptimizedImage
                 src={brandStoryImage}
-                alt="Style Statement by Shakthi Atelier"
+                alt="AURA Atelier"
                 fill
                 priority
                 className="object-cover"
@@ -197,7 +197,7 @@ export default async function HomePage() {
               </h2>
               <div className="space-y-5 text-neutral-600">
                 <p className="text-body-lg text-neutral-800 leading-relaxed">
-                  {shop.brand?.shortDescription || 'Founded in Mumbai, Style Statement by Shakthi began with a simple philosophy: jewelry should be more than decoration — it should be a quiet statement of individuality.'}
+                  {shop.brand?.shortDescription || 'Founded in Mumbai, AURA began with a simple philosophy: jewelry should be more than decoration — it should be a quiet statement of individuality.'}
                 </p>
                 <p className="text-body leading-relaxed">
                   Every ring, pendant, and cuff in our studio is sculpted by hand using certified recycled metals and conflict-free gemstones — heirloom pieces that minimize environmental impact while maximizing beauty.

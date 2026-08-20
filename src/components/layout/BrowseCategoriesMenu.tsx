@@ -174,7 +174,7 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     ],
     featuredCard: {
       title: 'Pendant Creations',
-      subtitle: 'Signature Shakthi Atelier pendants',
+      subtitle: 'Signature AURA Atelier pendants',
       image: '/images/Image9.jpeg',
       link: '/collections/new-arrivals',
     },

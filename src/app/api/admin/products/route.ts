@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   const price = input.price;
   const title = input.title;
   const description = input.description || '';
-  const vendor = input.vendor || 'Style Statement by Shakthi Atelier';
+  const vendor = input.vendor || 'AURA Atelier';
   const productType = input.productType || 'Jewelry';
   const tags = input.tags || [];
   const compareAtPrice = input.compareAtPrice ?? null;
