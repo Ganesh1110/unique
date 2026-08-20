@@ -2,9 +2,11 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Share2, Truck, RotateCcw, Shield, Check } from 'lucide-react';
+import { Heart, Share2, Truck, RotateCcw, Shield, Check, MapPin } from 'lucide-react';
 import { ProductGallery, VariantSelector, QuantitySelector, AddToCartButton } from '@/components/product/ProductDetail';
 import { ProductGrid } from '@/components/product/ProductGrid';
+import { CompleteTheLook } from '@/components/product/CompleteTheLook';
+import { FitGuideModal } from '@/components/product/FitGuideModal';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -29,6 +31,10 @@ export function ProductDetailsClient({
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [fitGuideOpen, setFitGuideOpen] = useState(false);
+
+  // Saree-specific PDP treatment
+  const isSaree = product.productType?.toLowerCase().includes('saree');
 
   // Initialize selected options with first available variant
   useEffect(() => {
@@ -148,6 +154,37 @@ export function ProductDetailsClient({
                 <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }} />
               </div>
 
+              {/* Saree-Specific Product Info Block */}
+              {isSaree && (
+                <div className="bg-neutral-50 rounded-md p-4 space-y-2.5">
+                  <h3 className="font-sans text-caption font-bold uppercase tracking-wider text-neutral-700">
+                    Saree Details
+                  </h3>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm">
+                    <div>
+                      <span className="text-neutral-500">Drape Length</span>
+                      <p className="font-medium text-neutral-950">5.5m + 0.8m blouse piece</p>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Blouse Piece</span>
+                      <p className="font-medium text-neutral-950">Included (unstitched)</p>
+                    </div>
+                    <div className="col-span-2 flex items-start gap-2 pt-1">
+                      <MapPin className="h-3.5 w-3.5 text-neutral-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span className="text-neutral-600">Handwoven in Kanchipuram, Tamil Nadu</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Complete the Look — cross-sell suggestions */}
+              {recommendations.length > 0 && (
+                <CompleteTheLook
+                  products={recommendations.slice(0, 3)}
+                  className="pt-2"
+                />
+              )}
+
               {/* Variant Selector */}
               {product.options.length > 0 && (
                 <VariantSelector
@@ -239,25 +276,33 @@ export function ProductDetailsClient({
                     </span>
                   </summary>
                   <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed">
-                    <p>&bull; <strong>Fabric Material:</strong> 53% AIRism Cotton, 47% Polyester.</p>
-                    <p>&bull; <strong>Washing Instructions:</strong> Machine wash cold with like colors, gentle cycle.</p>
-                    <p>&bull; <strong>Drying &amp; Ironing:</strong> Tumble dry low, warm iron if needed. Do not dry clean.</p>
+                    {isSaree ? (
+                      <>
+                        <p>&bull; <strong>Fabric:</strong> Pure mulberry silk with real gold zari work.</p>
+                        <p>&bull; <strong>Care:</strong> Dry clean only. Store folded in muslin cloth.</p>
+                        <p>&bull; <strong>Ironing:</strong> Low heat iron on reverse side. Do not use steam.</p>
+                      </>
+                    ) : (
+                      <>
+                        <p>&bull; <strong>Fabric Material:</strong> 53% AIRism Cotton, 47% Polyester.</p>
+                        <p>&bull; <strong>Washing Instructions:</strong> Machine wash cold with like colors, gentle cycle.</p>
+                        <p>&bull; <strong>Drying &amp; Ironing:</strong> Tumble dry low, warm iron if needed. Do not dry clean.</p>
+                      </>
+                    )}
                   </div>
                 </details>
 
-                <details className="group py-4 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex items-center justify-between text-body-sm font-bold text-neutral-950 cursor-pointer select-none">
+                {/* Size & Fit Guide — opens modal instead of inline accordion */}
+                <div className="py-4">
+                  <button
+                    type="button"
+                    onClick={() => setFitGuideOpen(true)}
+                    className="flex items-center justify-between w-full text-body-sm font-bold text-neutral-950 cursor-pointer select-none"
+                  >
                     <span>Size &amp; Fit Guide</span>
-                    <span className="transition duration-300 group-open:-rotate-180 text-neutral-400">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </span>
-                  </summary>
-                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed">
-                    <p>Designed with a relaxed, slightly dropped shoulder fit. Take your true size for an easy silhouette or size down for a tailored look.</p>
-                  </div>
-                </details>
+                    <span className="text-caption font-medium text-[#E60012] uppercase tracking-wider">View Guide</span>
+                  </button>
+                </div>
 
                 <details className="group py-4 [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex items-center justify-between text-body-sm font-bold text-neutral-950 cursor-pointer select-none">
@@ -286,7 +331,7 @@ export function ProductDetailsClient({
                 </p>
                 <p className="flex items-center gap-3">
                   <Shield className="h-4 w-4 text-neutral-400" aria-hidden="true" />
-                  Gemstones certified by IGI · GIA
+                  Authenticity guaranteed · Handloom mark certified
                 </p>
               </div>
             </div>
@@ -331,6 +376,13 @@ export function ProductDetailsClient({
 
       {/* Mobile spacer so the last section clears the sticky bar */}
       <div className="h-20 sm:hidden" aria-hidden="true" />
+
+      {/* Fit Guide Modal */}
+      <FitGuideModal
+        productType={product.productType}
+        isOpen={fitGuideOpen}
+        onClose={() => setFitGuideOpen(false)}
+      />
     </div>
   );
 }

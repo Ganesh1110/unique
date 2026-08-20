@@ -21,7 +21,7 @@ export function ProductGrid({ products, loading = false, columns = 3, showQuickA
 
   if (loading) {
     return (
-      <div className={cn('grid gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-14 lg:gap-x-8 lg:gap-y-16', columnClasses[columns], className)} role="status" aria-label="Loading products">
+      <div className={cn('grid gap-x-3 gap-y-8 sm:gap-x-4 sm:gap-y-10 lg:gap-x-5 lg:gap-y-12', columnClasses[columns], className)} role="status" aria-label="Loading products">
         {[...Array(8)].map((_, i) => (
           <ProductCardSkeleton key={i} />
         ))}
@@ -38,7 +38,7 @@ export function ProductGrid({ products, loading = false, columns = 3, showQuickA
   }
 
   return (
-    <div className={cn('grid gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-14 lg:gap-x-8 lg:gap-y-16', columnClasses[columns], className)} role="list" aria-label="Products">
+    <div className={cn('grid gap-x-3 gap-y-8 sm:gap-x-4 sm:gap-y-10 lg:gap-x-5 lg:gap-y-12', columnClasses[columns], className)} role="list" aria-label="Products">
       {products.map((product, index) => (
         <ProductCard
           key={product.id}

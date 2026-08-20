@@ -39,11 +39,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'AURA — Curated Jewelry for the Modern Collector',
+    default: 'AURA — Handcrafted Sarees & Ethnic Wear',
     template: '%s | AURA',
   },
-  description: 'Handcrafted jewelry with intention. Explore our curated collections of fine jewelry, shipped worldwide from Mumbai.',
-  keywords: ['jewelry', 'fine jewelry', 'handcrafted', 'gold', 'diamonds', 'gemstones', 'mumbai'],
+  description: 'Discover handwoven Kanjeevaram silk sarees, Banarasi brocade, designer lehengas & modern everyday wear. Shipped worldwide from India.',
+  keywords: ['sarees', 'silk sarees', 'kanjeevaram', 'banarasi', 'lehenga', 'ethnic wear', 'indian clothing', 'handloom'],
   authors: [{ name: 'AURA' }],
   creator: 'AURA',
   publisher: 'AURA',
@@ -58,21 +58,21 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: '/',
     siteName: 'AURA',
-    title: 'AURA — Curated Jewelry for the Modern Collector',
-    description: 'Handcrafted jewelry with intention. Explore our curated collections.',
+    title: 'AURA — Handcrafted Sarees & Ethnic Wear',
+    description: 'Discover handwoven sarees, designer lehengas & modern everyday wear.',
     images: [
       {
         url: '/og-default.svg',
         width: 1440,
         height: 720,
-        alt: 'AURA Jewelry',
+        alt: 'AURA Ethnic Wear',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AURA — Curated Jewelry',
-    description: 'Handcrafted jewelry with intention.',
+    title: 'AURA — Sarees & Ethnic Wear',
+    description: 'Handwoven sarees & ethnic wear from India.',
     images: ['/og-default.svg'],
   },
   robots: {

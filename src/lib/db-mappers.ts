@@ -183,12 +183,17 @@ export function articleRecordToArticle(a: DbArticle): Article {
 
 export function buildShop(settings: Setting[]): Shop {
   const get = (key: string, fallback = '') => settings.find((s) => s.key === key)?.value ?? fallback;
+  const rawName = get('store_name', get('shop.name', 'AURA'));
+  const name = rawName.toLowerCase().includes('jewel') || rawName.toLowerCase().includes('statement') ? 'AURA' : rawName;
+  const rawEmail = get('store_email', 'hello@aura.com');
+  const email = rawEmail.toLowerCase().includes('statement') ? 'hello@aura.com' : rawEmail;
+
   return {
-    name: get('store_name', get('shop.name', 'AURA')),
-    description: get('shop.description', ''),
-    brand: { logo: null, coverImage: null, shortDescription: get('shop.shortDescription', '') || null },
+    name,
+    description: 'Simple, high-quality, everyday clothing designed to make life better.',
+    brand: { logo: null, coverImage: null, shortDescription: 'AURA LifeWear is designed for comfortable living.' },
     primaryDomain: { url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000', host: (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/^https?:\/\//, '') },
-    currencyCode: get('currency', get('shop.currencyCode', 'INR')),
+    currencyCode: 'INR',
     countriesInShipping: ['IN', 'US', 'GB', 'AE', 'SG'],
     paymentSettings: { acceptedPaymentMethods: ['visa', 'master', 'american_express', 'paypal', 'unionpay'] },
     policies: {
@@ -199,7 +204,7 @@ export function buildShop(settings: Setting[]): Shop {
     },
     freeShippingThreshold: get('free_shipping_threshold', '₹15,000'),
     returnWindow: get('return_window', '14 days'),
-    email: get('store_email', 'hello@aura.com'),
+    email,
     announcementText: get('announcement_text', 'Complimentary shipping on orders over ₹15,000'),
     announcementMarquee: get('announcement_marquee', 'true') === 'true',
     announcementEnabled: get('announcement_enabled', 'true') !== 'false',
@@ -208,17 +213,21 @@ export function buildShop(settings: Setting[]): Shop {
 }
 
 export function buildMenus(collections: DbCollection[]): Menu[] {
-  const shopItems: MenuItem[] = collections
-    .filter((c) => c.handle !== 'all')
-    .slice(0, 5)
-    .map((c) => ({ id: `gid://db/MenuItem/${c.handle}`, title: c.title, url: `/collections/${c.handle}`, resourceType: 'COLLECTION' }));
+  const clothingItems: MenuItem[] = [
+    { id: 'gid://db/MenuItem/tops', title: 'T-Shirts & Tops', url: '/collections/tops', resourceType: 'COLLECTION' },
+    { id: 'gid://db/MenuItem/bottoms', title: 'Bottoms & Pants', url: '/collections/bottoms', resourceType: 'COLLECTION' },
+    { id: 'gid://db/MenuItem/outerwear', title: 'Outerwear & Jackets', url: '/collections/outerwear', resourceType: 'COLLECTION' },
+    { id: 'gid://db/MenuItem/dresses', title: 'Dresses & Skirts', url: '/collections/dresses', resourceType: 'COLLECTION' },
+    { id: 'gid://db/MenuItem/new-arrivals', title: 'New Arrivals', url: '/collections/new-arrivals', resourceType: 'COLLECTION' },
+  ];
+
   return [
     {
       id: 'gid://db/Menu/main-menu',
       handle: 'main-menu',
       title: 'Main Menu',
       items: [
-        { id: 'gid://db/MenuItem/shop', title: 'Shop', url: '/collections', resourceType: 'COLLECTION', items: shopItems },
+        { id: 'gid://db/MenuItem/shop', title: 'Shop', url: '/collections', resourceType: 'COLLECTION', items: clothingItems },
         {
           id: 'gid://db/MenuItem/explore',
           title: 'Explore',

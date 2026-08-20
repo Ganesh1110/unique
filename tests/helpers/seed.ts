@@ -70,7 +70,7 @@ export async function seedProduct(scope: TestScope, overrides: { price?: number;
       featuredImage: JSON.stringify({ id: `gid://db/MediaImage/${handle}`, url: 'https://via.placeholder.com/400x500', altText: null, width: 1200, height: 1500 }),
       images: JSON.stringify([{ id: `gid://db/MediaImage/${handle}`, url: 'https://via.placeholder.com/400x500', altText: null, width: 400, height: 500 }]),
       options: JSON.stringify([{ id: `gid://db/ProductOption/${handle}`, name: 'Title', values: ['Default Title'] }]),
-      tags: ['test'], seo: JSON.stringify({ title: 'Test', description: 'test' }), publishedAt: new Date(),
+      tags: JSON.stringify(['test']), seo: JSON.stringify({ title: 'Test', description: 'test' }), publishedAt: new Date(),
     },
   });
   scope.productIds.push(product.id);

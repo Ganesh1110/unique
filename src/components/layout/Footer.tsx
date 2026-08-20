@@ -22,6 +22,8 @@ const socialLinks = [
 ];
 
 export function Footer({ menus, policies, shopName = 'AURA', shopEmail = 'hello@aura.com' }: FooterProps) {
+  const displayShopName = shopName.toLowerCase().includes('jewel') || shopName.toLowerCase().includes('statement') ? 'AURA' : shopName;
+  const displayShopEmail = shopEmail.toLowerCase().includes('statement') ? 'hello@aura.com' : shopEmail;
   const mainMenu = menus.find((m) => m.handle === 'main-menu' || m.handle === 'footer');
   const footerMenus = mainMenu?.items.filter((item) => item.items && item.items.length > 0) || [];
 
@@ -35,11 +37,11 @@ export function Footer({ menus, policies, shopName = 'AURA', shopEmail = 'hello@
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 lg:gap-12">
             {/* Brand Column */}
             <div className="sm:col-span-2 md:col-span-1 lg:col-span-2 space-y-6">
-              <Link href="/" className="font-heading text-heading-lg sm:text-display-sm font-medium tracking-tight text-cream-50 block" aria-label={`${shopName} Home`}>
-                {shopName}
+              <Link href="/" className="font-heading text-heading-lg sm:text-display-sm font-medium tracking-tight text-cream-50 block" aria-label={`${displayShopName} Home`}>
+                {displayShopName}
               </Link>
               <p className="text-body-sm text-cream-50/55 max-w-xs leading-relaxed">
-                Curated jewelry for the modern collector. Handcrafted with intention in Mumbai, shipped worldwide.
+                Handwoven sarees, designer lehengas & modern everyday wear. Crafted with care, shipped worldwide from India.
               </p>
 
               {/* Newsletter — editorial capture in the brand rail */}
@@ -89,8 +91,8 @@ export function Footer({ menus, policies, shopName = 'AURA', shopEmail = 'hello@
                 Contact
               </h3>
               <address className="not-italic text-body-sm text-cream-50/55 space-y-2.5">
-                <a href={`mailto:${shopEmail}`} className="block hover:text-cream-50 transition-colors">
-                  {shopEmail}
+                <a href={`mailto:${displayShopEmail}`} className="block hover:text-cream-50 transition-colors">
+                  {displayShopEmail}
                 </a>
                 <a href="tel:+9122xxxxxxx" className="block hover:text-cream-50 transition-colors">
                   +91 22 XXXX XXXX
@@ -110,7 +112,7 @@ export function Footer({ menus, policies, shopName = 'AURA', shopEmail = 'hello@
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Copyright */}
             <p className="text-body-sm text-cream-50/40">
-              © {currentYear} {shopName}. All rights reserved.
+              © {currentYear} {displayShopName}. All rights reserved.
             </p>
 
             {/* Policies */}

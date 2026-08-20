@@ -74,6 +74,7 @@ const config: Config = {
         sunken: '#F4F1EA',
         ink: '#1A1815',
         faint: '#A8A095',
+        accent: '#E60012',
 
         // ---- Status (desaturated warm pastels — muted, non-neon) ----
         status: {

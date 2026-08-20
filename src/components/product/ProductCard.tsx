@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ProductImage } from '@/components/ui/Image';
-import { ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
 import { formatMoney, cn } from '@/lib/utils';
 import type { Product, ProductVariant } from '@/types/shopify';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
+import { useWishlist } from '@/context/WishlistContext';
+import { OptimizedImage } from '@/components/ui/Image';
 
 interface ProductCardProps {
   product: Product;
@@ -19,7 +21,9 @@ interface ProductCardProps {
 export function ProductCard({ product, variant, priority = false, showQuickAdd = true }: ProductCardProps) {
   const { addToCart, isLoading: cartLoading } = useCart();
   const { showToast } = useToast();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const [quickAddLoading, setQuickAddLoading] = useState<string | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const primaryVariant = variant || product.variants.edges[0]?.node;
   const price = primaryVariant?.price.amount || product.priceRange.minVariantPrice.amount;
@@ -28,6 +32,10 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
   const available = primaryVariant?.availableForSale ?? product.availableForSale;
   const images = product.images.edges.map(({ node }) => node);
   const featuredImage = product.featuredImage;
+  const isSaved = isInWishlist(product.id);
+
+  // Secondary image for fabric/texture hover preview
+  const secondaryImage = images.length > 1 ? images[1] : null;
 
   // Extract material / finish swatch values if present
   const finishOption = product.options.find((opt) =>
@@ -50,22 +58,41 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
     }
   };
 
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
+    showToast(
+      isSaved ? `Removed "${product.title}" from saved items` : `Saved "${product.title}" to wishlist`,
+      'success'
+    );
+  };
+
   const onSale = compareAtPrice && compareAtPrice > price;
 
   return (
     <article className="group relative flex flex-col">
       {/* Product Image Container — Fashion 3:4 Aspect Ratio */}
-      <div className={cn(
-        'relative overflow-hidden bg-neutral-100/90 transition-opacity duration-300',
-        !available && 'opacity-60'
-      )}>
+      <div
+        className={cn(
+          'relative overflow-hidden bg-neutral-100/90 transition-opacity duration-300',
+          !available && 'opacity-60'
+        )}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <Link
           href={`/products/${product.handle}`}
           aria-label={`${product.title}${onSale ? ' - Sale' : ''}`}
           className="block w-full h-full overflow-hidden"
           data-testid="product-card-link"
         >
-          <div className="transition-transform duration-500 ease-expo group-hover:scale-[1.02]">
+          {/* Primary Image */}
+          <div className={cn(
+            'transition-all duration-500 ease-expo',
+            isHovered && secondaryImage ? 'opacity-0' : 'opacity-100',
+            'group-hover:scale-[1.02]'
+          )}>
             <ProductImage
               images={images}
               selectedVariantImage={featuredImage ? { url: featuredImage.url, altText: featuredImage.altText } : null}
@@ -73,7 +100,40 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
               priority={priority}
             />
           </div>
+
+          {/* Secondary Fabric/Texture Image on Hover */}
+          {secondaryImage && (
+            <div className={cn(
+              'absolute inset-0 transition-opacity duration-500 ease-expo',
+              isHovered ? 'opacity-100' : 'opacity-0'
+            )}>
+              <OptimizedImage
+                src={secondaryImage.url}
+                alt={secondaryImage.altText || `${product.title} - texture detail`}
+                fill
+                objectFit="cover"
+              />
+            </div>
+          )}
         </Link>
+
+        {/* Wishlist Heart Icon — persistent on mobile, hover-reveal desktop */}
+        <button
+          onClick={handleWishlistToggle}
+          className={cn(
+            'absolute top-2.5 right-2.5 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200',
+            'sm:opacity-0 sm:group-hover:opacity-100',
+            isSaved && 'sm:opacity-100'
+          )}
+          aria-label={isSaved ? `Remove ${product.title} from wishlist` : `Save ${product.title} to wishlist`}
+        >
+          <Heart
+            className={cn(
+              'h-4 w-4 transition-colors',
+              isSaved ? 'fill-[#E60012] text-[#E60012]' : 'text-neutral-600 hover:text-neutral-950'
+            )}
+          />
+        </button>
 
         {/* UNIQLO Red Offer Tag */}
         {onSale && available && (
@@ -108,7 +168,7 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
       {/* Product Info — Clean UNIQLO Apparel Typography */}
       <Link
         href={`/products/${product.handle}`}
-        className="block pt-3 space-y-1"
+        className="block pt-2.5 space-y-1"
         data-testid="product-card-link"
       >
         <h3 className="font-sans text-body-sm font-semibold tracking-tight text-neutral-900 group-hover:text-[#E60012] transition-colors line-clamp-1">

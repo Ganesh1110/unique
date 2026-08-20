@@ -24,94 +24,88 @@ export interface MegaCategory {
 
 export const MEGA_CATEGORIES: MegaCategory[] = [
   {
+    id: 'sarees',
+    name: 'Sarees Collection',
+    href: '/collections/sarees',
+    badge: 'Heritage',
+    subsections: [
+      {
+        title: 'BY WEAVE & FABRIC',
+        items: [
+          { label: 'Kanjeevaram Mulberry Silk', href: '/collections/silk-sarees', isHot: true },
+          { label: 'Banarasi Zari Brocade', href: '/collections/silk-sarees' },
+          { label: 'Chanderi & Organza Sarees', href: '/collections/sarees' },
+          { label: 'Handloom Pure Linen', href: '/collections/sarees' },
+          { label: 'Georgette Designer Drapes', href: '/collections/sarees' },
+        ],
+      },
+      {
+        title: 'FEATURED DROPS',
+        items: [
+          { label: 'Kanjeevaram Pure Silk Saree', href: '/products/kanjeevaram-pure-silk-saree' },
+          { label: 'Banarasi Zari Brocade Saree', href: '/products/banarasi-zari-brocade-saree' },
+          { label: 'Chanderi Tissue Organza Saree', href: '/products/chanderi-floral-organza-saree' },
+          { label: 'Handloom Pure Linen Saree', href: '/products/handloom-pure-linen-saree' },
+        ],
+      },
+      {
+        title: 'BY OCCASION',
+        items: [
+          { label: 'Bridal & Wedding Sarees', href: '/collections/sarees' },
+          { label: 'Festive & Reception Drapes', href: '/collections/sarees' },
+          { label: 'Everyday Work Linen Sarees', href: '/collections/sarees' },
+        ],
+      },
+    ],
+    featuredCard: {
+      title: 'Kanjeevaram Silk Edition',
+      subtitle: 'Pure 3-ply mulberry silk handwoven in Kanchipuram.',
+      image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop',
+      link: '/products/kanjeevaram-pure-silk-saree',
+    },
+  },
+  {
+    id: 'lehengas',
+    name: 'Lehengas & Festive',
+    href: '/collections/lehengas',
+    badge: 'Festive',
+    subsections: [
+      {
+        title: 'ETHNIC SETS',
+        items: [
+          { label: 'Bridal Velvet Lehengas', href: '/products/bridal-velvet-lehenga-set', isHot: true },
+          { label: 'Embroidered Anarkali Sets', href: '/collections/lehengas' },
+          { label: 'Designer Kurta Sets', href: '/collections/lehengas' },
+        ],
+      },
+    ],
+    featuredCard: {
+      title: 'Bridal Velvet Lehenga',
+      subtitle: 'Opulent zardozi threadwork for grand celebrations.',
+      image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&auto=format&fit=crop',
+      link: '/products/bridal-velvet-lehenga-set',
+    },
+  },
+  {
     id: 'tops',
-    name: 'Tops & T-Shirts',
+    name: 'Tops & Tunics',
     href: '/collections/tops',
     badge: 'AIRism',
     subsections: [
       {
-        title: 'BY CATEGORY',
+        title: 'EVERYDAY WEAR',
         items: [
-          { label: 'AIRism Cotton T-Shirts', href: '/search?q=airism', isHot: true },
-          { label: 'Short Sleeve Shirts', href: '/search?q=shirt' },
-          { label: 'Sweatshirts & Hoodies', href: '/search?q=sweat' },
-          { label: 'Fine Merino Cardigans', href: '/search?q=merino' },
-        ],
-      },
-      {
-        title: 'POPULAR DROPS',
-        items: [
-          { label: 'AIRism Oversized Tee', href: '/products/airism-cotton-t-shirt' },
-          { label: 'Linen Blend Shirt', href: '/products/linen-blend-open-collar-shirt' },
-          { label: 'Merino V-Neck Cardigan', href: '/products/merino-blend-cardigan' },
-        ],
-      },
-      {
-        title: 'BY FABRIC',
-        items: [
-          { label: '100% AIRism Cotton', href: '/search?q=cotton' },
-          { label: 'Premium Linen Blend', href: '/search?q=linen' },
-          { label: 'Extra Fine Merino Wool', href: '/search?q=wool' },
+          { label: 'AIRism Cotton Oversized Tee', href: '/products/airism-cotton-t-shirt', isHot: true },
+          { label: 'Linen Blend Shirts', href: '/collections/tops' },
+          { label: 'Casual Tunics', href: '/collections/tops' },
         ],
       },
     ],
     featuredCard: {
-      title: 'AIRism Cotton Collection',
-      subtitle: 'Smooth, quick-drying comfort for everyday wear.',
-      image: '/images/Image1.jpeg',
-      link: '/collections/tops',
-    },
-  },
-  {
-    id: 'bottoms',
-    name: 'Bottoms & Pants',
-    href: '/collections/bottoms',
-    badge: 'Popular',
-    subsections: [
-      {
-        title: 'BY CATEGORY',
-        items: [
-          { label: 'Waffle Easy Pants', href: '/products/waffle-easy-pants', isHot: true },
-          { label: 'Smart Stretch Chinos', href: '/products/stretch-chino-pants' },
-          { label: 'Relaxed Shorts', href: '/collections/bottoms' },
-          { label: 'Loungewear Bottoms', href: '/collections/bottoms' },
-        ],
-      },
-      {
-        title: 'FIT & STYLE',
-        items: [
-          { label: 'Straight Easy Fit', href: '/collections/bottoms' },
-          { label: 'Smart Ankle Cut', href: '/collections/bottoms' },
-          { label: 'Wide Leg Trousers', href: '/collections/bottoms' },
-        ],
-      },
-    ],
-    featuredCard: {
-      title: 'Waffle Easy Pants',
-      subtitle: 'All-day comfort with textured waffle knit stretch.',
-      image: '/images/Image5.jpeg',
-      link: '/products/waffle-easy-pants',
-    },
-  },
-  {
-    id: 'outerwear',
-    name: 'Outerwear & Jackets',
-    href: '/collections/outerwear',
-    subsections: [
-      {
-        title: 'BY STYLE',
-        items: [
-          { label: 'Ultra Light Down Jackets', href: '/products/ultra-light-down-jacket', isHot: true },
-          { label: 'Tailored Blazers', href: '/collections/outerwear' },
-          { label: 'Parkas & Windproofs', href: '/collections/outerwear' },
-        ],
-      },
-    ],
-    featuredCard: {
-      title: 'Ultra Light Down',
-      subtitle: 'Lightweight warmth that packs down into your bag.',
-      image: '/images/Image9.jpeg',
-      link: '/products/ultra-light-down-jacket',
+      title: 'AIRism Cotton Tops',
+      subtitle: 'Smooth, quick-drying comfort for daily wear.',
+      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop',
+      link: '/products/airism-cotton-t-shirt',
     },
   },
 ];
@@ -140,7 +134,7 @@ interface BrowseCategoriesMenuProps {
 
 export function BrowseCategoriesDesktopMenu({ onClose }: BrowseCategoriesMenuProps) {
   const categories = useDynamicCategories();
-  const [activeTabId, setActiveTabId] = useState<string>(categories[0]?.id || 'necklaces');
+  const [activeTabId, setActiveTabId] = useState<string>(categories[0]?.id || 'sarees');
   const activeCategory = categories.find((c) => c.id === activeTabId) || categories[0] || MEGA_CATEGORIES[0];
 
   return (

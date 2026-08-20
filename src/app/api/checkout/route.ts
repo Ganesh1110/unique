@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { gidToId } from '@/lib/db-mappers';
+import { gidToId, toImage } from '@/lib/db-mappers';
 import { applyMovement, InsufficientStockError } from '@/lib/inventory';
 
 export async function POST(req: Request) {
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
           customerName: name,
           customerEmail: email,
           customerPhone: phone,
-          address: addressJson ? (addressJson as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
+          address: addressJson ? JSON.stringify(addressJson) : null,
           subtotal,
           total: subtotal,
           currencyCode: currency,
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
               handle: l.variant.product.handle,
               price: Number(l.variant.price),
               quantity: l.quantity,
-              image: (l.variant.image as Prisma.InputJsonValue) ?? Prisma.JsonNull,
+              image: l.variant.image ? JSON.stringify(l.variant.image) : null,
             })),
           },
         },
@@ -64,7 +64,11 @@ export async function POST(req: Request) {
       });
 
       const orderNumber = `#${1000 + created.id}`;
-      await tx.order.update({ where: { id: created.id }, data: { orderNumber } });
+      const updatedOrder = await tx.order.update({
+        where: { id: created.id },
+        data: { orderNumber },
+        include: { items: { include: { variant: true } } },
+      });
 
       for (const l of lines) {
         await applyMovement({ variantId: l.variant.id, type: 'SALE', quantity: l.quantity, reference: orderNumber }, tx);

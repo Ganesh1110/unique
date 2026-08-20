@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { SortDropdown } from '@/components/product/SortDropdown';
 import { OptimizedImage } from '@/components/ui/Image';
+import { LookbookStrip, SAREE_LOOKBOOKS } from '@/components/product/LookbookStrip';
+import { CollectionFilterPills } from './CollectionFilterPills';
 import { fetchCollection, fetchCollections, fetchShop } from '@/lib/shopify';
 import type { Product } from '@/types/shopify';
 
@@ -41,7 +43,7 @@ function sortProducts(products: Product[], sortKey?: string): Product[] {
       break;
   }
 
-  // Push sold out items (out of stock / unavailable) to the very end of the page
+  // Push sold out items to the end
   return sorted.sort((a, b) => {
     const aInStock = a.availableForSale && (a.totalInventory ?? 0) > 0;
     const bInStock = b.availableForSale && (b.totalInventory ?? 0) > 0;
@@ -53,7 +55,6 @@ function sortProducts(products: Product[], sortKey?: string): Product[] {
 async function getCollectionData(handle: string, searchParams: { page?: string; sort?: string; min?: string; max?: string; tag?: string }) {
   const page = parseInt(searchParams.page || '1');
   const first = 10;
-  // Pass the sort key so virtual collections (all, bestsellers) sort at DB level.
   const sortKey = searchParams.sort;
   
   const [collection, allCollections, shop] = await Promise.all([
@@ -106,6 +107,17 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   const hasNextPage = collection.products.pageInfo.hasNextPage;
   const hasPrevPage = currentPage > 1;
 
+  // Determine if this is a saree collection for lookbook strips
+  const isSareeCollection = resolvedParams.handle.includes('saree') || resolvedParams.handle.includes('silk');
+
+  // Extract unique fabric/occasion tags for filter pills
+  const allTags = new Set<string>();
+  rawProducts.forEach((p) => {
+    if (p.tags) {
+      (Array.isArray(p.tags) ? p.tags : [p.tags]).forEach((t: string) => allTags.add(t));
+    }
+  });
+
   return (
     <div className="flex flex-col">
       {/* Page Header */}
@@ -132,6 +144,12 @@ export default async function CollectionPage({ params, searchParams }: Collectio
           </div>
         </div>
       </header>
+
+      {/* Filter Pills */}
+      <CollectionFilterPills
+        products={sortedProducts}
+        collectionHandle={resolvedParams.handle}
+      />
 
       {/* Products Grid */}
       <section className="section" aria-labelledby="products-heading">
@@ -176,6 +194,11 @@ export default async function CollectionPage({ params, searchParams }: Collectio
           />
         </div>
       </section>
+
+      {/* Lookbook Editorial Strip — only on saree collections */}
+      {isSareeCollection && SAREE_LOOKBOOKS.length > 0 && (
+        <LookbookStrip {...SAREE_LOOKBOOKS[0]} />
+      )}
 
       {/* Other Collections */}
       <section className="section bg-white border-y border-neutral-950/10" aria-labelledby="other-collections-heading">

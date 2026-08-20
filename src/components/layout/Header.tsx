@@ -76,29 +76,14 @@ export function Header({
     >
       {/* Announcement Bar */}
       {announcementEnabled && (
-        <div className="bg-brandEmerald-900 text-cream-50 py-2 px-4 text-center text-[11px] uppercase tracking-[0.2em] font-medium overflow-hidden border-b border-brandEmerald-950">
-          {announcementMarquee ? (
-            <div className="w-full overflow-hidden whitespace-nowrap">
-              <div className="inline-block animate-marquee whitespace-nowrap">
-                <span className="mx-8">{displayText}</span>
-                <span className="mx-8">&bull;</span>
-                <span className="mx-8">{displayText}</span>
-                <span className="mx-8">&bull;</span>
-                <span className="mx-8">{displayText}</span>
-                <span className="mx-8">&bull;</span>
-                <span className="mx-8">{displayText}</span>
-                <span className="mx-8">&bull;</span>
-              </div>
-            </div>
-          ) : (
-            <div>{displayText}</div>
-          )}
+        <div className="bg-neutral-950 text-neutral-400 py-2 px-4 text-center text-[11px] uppercase tracking-[0.2em] font-medium overflow-hidden border-b border-neutral-900">
+          <div>{displayText}</div>
         </div>
       )}
 
       {/* Main UNIQLO-Style Header */}
       <div className="max-w-container-wide mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-18 gap-4">
+        <div className="flex items-center justify-between h-14 gap-4">
           
           {/* Left: Red Square Logo Badge & Department Tabs */}
           <div className="flex items-center gap-6">
@@ -113,25 +98,31 @@ export function Header({
             {/* Department Navigation Tabs (UNIQLO Style) */}
             <nav className="hidden md:flex items-center gap-6 font-sans text-body-sm font-semibold uppercase tracking-wider text-neutral-800" aria-label="Department navigation">
               <Link
-                href="/collections/women"
+                href="/collections/sarees"
                 className="relative py-5 text-neutral-950 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-neutral-950"
               >
-                WOMEN
+                SAREES
               </Link>
               <Link
-                href="/collections/men"
+                href="/collections/silk-sarees"
                 className="py-5 text-neutral-600 hover:text-neutral-950 transition-colors"
               >
-                MEN
+                SILK SAREES
               </Link>
               <Link
-                href="/collections/kids"
+                href="/collections/lehengas"
                 className="py-5 text-neutral-600 hover:text-neutral-950 transition-colors"
               >
-                KIDS
+                LEHENGAS
               </Link>
               <Link
-                href="/collections/new-arrivals"
+                href="/collections/tops"
+                className="py-5 text-neutral-600 hover:text-neutral-950 transition-colors"
+              >
+                TOPS
+              </Link>
+              <Link
+                href="/collections/sarees"
                 className="py-5 text-neutral-600 hover:text-neutral-950 transition-colors"
               >
                 NEW
@@ -264,7 +255,7 @@ export function Header({
                 <input
                   type="search"
                   name="q"
-                  placeholder="Search rings, necklaces, Gold..."
+                  placeholder="Search sarees, lehengas, tops..."
                   className="input pl-10 text-body-sm"
                 />
               </form>
@@ -334,7 +325,7 @@ export function Header({
                 <input
                   type="search"
                   name="q"
-                  placeholder="Search rings, necklaces, Gold, diamonds..."
+                  placeholder="Search sarees, lehengas, silk, linen..."
                   className="flex-1 min-h-[44px] bg-transparent font-heading text-lg sm:text-display-sm text-neutral-950 placeholder:font-sans placeholder:text-body-sm sm:placeholder:text-body placeholder:text-neutral-400 focus:outline-none border-none p-0"
                   autoFocus
                   aria-label="Search"
@@ -359,11 +350,11 @@ export function Header({
               <div className="mt-4 pt-1 flex flex-wrap items-center gap-2 text-caption">
                 <span className="text-neutral-400 font-semibold uppercase tracking-wider text-[10px] mr-1">Trending:</span>
                 {[
-                  { label: 'Gold Necklaces', query: 'gold' },
-                  { label: 'Solitaire Rings', query: 'ring' },
-                  { label: 'Bestsellers', query: 'bestseller' },
+                  { label: 'Kanjeevaram Silk', query: 'kanjeevaram' },
+                  { label: 'Banarasi Sarees', query: 'banarasi' },
+                  { label: 'Bridal Lehengas', query: 'lehenga' },
+                  { label: 'Linen Sarees', query: 'linen' },
                   { label: 'New Arrivals', query: 'new' },
-                  { label: 'Earrings', query: 'earrings' },
                 ].map((tag) => (
                   <Link
                     key={tag.label}
