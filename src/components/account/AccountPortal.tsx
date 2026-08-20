@@ -211,7 +211,7 @@ export function AccountPortal() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <button
                     onClick={() => setActiveTab('orders')}
-                    className="p-4 rounded-lg border border-neutral-950/10 hover:border-neutral-950 text-left transition-colors bg-white flex items-center justify-between"
+                    className="p-4 rounded-lg border border-ink/10 hover:border-ink text-left transition-colors bg-surface flex items-center justify-between"
                   >
                     <div>
                       <p className="font-medium text-neutral-950">Track Orders</p>
@@ -222,7 +222,7 @@ export function AccountPortal() {
 
                   <button
                     onClick={() => setActiveTab('wishlist')}
-                    className="p-4 rounded-lg border border-neutral-950/10 hover:border-neutral-950 text-left transition-colors bg-white flex items-center justify-between"
+                    className="p-4 rounded-lg border border-ink/10 hover:border-ink text-left transition-colors bg-surface flex items-center justify-between"
                   >
                     <div>
                       <p className="font-medium text-neutral-950">Saved Wishlist ({wishlistCount})</p>
@@ -416,7 +416,7 @@ export function AccountPortal() {
                     const image = product.featuredImage?.url || '/placeholder.svg';
 
                     return (
-                      <div key={product.id} className="card p-4 flex gap-4 items-center bg-white border border-neutral-950/10 rounded-lg">
+                      <div key={product.id} className="card p-4 flex gap-4 items-center bg-surface border border-ink/10 rounded-lg">
                         <div className="w-20 h-20 rounded bg-neutral-100 overflow-hidden flex-shrink-0 relative border border-neutral-950/10">
                           <OptimizedImage src={image} alt={product.title} fill objectFit="cover" />
                         </div>

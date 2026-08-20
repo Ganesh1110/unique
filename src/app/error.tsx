@@ -16,7 +16,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4 py-16 bg-cream-50">
+    <div className="min-h-[70vh] flex items-center justify-center px-4 py-16 bg-surface">
       <div className="text-center max-w-md">
         <h1 className="font-heading text-display-sm tracking-tight text-neutral-950 mb-3">
           Something went wrong

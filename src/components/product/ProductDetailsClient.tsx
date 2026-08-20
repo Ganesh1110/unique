@@ -13,6 +13,26 @@ import { useWishlist } from '@/context/WishlistContext';
 import { formatMoney, getSelectedVariant, getVariantAvailability, cn } from '@/lib/utils';
 import type { Product } from '@/types/shopify';
 
+function FitSummaryChip({ isSaree }: { isSaree: boolean }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5" aria-label="Fit summary">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-sunken px-3 py-1.5">
+        <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+        <span className="text-caption font-semibold text-ink">True to size</span>
+      </span>
+      {isSaree ? (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-sunken px-3 py-1.5">
+          <span className="text-caption text-faint">Drape &amp; blouse tailored to your measurements</span>
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-sunken px-3 py-1.5">
+          <span className="text-caption text-faint">Model wears S · 5&apos;7&quot;</span>
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function ProductDetailsClient({
   product,
   recommendations,
@@ -82,24 +102,24 @@ export function ProductDetailsClient({
   return (
     <div className="flex flex-col">
       {/* Breadcrumb */}
-      <nav className="section-sm bg-white border-b border-neutral-200" aria-label="Breadcrumb">
+      <nav className="section-sm bg-surface border-b border-ink/10" aria-label="Breadcrumb">
         <div className="container">
-          <ol className="flex items-center gap-2 text-caption text-neutral-500">
-            <li><Link href="/" className="hover:text-neutral-950 transition-colors">Home</Link></li>
+          <ol className="flex items-center gap-2 text-caption text-faint">
+            <li><Link href="/" className="hover:text-ink transition-colors">Home</Link></li>
             <li aria-hidden="true">/</li>
-            <li><Link href="/collections" className="hover:text-neutral-950 transition-colors">Collections</Link></li>
+            <li><Link href="/collections" className="hover:text-ink transition-colors">Collections</Link></li>
             <li aria-hidden="true">/</li>
-            <li><Link href="/collections" className="hover:text-neutral-950 transition-colors">
+            <li><Link href="/collections" className="hover:text-ink transition-colors">
               {product.productType || 'Collections'}
             </Link></li>
             <li aria-hidden="true">/</li>
-            <li className="text-neutral-950 font-medium truncate max-w-[200px]">{product.title}</li>
+            <li className="text-ink font-medium truncate max-w-[200px]">{product.title}</li>
           </ol>
         </div>
       </nav>
 
       {/* Product Content */}
-      <section className="section bg-white" aria-labelledby="product-title">
+      <section className="section bg-surface" aria-labelledby="product-title">
         <div className="container">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
             {/* Gallery (60% width on desktop) */}
@@ -116,19 +136,19 @@ export function ProductDetailsClient({
             <div className="lg:col-span-5 space-y-8">
               {/* Category */}
               {product.productType && (
-                <p className="overline text-neutral-600">{product.productType}</p>
+                <p className="overline text-faint">{product.productType}</p>
               )}
 
               {/* Title */}
-              <h1 id="product-title" className="font-heading text-display-sm tracking-tight text-neutral-950">
+              <h1 id="product-title" className="font-heading text-display-sm tracking-tight text-ink">
                 {product.title}
               </h1>
 
               {/* Price */}
               <div className="flex items-baseline gap-3 flex-wrap">
-                <span className="font-sans text-display-sm font-black text-[#E60012] tabular-nums">{formatMoney(price, currencyCode)}</span>
+                <span className="font-sans text-display-sm font-black text-accent tabular-nums">{formatMoney(price, currencyCode)}</span>
                 {onSale && compareAtPrice && (
-                  <span className="text-heading-md text-neutral-400 line-through tabular-nums">{formatMoney(compareAtPrice, currencyCode)}</span>
+                  <span className="text-heading-md text-faint line-through tabular-nums">{formatMoney(compareAtPrice, currencyCode)}</span>
                 )}
               </div>
 
@@ -136,42 +156,42 @@ export function ProductDetailsClient({
               <div className="flex items-center gap-2 text-body-sm">
                 <span className={cn(
                   'w-1.5 h-1.5 rounded-full',
-                  availability.status === 'in_stock' && 'bg-[#E60012]',
-                  availability.status === 'low_stock' && 'bg-amber-600',
-                  availability.status === 'out_of_stock' && 'bg-neutral-400'
+                  availability.status === 'in_stock' && 'bg-accent',
+                  availability.status === 'low_stock' && 'bg-amber-500',
+                  availability.status === 'out_of_stock' && 'bg-faint'
                 )} aria-hidden="true" />
                 <span className={cn(
-                  availability.status === 'in_stock' && 'text-neutral-700 font-medium',
-                  availability.status === 'low_stock' && 'text-amber-700 font-medium',
-                  availability.status === 'out_of_stock' && 'text-neutral-500'
+                  availability.status === 'in_stock' && 'text-ink font-medium',
+                  availability.status === 'low_stock' && 'text-amber-700 dark:text-amber-400 font-medium',
+                  availability.status === 'out_of_stock' && 'text-faint'
                 )}>
                   {availability.message}
                 </span>
               </div>
 
               {/* Description */}
-              <div className="text-body text-neutral-600 leading-relaxed">
+              <div className="text-body text-faint leading-relaxed">
                 <div dangerouslySetInnerHTML={{ __html: product.descriptionHtml || product.description }} />
               </div>
 
               {/* Saree-Specific Product Info Block */}
               {isSaree && (
-                <div className="bg-neutral-50 rounded-md p-4 space-y-2.5">
-                  <h3 className="font-sans text-caption font-bold uppercase tracking-wider text-neutral-700">
+                <div className="bg-sunken rounded-md p-5 space-y-3">
+                  <h3 className="font-sans text-caption font-bold uppercase tracking-wider text-ink">
                     Saree Details
                   </h3>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-body-sm">
                     <div>
-                      <span className="text-neutral-500">Drape Length</span>
-                      <p className="font-medium text-neutral-950">5.5m + 0.8m blouse piece</p>
+                      <span className="text-faint">Drape Length</span>
+                      <p className="font-medium text-ink">5.5m + 0.8m blouse piece</p>
                     </div>
                     <div>
-                      <span className="text-neutral-500">Blouse Piece</span>
-                      <p className="font-medium text-neutral-950">Included (unstitched)</p>
+                      <span className="text-faint">Blouse Piece</span>
+                      <p className="font-medium text-ink">Included (unstitched)</p>
                     </div>
                     <div className="col-span-2 flex items-start gap-2 pt-1">
-                      <MapPin className="h-3.5 w-3.5 text-neutral-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                      <span className="text-neutral-600">Handwoven in Kanchipuram, Tamil Nadu</span>
+                      <MapPin className="h-3.5 w-3.5 text-faint mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span className="text-faint">Handwoven in Kanchipuram, Tamil Nadu</span>
                     </div>
                   </div>
                 </div>
@@ -185,6 +205,11 @@ export function ProductDetailsClient({
                 />
               )}
 
+              {/* Fit summary — quick reassurance near the variant selector */}
+              <div className="pt-1">
+                <FitSummaryChip isSaree={isSaree} />
+              </div>
+
               {/* Variant Selector */}
               {product.options.length > 0 && (
                 <VariantSelector
@@ -196,7 +221,7 @@ export function ProductDetailsClient({
               )}
 
               {/* Quantity & Add to Cart & WhatsApp Inquiry */}
-              <div className="flex flex-col sm:flex-row gap-4 items-start pt-8 border-t border-neutral-950/10">
+              <div className="flex flex-col sm:flex-row gap-4 items-start pt-8 border-t border-ink/10">
                 <QuantitySelector
                   value={quantity}
                   onChange={setQuantity}
@@ -208,7 +233,7 @@ export function ProductDetailsClient({
                     onClick={handleAddToCart}
                     loading={cartLoading}
                     disabled={availability.status === 'out_of_stock'}
-                    className="w-full sm:w-auto min-w-[180px] !bg-[#E60012] hover:!bg-red-700 !text-white font-bold"
+                    className="w-full sm:w-auto min-w-[180px] font-bold"
                   >
                     {addedToCart ? (
                       <>
@@ -226,7 +251,7 @@ export function ProductDetailsClient({
                     href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I am interested in purchasing "${product.title}" (${typeof window !== 'undefined' ? window.location.href : ''}). Please assist me.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-secondary w-full sm:w-auto min-h-[52px] text-body-sm font-medium flex items-center justify-center gap-2 border-neutral-300 text-neutral-900 hover:bg-neutral-100"
+                    className="btn-secondary w-full sm:w-auto min-h-[52px] text-body-sm font-medium flex items-center justify-center gap-2"
                   >
                     Enquire on WhatsApp
                   </a>
@@ -234,7 +259,7 @@ export function ProductDetailsClient({
               </div>
 
               {/* Share Action */}
-              <div className="flex items-center gap-6 pt-6 border-t border-neutral-950/10">
+              <div className="flex items-center gap-6 pt-6 border-t border-ink/10">
                 <button
                   type="button"
                   onClick={async () => {
@@ -256,7 +281,7 @@ export function ProductDetailsClient({
                       }
                     }
                   }}
-                  className="inline-flex items-center gap-2 text-body-sm font-medium text-neutral-700 hover:text-neutral-950 transition-colors"
+                  className="inline-flex items-center gap-2 text-body-sm font-medium text-ink/70 hover:text-ink transition-colors"
                   aria-label="Share product"
                 >
                   <Share2 className="h-4 w-4" aria-hidden="true" />
@@ -265,17 +290,17 @@ export function ProductDetailsClient({
               </div>
 
               {/* Clothing Accordions */}
-              <div className="border-t border-neutral-950/10 pt-4 divide-y divide-neutral-950/10">
+              <div className="border-t border-ink/10 pt-4 divide-y divide-ink/10">
                 <details className="group py-4 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex items-center justify-between text-body-sm font-bold text-neutral-950 cursor-pointer select-none">
+                  <summary className="flex items-center justify-between text-body-sm font-bold text-ink cursor-pointer select-none">
                     <span>Fabric Composition &amp; Care Instructions</span>
-                    <span className="transition duration-300 group-open:-rotate-180 text-neutral-400">
+                    <span className="transition duration-300 group-open:-rotate-180 text-faint">
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
                       </svg>
                     </span>
                   </summary>
-                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed">
+                  <div className="mt-3 text-body-sm text-faint space-y-2 leading-relaxed">
                     {isSaree ? (
                       <>
                         <p>&bull; <strong>Fabric:</strong> Pure mulberry silk with real gold zari work.</p>
@@ -297,40 +322,40 @@ export function ProductDetailsClient({
                   <button
                     type="button"
                     onClick={() => setFitGuideOpen(true)}
-                    className="flex items-center justify-between w-full text-body-sm font-bold text-neutral-950 cursor-pointer select-none"
+                    className="flex items-center justify-between w-full text-body-sm font-bold text-ink cursor-pointer select-none"
                   >
                     <span>Size &amp; Fit Guide</span>
-                    <span className="text-caption font-medium text-[#E60012] uppercase tracking-wider">View Guide</span>
+                    <span className="text-caption font-medium text-accent uppercase tracking-wider">View Guide</span>
                   </button>
                 </div>
 
                 <details className="group py-4 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex items-center justify-between text-body-sm font-bold text-neutral-950 cursor-pointer select-none">
+                  <summary className="flex items-center justify-between text-body-sm font-bold text-ink cursor-pointer select-none">
                     <span>Shipping &amp; Return Policy</span>
-                    <span className="transition duration-300 group-open:-rotate-180 text-neutral-400">
+                    <span className="transition duration-300 group-open:-rotate-180 text-faint">
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
                       </svg>
                     </span>
                   </summary>
-                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed">
+                  <div className="mt-3 text-body-sm text-faint space-y-2 leading-relaxed">
                     <p>Complimentary shipping on orders over {freeShippingThreshold}. 30-day hassle-free returns and exchanges at any AURA store or online.</p>
                   </div>
                 </details>
               </div>
 
               {/* Service Note */}
-              <div className="space-y-3 text-body-sm text-neutral-600 pt-2">
+              <div className="space-y-3 text-body-sm text-faint pt-2">
                 <p className="flex items-center gap-3">
-                  <Truck className="h-4 w-4 text-neutral-400" aria-hidden="true" />
+                  <Truck className="h-4 w-4 text-ink/40" aria-hidden="true" />
                   Complimentary shipping on orders over {freeShippingThreshold}
                 </p>
                 <p className="flex items-center gap-3">
-                  <RotateCcw className="h-4 w-4 text-neutral-400" aria-hidden="true" />
+                  <RotateCcw className="h-4 w-4 text-ink/40" aria-hidden="true" />
                   {returnWindow.includes('day') || returnWindow.includes('month') ? `${returnWindow} complimentary returns` : `${returnWindow}-day complimentary returns`}
                 </p>
                 <p className="flex items-center gap-3">
-                  <Shield className="h-4 w-4 text-neutral-400" aria-hidden="true" />
+                  <Shield className="h-4 w-4 text-ink/40" aria-hidden="true" />
                   Authenticity guaranteed · Handloom mark certified
                 </p>
               </div>
@@ -341,13 +366,13 @@ export function ProductDetailsClient({
 
       {/* You May Also Like */}
       {recommendations.length > 0 && (
-        <section className="section bg-cream-50 border-y border-neutral-950/10" aria-labelledby="recommendations-heading">
+        <section className="section bg-sunken/60 border-y border-ink/10" aria-labelledby="recommendations-heading">
           <div className="container">
             <header className="max-w-2xl mx-auto text-center mb-12 lg:mb-20">
-              <h2 id="recommendations-heading" className="font-heading text-display-sm sm:text-display-md tracking-tight text-neutral-950 mb-4">
+              <h2 id="recommendations-heading" className="font-heading text-display-sm sm:text-display-md tracking-tight text-ink mb-4">
                 You May Also Like
               </h2>
-              <p className="text-body text-neutral-600">
+              <p className="text-body text-faint">
                 Handpicked pieces that complement your selection.
               </p>
             </header>
@@ -357,11 +382,11 @@ export function ProductDetailsClient({
       )}
 
       {/* Sticky Mobile Add-to-Bag Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-cream-50/95 backdrop-blur-md border-t border-neutral-950/10 p-3.5 sm:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-ink/10 p-3.5 sm:hidden">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="font-heading text-body-sm font-medium text-neutral-950 truncate">{product.title}</p>
-            <p className="text-body-sm font-medium text-neutral-900 tabular-nums">{formatMoney(price, currencyCode)}</p>
+            <p className="font-heading text-body-sm font-medium text-ink truncate">{product.title}</p>
+            <p className="text-body-sm font-medium text-ink tabular-nums">{formatMoney(price, currencyCode)}</p>
           </div>
           <AddToCartButton
             onClick={handleAddToCart}

@@ -21,7 +21,7 @@ export default async function AboutPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="section bg-white border-b border-neutral-200" aria-labelledby="about-title">
+      <section className="section bg-surface border-b border-ink/10" aria-labelledby="about-title">
         <div className="container">
           <nav className="flex items-center gap-2 text-caption text-neutral-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-neutral-950 transition-colors">Home</Link>

@@ -19,7 +19,7 @@ export default async function ContactPage() {
 
   return (
     <div className="flex flex-col">
-      <header className="section-sm bg-white border-b border-neutral-950/10">
+      <header className="section-sm bg-surface border-b border-ink/10">
         <div className="container">
           <nav className="flex items-center gap-2 text-caption text-neutral-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-neutral-950 transition-colors">Home</Link>

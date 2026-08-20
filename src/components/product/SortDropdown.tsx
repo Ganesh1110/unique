@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { Filter, ChevronDown, Check } from 'lucide-react';
+import { useSearchParams, usePathname } from 'next/navigation';
+import { Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface SortOption {
@@ -20,76 +19,51 @@ export const SORT_OPTIONS: SortOption[] = [
 ];
 
 export function SortDropdown({ currentSort }: { currentSort?: string }) {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const activeSort = currentSort || searchParams.get('sort') || 'BEST_SELLING';
   const activeLabel = SORT_OPTIONS.find((opt) => opt.value === activeSort)?.label || 'Best Selling';
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleSelect = (sortValue: string) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('sort', sortValue);
+    params.set('sort', e.target.value);
     params.delete('page'); // Reset to page 1 on sort change
-    router.push(`${pathname}?${params.toString()}`);
-    setIsOpen(false);
+    window.location.assign(`${pathname}?${params.toString()}`);
   };
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="btn-secondary flex items-center gap-2 px-4 py-2 text-body-sm font-medium text-neutral-800 hover:text-neutral-950 transition-colors"
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
+    <div className="relative inline-flex items-center">
+      <Filter className="pointer-events-none absolute left-4 h-4 w-4 text-faint" aria-hidden="true" />
+      <label htmlFor="sort-select" className="sr-only">
+        Sort products
+      </label>
+      <select
+        id="sort-select"
+        name="sort"
+        value={activeSort}
+        onChange={handleChange}
         aria-label={`Sort products, currently sorted by ${activeLabel}`}
+        className={cn(
+          'cursor-pointer appearance-none rounded-full border border-ink/15 bg-sunken py-2 pl-11 pr-10 text-body-sm font-medium text-ink',
+          'focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30 transition-colors duration-fast'
+        )}
       >
-        <Filter className="h-4 w-4" aria-hidden="true" />
-        <span>Sort: <strong className="font-medium text-neutral-950">{activeLabel}</strong></span>
-        <ChevronDown className={cn('h-4 w-4 transition-transform duration-200', isOpen && 'rotate-180')} aria-hidden="true" />
-      </button>
-
-      {isOpen && (
-        <div
-          className="absolute right-0 mt-2 w-56 rounded-sm bg-cream-50 border border-neutral-950/10 z-30 py-1.5 animate-fade-in"
-          role="listbox"
-          aria-label="Sort options"
-        >
-          {SORT_OPTIONS.map((option) => {
-            const isSelected = option.value === activeSort;
-            return (
-              <button
-                key={option.value}
-                onClick={() => handleSelect(option.value)}
-                role="option"
-                aria-selected={isSelected}
-                className={cn(
-                  'w-full flex items-center justify-between px-4 py-2 text-left text-body-sm transition-colors',
-                  isSelected
-                    ? 'bg-neutral-950/[0.05] font-medium text-neutral-950'
-                    : 'text-neutral-700 hover:bg-neutral-950/[0.03] hover:text-neutral-950'
-                )}
-              >
-                <span>{option.label}</span>
-                {isSelected && <Check className="h-4 w-4" aria-hidden="true" />}
-              </button>
-            );
-          })}
-        </div>
-      )}
+        {SORT_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <svg
+        className="pointer-events-none absolute right-4 h-4 w-4 text-faint"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+      </svg>
     </div>
   );
 }

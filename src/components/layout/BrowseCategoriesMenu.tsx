@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronDown, ChevronRight, LayoutGrid, Sparkles, ArrowRight, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, ArrowRight, LayoutGrid } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/Image';
+import { cn } from '@/lib/utils';
 
 export interface MegaSubSection {
   title: string;
+  href: string;
+  image: string;
   items: { label: string; href: string; isHot?: boolean }[];
 }
 
@@ -25,35 +28,39 @@ export interface MegaCategory {
 export const MEGA_CATEGORIES: MegaCategory[] = [
   {
     id: 'sarees',
-    name: 'Sarees Collection',
+    name: 'Sarees',
     href: '/collections/sarees',
     badge: 'Heritage',
     subsections: [
       {
-        title: 'BY WEAVE & FABRIC',
+        title: 'By Weave & Fabric',
+        href: '/collections/silk-sarees',
+        image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop',
         items: [
           { label: 'Kanjeevaram Mulberry Silk', href: '/collections/silk-sarees', isHot: true },
           { label: 'Banarasi Zari Brocade', href: '/collections/silk-sarees' },
-          { label: 'Chanderi & Organza Sarees', href: '/collections/sarees' },
+          { label: 'Chanderi & Organza', href: '/collections/sarees' },
           { label: 'Handloom Pure Linen', href: '/collections/sarees' },
-          { label: 'Georgette Designer Drapes', href: '/collections/sarees' },
         ],
       },
       {
-        title: 'FEATURED DROPS',
+        title: 'Featured Drops',
+        href: '/collections/sarees',
+        image: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&auto=format&fit=crop',
         items: [
           { label: 'Kanjeevaram Pure Silk Saree', href: '/products/kanjeevaram-pure-silk-saree' },
           { label: 'Banarasi Zari Brocade Saree', href: '/products/banarasi-zari-brocade-saree' },
-          { label: 'Chanderi Tissue Organza Saree', href: '/products/chanderi-floral-organza-saree' },
-          { label: 'Handloom Pure Linen Saree', href: '/products/handloom-pure-linen-saree' },
+          { label: 'Chanderi Tissue Organza', href: '/products/chanderi-floral-organza-saree' },
         ],
       },
       {
-        title: 'BY OCCASION',
+        title: 'By Occasion',
+        href: '/collections/sarees',
+        image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&auto=format&fit=crop',
         items: [
           { label: 'Bridal & Wedding Sarees', href: '/collections/sarees' },
           { label: 'Festive & Reception Drapes', href: '/collections/sarees' },
-          { label: 'Everyday Work Linen Sarees', href: '/collections/sarees' },
+          { label: 'Everyday Work Linen', href: '/collections/sarees' },
         ],
       },
     ],
@@ -71,7 +78,9 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     badge: 'Festive',
     subsections: [
       {
-        title: 'ETHNIC SETS',
+        title: 'Ethnic Sets',
+        href: '/collections/lehengas',
+        image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&auto=format&fit=crop',
         items: [
           { label: 'Bridal Velvet Lehengas', href: '/products/bridal-velvet-lehenga-set', isHot: true },
           { label: 'Embroidered Anarkali Sets', href: '/collections/lehengas' },
@@ -90,10 +99,11 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     id: 'tops',
     name: 'Tops & Tunics',
     href: '/collections/tops',
-    badge: 'AIRism',
     subsections: [
       {
-        title: 'EVERYDAY WEAR',
+        title: 'Everyday Wear',
+        href: '/collections/tops',
+        image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop',
         items: [
           { label: 'AIRism Cotton Oversized Tee', href: '/products/airism-cotton-t-shirt', isHot: true },
           { label: 'Linen Blend Shirts', href: '/collections/tops' },
@@ -109,7 +119,6 @@ export const MEGA_CATEGORIES: MegaCategory[] = [
     },
   },
 ];
-
 
 export function useDynamicCategories(): MegaCategory[] {
   const [categories, setCategories] = useState<MegaCategory[]>(MEGA_CATEGORIES);
@@ -132,107 +141,148 @@ interface BrowseCategoriesMenuProps {
   onClose?: () => void;
 }
 
-export function BrowseCategoriesDesktopMenu({ onClose }: BrowseCategoriesMenuProps) {
+interface DesktopMenuProps extends BrowseCategoriesMenuProps {
+  activeId: string;
+}
+
+export function BrowseCategoriesDesktopMenu({ activeId, onClose }: DesktopMenuProps) {
   const categories = useDynamicCategories();
-  const [activeTabId, setActiveTabId] = useState<string>(categories[0]?.id || 'sarees');
-  const activeCategory = categories.find((c) => c.id === activeTabId) || categories[0] || MEGA_CATEGORIES[0];
+  const activeCategory = categories.find((c) => c.id === activeId) || categories[0] || MEGA_CATEGORIES[0];
 
   return (
-    <div className="w-full bg-cream-50 border-b border-neutral-950/10 shadow-2xl animate-fade-in text-neutral-900">
-      <div className="max-w-container-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-12 gap-6 min-h-[340px]">
-          {/* Left Sidebar: Category Selector */}
-          <div className="col-span-3 border-r border-neutral-950/10 pr-4 space-y-1">
-            <p className="text-caption uppercase tracking-[0.2em] font-semibold text-neutral-400 mb-3 px-3">
-              Categories
-            </p>
-            {categories.map((cat) => {
-              const isActive = cat.id === activeTabId;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onMouseEnter={() => setActiveTabId(cat.id)}
-                  onClick={() => setActiveTabId(cat.id)}
-                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-lg text-body-sm font-medium text-left transition-all ${
-                    isActive
-                      ? 'bg-neutral-950 text-cream-50 shadow-subtle'
-                      : 'text-neutral-700 hover:bg-neutral-950/5 hover:text-neutral-950'
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    {cat.name}
-                    {cat.badge && (
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded font-semibold uppercase tracking-wider ${
-                        isActive ? 'bg-gold-500 text-white' : 'bg-gold-100 text-gold-800'
-                      }`}>
-                        {cat.badge}
-                      </span>
-                    )}
-                  </span>
-                  <ChevronRight className={`h-4 w-4 transition-transform ${isActive ? 'text-cream-50 translate-x-0.5' : 'text-neutral-400'}`} />
-                </button>
-              );
-            })}
-          </div>
+    <div className="w-full bg-surface border-b border-ink/10 shadow-[0_32px_64px_-32px_rgba(0,0,0,0.2)] animate-fade-in text-ink">
+      <div className="max-w-container-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Category tab pills */}
+        <div className="flex items-center gap-2 mb-7">
+          <span className="text-caption font-semibold uppercase tracking-[0.16em] text-faint mr-1">
+            Departments
+          </span>
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={cat.href}
+              onClick={onClose}
+              className={cn(
+                'inline-flex min-h-[36px] items-center rounded-full px-4 text-caption font-medium transition-colors duration-fast',
+                cat.id === activeCategory.id
+                  ? 'bg-accent text-accent-ink'
+                  : 'bg-sunken text-neutral-700 hover:bg-ink/[0.08] hover:text-ink'
+              )}
+            >
+              {cat.name}
+              {cat.badge && (
+                <span className="ml-2 text-[9px] font-semibold uppercase tracking-wider opacity-70">
+                  {cat.badge}
+                </span>
+              )}
+            </Link>
+          ))}
+        </div>
 
-          {/* Center: Dynamic Subsections */}
-          <div className="col-span-6 px-4 grid grid-cols-3 gap-6 align-start">
-            {activeCategory.subsections.map((sub, idx) => (
-              <div key={idx} className="space-y-3">
-                <p className="text-caption uppercase tracking-[0.16em] font-semibold text-gold-700 border-b border-neutral-950/10 pb-1.5">
-                  {sub.title}
-                </p>
-                <ul className="space-y-2 text-body-sm">
-                  {sub.items.map((item, itemIdx) => (
-                    <li key={itemIdx}>
-                      <Link
-                        href={item.href}
-                        onClick={onClose}
-                        className="text-neutral-700 hover:text-neutral-950 hover:underline flex items-center gap-1.5 transition-colors"
+        <div className="grid grid-cols-12 gap-6">
+          {/* Image tiles per subsection */}
+          <div className="col-span-9 grid grid-cols-3 gap-4">
+            {activeCategory.subsections.map((sub) => (
+              <Link
+                key={sub.title}
+                href={sub.href}
+                onClick={onClose}
+                className="group relative block overflow-hidden bg-sunken"
+              >
+                <div className="relative aspect-4-5 overflow-hidden">
+                  <OptimizedImage
+                    src={sub.image}
+                    alt={sub.title}
+                    fill
+                    objectFit="cover"
+                    className="transition-transform duration-700 ease-expo group-hover:scale-[1.05]"
+                  />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent transition-opacity duration-500"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <h4 className="font-heading text-heading-sm font-medium text-accent-ink mb-1.5">
+                    {sub.title}
+                  </h4>
+                  <ul className="space-y-1" role="list">
+                    {sub.items.slice(0, 3).map((item) => (
+                      <li
+                        key={item.label}
+                        className="flex items-center gap-1.5 text-body-xs text-accent-ink/75"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <span>{item.label}</span>
+                        <Link
+                          href={item.href}
+                          onClick={onClose}
+                          className="truncate hover:text-accent-ink transition-colors"
+                        >
+                          {item.label}
+                        </Link>
                         {item.isHot && (
-                          <span className="text-[9px] bg-red-100 text-red-700 font-bold px-1 rounded">HOT</span>
+                          <span className="shrink-0 rounded-sm bg-accent px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-accent-ink">
+                            New
+                          </span>
                         )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      </li>
+                    ))}
+                  </ul>
+                  <span className="mt-2.5 inline-flex items-center gap-1 text-body-xs font-medium text-accent-ink/90">
+                    View all <ArrowRight className="h-3 w-3 transition-transform duration-fast group-hover:translate-x-0.5" />
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
 
-          {/* Right: Featured Luxury Banner */}
-          <div className="col-span-3 border-l border-neutral-950/10 pl-6 flex flex-col justify-between">
+          {/* Featured card */}
+          <div className="col-span-3">
             {activeCategory.featuredCard ? (
-              <div className="card overflow-hidden bg-white p-4 border border-neutral-950/10 flex flex-col h-full justify-between group">
-                <div className="relative aspect-4-3 rounded overflow-hidden bg-neutral-100 mb-3">
+              <div className="group relative block h-full overflow-hidden bg-sunken">
+                <div className="absolute inset-0">
                   <OptimizedImage
                     src={activeCategory.featuredCard.image}
                     alt={activeCategory.featuredCard.title}
                     fill
                     objectFit="cover"
+                    className="transition-transform duration-700 ease-expo group-hover:scale-[1.05]"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" aria-hidden="true" />
                 </div>
-                <div className="space-y-1">
-                  <span className="overline text-gold-600">Featured Highlight</span>
-                  <h4 className="font-heading text-heading-xs text-neutral-950 group-hover:text-gold-700 transition-colors">
+                <div className="relative flex h-full min-h-[340px] flex-col justify-end p-5">
+                  <span className="text-caption font-semibold uppercase tracking-[0.18em] text-gold-300 mb-2">
+                    Featured Highlight
+                  </span>
+                  <h4 className="font-heading text-heading-lg font-medium text-accent-ink mb-1.5">
                     {activeCategory.featuredCard.title}
                   </h4>
-                  <p className="text-caption text-neutral-500 line-clamp-2">
+                  <p className="text-body-xs text-accent-ink/70 mb-4 line-clamp-2">
                     {activeCategory.featuredCard.subtitle}
                   </p>
+                  <Link
+                    href={activeCategory.featuredCard.link}
+                    onClick={onClose}
+                    className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-accent-ink/95 text-ink text-caption font-semibold uppercase tracking-wider transition-colors duration-fast hover:bg-accent-ink"
+                  >
+                    Explore <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
+              </div>
+            ) : (
+              <div className="flex h-full min-h-[340px] flex-col justify-center rounded-md bg-sunken p-5">
+                <p className="font-heading text-heading-lg font-medium text-ink">
+                  {activeCategory.name}
+                </p>
                 <Link
-                  href={activeCategory.featuredCard.link}
+                  href={activeCategory.href}
                   onClick={onClose}
-                  className="mt-4 btn-secondary text-caption py-2 w-full justify-center inline-flex items-center gap-1.5"
+                  className="mt-4 inline-flex items-center gap-1.5 text-body-sm font-medium text-accent"
                 >
-                  Explore Collection <ArrowRight className="h-3.5 w-3.5" />
+                  Browse collection <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
-            ) : null}
+            )}
           </div>
         </div>
       </div>
@@ -242,71 +292,78 @@ export function BrowseCategoriesDesktopMenu({ onClose }: BrowseCategoriesMenuPro
 
 export function BrowseCategoriesMobileAccordion({ onClose }: BrowseCategoriesMenuProps) {
   const categories = useDynamicCategories();
-  const [openCatId, setOpenCatId] = useState<string | null>(categories[0]?.id || 'necklaces');
+  const [openCatId, setOpenCatId] = useState<string | null>(categories[0]?.id || null);
 
   const toggleCategory = (id: string) => {
     setOpenCatId((prev) => (prev === id ? null : id));
   };
 
   return (
-    <div className="space-y-2 border-b border-neutral-950/10 pb-4 mb-4">
-      <div className="flex items-center gap-2 px-1 text-caption uppercase tracking-[0.2em] font-semibold text-gold-700 mb-2">
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 px-1 text-caption uppercase tracking-[0.18em] font-semibold text-faint">
         <LayoutGrid className="h-4 w-4" />
-        <span>Browse All Categories</span>
+        <span>Browse Categories</span>
       </div>
 
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         {categories.map((cat) => {
           const isOpen = openCatId === cat.id;
           return (
-            <div key={cat.id} className="border border-neutral-950/10 rounded-lg overflow-hidden bg-white">
+            <div key={cat.id} className="overflow-hidden border border-ink/10 rounded-md">
               <button
                 type="button"
                 onClick={() => toggleCategory(cat.id)}
-                className="w-full flex items-center justify-between p-3.5 text-body-sm font-medium text-neutral-950 bg-neutral-50/50 hover:bg-neutral-100 transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 text-body-sm font-medium text-ink bg-sunken/50 hover:bg-sunken transition-colors"
+                aria-expanded={isOpen}
               >
-                <span className="flex items-center gap-2 font-semibold">
+                <span className="flex items-center gap-2 font-medium">
                   {cat.name}
                   {cat.badge && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded font-semibold uppercase bg-gold-100 text-gold-800">
+                    <span className="rounded-sm bg-accent px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-accent-ink">
                       {cat.badge}
                     </span>
                   )}
                 </span>
-                <ChevronDown className={`h-4 w-4 text-neutral-500 transition-transform duration-200 ${isOpen ? 'rotate-180 text-neutral-950' : ''}`} />
+                <ChevronDown
+                  className={cn('h-4 w-4 text-faint transition-transform duration-200', isOpen && 'rotate-180')}
+                />
               </button>
 
               {isOpen && (
-                <div className="p-3 bg-cream-50/50 space-y-4 border-t border-neutral-950/5">
-                  {cat.subsections.map((sub, sIdx) => (
-                    <div key={sIdx} className="space-y-2">
-                      <p className="text-[10px] uppercase tracking-[0.16em] font-bold text-neutral-400">
+                <div className="divide-y divide-ink/5 border-t border-ink/10">
+                  {cat.subsections.map((sub) => (
+                    <div key={sub.title} className="px-4 py-3">
+                      <Link
+                        href={sub.href}
+                        onClick={onClose}
+                        className="text-caption font-semibold uppercase tracking-[0.14em] text-accent mb-2 flex items-center justify-between"
+                      >
                         {sub.title}
-                      </p>
-                      <div className="grid grid-cols-1 gap-1.5 pl-2">
-                        {sub.items.map((item, iIdx) => (
-                          <Link
-                            key={iIdx}
-                            href={item.href}
-                            onClick={onClose}
-                            className="text-body-sm text-neutral-700 hover:text-gold-700 py-1 flex items-center justify-between"
-                          >
-                            <span>{item.label}</span>
-                            <ArrowRight className="h-3 w-3 text-neutral-400" />
-                          </Link>
+                        <ChevronRight className="h-3.5 w-3.5" />
+                      </Link>
+                      <ul className="space-y-1" role="list">
+                        {sub.items.map((item) => (
+                          <li key={item.label}>
+                            <Link
+                              href={item.href}
+                              onClick={onClose}
+                              className="flex min-h-[36px] items-center justify-between gap-2 py-1 text-body-sm text-neutral-700 hover:text-ink transition-colors"
+                            >
+                              <span className="flex items-center gap-1.5">
+                                <span className="truncate">{item.label}</span>
+                                {item.isHot && (
+                                  <span className="shrink-0 rounded-sm bg-accent px-1 py-0.5 text-[9px] font-bold uppercase text-accent-ink">
+                                    New
+                                  </span>
+                                )}
+                              </span>
+                              <ArrowRight className="h-3 w-3 shrink-0 text-faint" />
+                            </Link>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
                   ))}
-                  <div className="pt-2 border-t border-neutral-200">
-                    <Link
-                      href={cat.href}
-                      onClick={onClose}
-                      className="text-caption font-semibold uppercase tracking-wider text-gold-700 hover:underline flex items-center gap-1"
-                    >
-                      View All {cat.name} <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
                 </div>
               )}
             </div>

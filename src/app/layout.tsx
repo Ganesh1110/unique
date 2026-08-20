@@ -106,7 +106,7 @@ export default async function RootLayout({
 
   return (
       <html lang="en" className={`${cormorant.variable} ${instrument.variable}`}>
-      <body className="font-sans antialiased text-neutral-900 bg-cream-50 selection:bg-gold-500/20 selection:text-neutral-950">
+      <body className="font-sans antialiased text-ink bg-canvas selection:bg-accent/15 selection:text-ink">
         {gaId && (
           <>
             <Script

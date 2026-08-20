@@ -25,14 +25,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses =
-      'inline-flex items-center justify-center gap-2 font-sans font-medium tracking-wide transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/25 disabled:opacity-30 disabled:pointer-events-none rounded-md active:scale-[0.99]';
+      'inline-flex items-center justify-center gap-2 font-sans font-medium tracking-wide transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 disabled:opacity-30 disabled:pointer-events-none rounded-md active:scale-[0.99]';
 
     const variantClasses = {
-      primary: 'bg-neutral-950 !text-cream-50 hover:bg-neutral-800',
-      secondary: 'bg-transparent !text-neutral-950 border border-neutral-950/20 hover:border-neutral-950 hover:bg-neutral-950 hover:!text-cream-50',
-      ghost: 'bg-transparent text-neutral-800 hover:bg-neutral-900/[0.04] active:bg-neutral-900/[0.08]',
-      link: 'bg-transparent px-0 text-neutral-800 hover:text-neutral-950 underline underline-offset-4 decoration-neutral-300 hover:decoration-neutral-950 font-normal',
-      gold: 'bg-gold-700 !text-cream-50 hover:bg-gold-800',
+      primary: 'bg-accent !text-accent-ink hover:bg-accent-hover',
+      secondary: 'bg-transparent !text-ink border border-ink/20 hover:border-ink hover:bg-ink hover:!text-canvas',
+      ghost: 'bg-transparent text-ink/80 hover:bg-ink/[0.05] active:bg-ink/[0.08]',
+      link: 'bg-transparent px-0 text-ink/80 hover:text-ink underline underline-offset-4 decoration-ink/30 hover:decoration-ink font-normal',
+      gold: 'bg-gold-700 !text-accent-ink hover:bg-gold-800',
     };
 
     const sizeClasses = {

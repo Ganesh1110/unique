@@ -37,7 +37,7 @@ export function CookieConsent() {
       aria-label="Cookie consent banner"
       className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 animate-slide-up"
     >
-      <div className="bg-cream-50 border border-neutral-950/10 p-5 sm:p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.2)]">
+      <div className="bg-surface border border-ink/10 p-5 sm:p-6 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.2)]">
         <div className="flex items-start justify-between gap-4 mb-3">
           <div className="flex items-center gap-2">
             <Cookie className="h-5 w-5 flex-shrink-0 text-neutral-400" aria-hidden="true" />

@@ -12,7 +12,13 @@ interface ProductGridProps {
   className?: string;
 }
 
-export function ProductGrid({ products, loading = false, columns = 3, showQuickAdd = true, className }: ProductGridProps) {
+export function ProductGrid({
+  products,
+  loading = false,
+  columns = 3,
+  showQuickAdd = true,
+  className,
+}: ProductGridProps) {
   const columnClasses = {
     2: 'grid-cols-2',
     3: 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3',
@@ -21,7 +27,7 @@ export function ProductGrid({ products, loading = false, columns = 3, showQuickA
 
   if (loading) {
     return (
-      <div className={cn('grid gap-x-3 gap-y-8 sm:gap-x-4 sm:gap-y-10 lg:gap-x-5 lg:gap-y-12', columnClasses[columns], className)} role="status" aria-label="Loading products">
+      <div className={cn('grid gap-x-4 gap-y-10 sm:gap-x-5 sm:gap-y-14 lg:gap-x-6 lg:gap-y-16', columnClasses[columns], className)} role="status" aria-label="Loading products">
         {[...Array(8)].map((_, i) => (
           <ProductCardSkeleton key={i} />
         ))}
@@ -32,13 +38,17 @@ export function ProductGrid({ products, loading = false, columns = 3, showQuickA
   if (products.length === 0) {
     return (
       <div className="flex justify-center py-16 text-center">
-        <p className="text-body text-neutral-500">No products found in this collection.</p>
+        <p className="text-body text-faint">No products found in this collection.</p>
       </div>
     );
   }
 
   return (
-    <div className={cn('grid gap-x-3 gap-y-8 sm:gap-x-4 sm:gap-y-10 lg:gap-x-5 lg:gap-y-12', columnClasses[columns], className)} role="list" aria-label="Products">
+    <div
+      className={cn('grid gap-x-4 gap-y-10 sm:gap-x-5 sm:gap-y-14 lg:gap-x-6 lg:gap-y-16', columnClasses[columns], className)}
+      role="list"
+      aria-label="Products"
+    >
       {products.map((product, index) => (
         <ProductCard
           key={product.id}
@@ -54,10 +64,10 @@ export function ProductGrid({ products, loading = false, columns = 3, showQuickA
 function ProductCardSkeleton() {
   return (
     <article className="animate-pulse" aria-hidden="true">
-      <div className="aspect-4-5 bg-cream-100" />
+      <div className="aspect-4-5 bg-sunken" />
       <div className="pt-4 space-y-2">
-        <div className="h-4 w-3/4 bg-cream-100 rounded-sm" />
-        <div className="h-4 w-1/3 bg-cream-100 rounded-sm" />
+        <div className="h-4 w-3/4 bg-sunken rounded-sm" />
+        <div className="h-4 w-1/3 bg-sunken rounded-sm" />
       </div>
     </article>
   );

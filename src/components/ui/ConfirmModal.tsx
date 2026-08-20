@@ -62,7 +62,7 @@ export function ConfirmModal({
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-neutral-950/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-ink/60 backdrop-blur-sm transition-opacity"
         onClick={() => !loading && onClose()}
         aria-hidden="true"
       />
@@ -73,13 +73,13 @@ export function ConfirmModal({
         aria-modal="true"
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
-        className="relative w-full max-w-md rounded-xl bg-white p-6 sm:p-8 shadow-2xl border border-neutral-200/80 z-10 space-y-6 transform transition-all animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-md rounded-xl bg-surface p-6 sm:p-8 shadow-strong border border-ink/10 z-10 space-y-6 transform transition-all animate-in zoom-in-95 duration-200"
       >
         <button
           type="button"
           onClick={onClose}
           disabled={loading}
-          className="absolute top-4 right-4 p-1.5 rounded-full text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors disabled:opacity-50"
+          className="absolute top-4 right-4 p-1.5 rounded-full text-faint hover:text-ink hover:bg-sunken transition-colors disabled:opacity-50"
           aria-label="Close dialog"
         >
           <X className="h-4 w-4" />
@@ -90,10 +90,10 @@ export function ConfirmModal({
             {iconMap[variant]}
           </div>
           <div className="space-y-1 min-w-0 flex-1">
-            <h3 id="modal-title" className="font-heading text-heading-md text-neutral-950 font-medium leading-snug">
+            <h3 id="modal-title" className="font-heading text-heading-md text-ink font-medium leading-snug">
               {title}
             </h3>
-            <p id="modal-description" className="text-body-sm text-neutral-600 leading-relaxed">
+            <p id="modal-description" className="text-body-sm text-faint leading-relaxed">
               {description}
             </p>
           </div>

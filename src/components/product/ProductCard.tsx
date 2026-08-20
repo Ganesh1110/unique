@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { ProductImage } from '@/components/ui/Image';
 import { Heart, ShoppingBag } from 'lucide-react';
 import { formatMoney, cn } from '@/lib/utils';
 import type { Product, ProductVariant } from '@/types/shopify';
@@ -16,9 +14,24 @@ interface ProductCardProps {
   variant?: ProductVariant;
   priority?: boolean;
   showQuickAdd?: boolean;
+  className?: string;
 }
 
-export function ProductCard({ product, variant, priority = false, showQuickAdd = true }: ProductCardProps) {
+function swatchClass(value: string): string {
+  const v = value.toLowerCase();
+  if (v.includes('white') || v.includes('ivory') || v.includes('cream')) return 'bg-cream-100';
+  if (v.includes('black')) return 'bg-neutral-950';
+  if (v.includes('navy')) return 'bg-sky-900';
+  if (v.includes('emerald')) return 'bg-emerald-800';
+  if (v.includes('olive')) return 'bg-emerald-900';
+  if (v.includes('rose') || v.includes('pink')) return 'bg-rose-300';
+  if (v.includes('maroon') || v.includes('burgundy')) return 'bg-red-900';
+  if (v.includes('mustard')) return 'bg-yellow-500';
+  if (v.includes('beige') || v.includes('sand') || v.includes('gold')) return 'bg-amber-100';
+  return 'bg-neutral-300';
+}
+
+export function ProductCard({ product, variant, priority = false, showQuickAdd = true, className }: ProductCardProps) {
   const { addToCart, isLoading: cartLoading } = useCart();
   const { showToast } = useToast();
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -33,11 +46,11 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
   const images = product.images.edges.map(({ node }) => node);
   const featuredImage = product.featuredImage;
   const isSaved = isInWishlist(product.id);
+  const onSale = compareAtPrice && compareAtPrice > price;
 
-  // Secondary image for fabric/texture hover preview
+  // Secondary image doubles as a fabric / texture detail on hover
   const secondaryImage = images.length > 1 ? images[1] : null;
 
-  // Extract material / finish swatch values if present
   const finishOption = product.options.find((opt) =>
     ['Finish', 'Material', 'Color', 'Colour'].includes(opt.name)
   );
@@ -46,7 +59,7 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
     e.preventDefault();
     e.stopPropagation();
     if (!primaryVariant?.id || !available) return;
-    
+
     setQuickAddLoading(primaryVariant.id);
     try {
       await addToCart(primaryVariant.id, 1);
@@ -68,94 +81,108 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
     );
   };
 
-  const onSale = compareAtPrice && compareAtPrice > price;
-
   return (
-    <article className="group relative flex flex-col">
-      {/* Product Image Container — Fashion 3:4 Aspect Ratio */}
+    <article
+      className={cn('group relative flex flex-col', className)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Image tile — uniform 4:5 */}
       <div
         className={cn(
-          'relative overflow-hidden bg-neutral-100/90 transition-opacity duration-300',
-          !available && 'opacity-60'
+          'relative overflow-hidden bg-sunken transition-opacity duration-300',
+          !available && 'opacity-70'
         )}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
-        <Link
+        <a
           href={`/products/${product.handle}`}
-          aria-label={`${product.title}${onSale ? ' - Sale' : ''}`}
+          aria-label={`${product.title}${onSale ? ' — on sale' : ''}`}
           className="block w-full h-full overflow-hidden"
           data-testid="product-card-link"
         >
-          {/* Primary Image */}
-          <div className={cn(
-            'transition-all duration-500 ease-expo',
-            isHovered && secondaryImage ? 'opacity-0' : 'opacity-100',
-            'group-hover:scale-[1.02]'
-          )}>
-            <ProductImage
-              images={images}
-              selectedVariantImage={featuredImage ? { url: featuredImage.url, altText: featuredImage.altText } : null}
-              aspectRatio="3:4"
-              priority={priority}
-            />
-          </div>
-
-          {/* Secondary Fabric/Texture Image on Hover */}
-          {secondaryImage && (
-            <div className={cn(
-              'absolute inset-0 transition-opacity duration-500 ease-expo',
-              isHovered ? 'opacity-100' : 'opacity-0'
-            )}>
+          <div className="relative aspect-4-5">
+            {/* Primary image */}
+            <div
+              className={cn(
+                'absolute inset-0 transition-opacity duration-500 ease-expo',
+                isHovered && secondaryImage ? 'opacity-0' : 'opacity-100'
+              )}
+            >
               <OptimizedImage
-                src={secondaryImage.url}
-                alt={secondaryImage.altText || `${product.title} - texture detail`}
+                src={featuredImage?.url || images[0]?.url}
+                alt={featuredImage?.altText || product.title}
                 fill
+                priority={priority}
                 objectFit="cover"
+                className={cn(
+                  'transition-transform duration-[900ms] ease-expo',
+                  isHovered && 'scale-[1.03]'
+                )}
               />
             </div>
-          )}
-        </Link>
 
-        {/* Wishlist Heart Icon — persistent on mobile, hover-reveal desktop */}
+            {/* Secondary texture / fabric close-up */}
+            {secondaryImage && (
+              <div
+                className={cn(
+                  'absolute inset-0 transition-opacity duration-500 ease-expo',
+                  isHovered ? 'opacity-100' : 'opacity-0'
+                )}
+              >
+                <OptimizedImage
+                  src={secondaryImage.url}
+                  alt={secondaryImage.altText || `${product.title} — texture detail`}
+                  fill
+                  objectFit="cover"
+                />
+              </div>
+            )}
+          </div>
+        </a>
+
+        {/* Wishlist heart — persistent, photo-overlay chip stays light */}
         <button
           onClick={handleWishlistToggle}
           className={cn(
-            'absolute top-2.5 right-2.5 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200',
-            'sm:opacity-0 sm:group-hover:opacity-100',
+            'absolute top-3 right-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/95 backdrop-blur-sm shadow-subtle transition-all duration-200',
+            'dark:bg-white/95',
+            'sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100',
             isSaved && 'sm:opacity-100'
           )}
-          aria-label={isSaved ? `Remove ${product.title} from wishlist` : `Save ${product.title} to wishlist`}
+          aria-label={isSaved ? `Remove ${product.title} from saved items` : `Save ${product.title} to saved items`}
+          aria-pressed={isSaved}
         >
           <Heart
             className={cn(
-              'h-4 w-4 transition-colors',
-              isSaved ? 'fill-[#E60012] text-[#E60012]' : 'text-neutral-600 hover:text-neutral-950'
+              'h-4 w-4 transition-colors duration-fast',
+              isSaved
+                ? 'fill-accent text-accent'
+                : 'text-neutral-700 dark:text-neutral-800 hover:text-accent'
             )}
           />
         </button>
 
-        {/* UNIQLO Red Offer Tag */}
+        {/* Sale tag */}
         {onSale && available && (
-          <span className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[9px] uppercase font-black tracking-wider bg-[#E60012] text-white shadow-sm z-10">
-            LIMITED OFFER
+          <span className="absolute top-3 left-3 z-10 rounded-sm bg-accent px-2 py-1 text-[9px] uppercase font-bold tracking-[0.14em] text-accent-ink shadow-sm">
+            Limited Offer
           </span>
         )}
 
-        {/* Muted Sold Out Overlay Tag */}
+        {/* Sold out */}
         {!available && (
-          <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-neutral-900/80 text-white backdrop-blur-sm z-10">
+          <span className="absolute top-3 left-3 z-10 rounded-sm bg-night/85 px-2.5 py-1 text-[10px] uppercase font-bold tracking-[0.12em] text-accent-ink backdrop-blur-sm">
             Sold Out
           </span>
         )}
 
-        {/* Quick Add Overlay Button */}
+        {/* Quick add — hover-reveal, photo-overlay chip stays light */}
         {showQuickAdd && available && (
-          <div className="absolute bottom-2.5 left-2.5 right-2.5 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 ease-expo z-10">
+          <div className="absolute bottom-3 left-3 right-3 translate-y-2 opacity-0 transition-all duration-250 ease-expo group-hover:translate-y-0 group-hover:opacity-100 z-10">
             <button
               onClick={handleQuickAdd}
               disabled={!primaryVariant?.id || quickAddLoading === primaryVariant?.id || cartLoading}
-              className="w-full min-h-[40px] bg-white/95 backdrop-blur-sm text-neutral-950 text-caption font-bold uppercase tracking-wider px-3 flex items-center justify-center gap-2 border border-neutral-300 hover:bg-[#E60012] hover:text-white hover:border-[#E60012] transition-colors shadow-sm"
+              className="w-full min-h-[42px] rounded-sm bg-white/95 backdrop-blur-sm text-neutral-950 text-caption font-bold uppercase tracking-[0.12em] px-3 flex items-center justify-center gap-2 border border-ink/10 hover:bg-accent hover:text-accent-ink hover:border-accent transition-colors duration-fast shadow-subtle dark:bg-white/95"
               aria-label={`Quick add ${product.title}`}
             >
               <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
@@ -165,52 +192,51 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
         )}
       </div>
 
-      {/* Product Info — Clean UNIQLO Apparel Typography */}
-      <Link
-        href={`/products/${product.handle}`}
-        className="block pt-2.5 space-y-1"
-        data-testid="product-card-link"
-      >
-        <h3 className="font-sans text-body-sm font-semibold tracking-tight text-neutral-900 group-hover:text-[#E60012] transition-colors line-clamp-1">
-          {product.title}
-        </h3>
+      {/* Product info — name + price only */}
+      <div className="pt-3 space-y-1.5">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-body-sm font-medium text-ink leading-snug line-clamp-1 m-0">
+            <a
+              href={`/products/${product.handle}`}
+              className="hover:text-accent transition-colors duration-fast"
+              data-product-title
+            >
+              {product.title}
+            </a>
+          </h3>
+        </div>
 
-        {/* Color Swatch Dots */}
+        <p className="flex items-center gap-2 m-0">
+          <span
+            className={cn(
+              'text-body font-medium tabular-nums',
+              onSale ? 'text-accent' : 'text-ink'
+            )}
+          >
+            {formatMoney(price, currencyCode)}
+          </span>
+          {onSale && compareAtPrice && (
+            <span className="text-body-xs text-faint line-through tabular-nums">
+              {formatMoney(compareAtPrice, currencyCode)}
+            </span>
+          )}
+        </p>
+
         {finishOption && finishOption.values.length > 0 && (
-          <div className="flex items-center gap-1.5 pt-0.5 pb-0.5">
+          <div className="flex items-center gap-1.5 pt-0.5">
             {finishOption.values.slice(0, 5).map((val) => (
               <span
                 key={val}
                 title={val}
                 className={cn(
-                  'w-2.5 h-2.5 rounded-full border border-neutral-400 inline-block',
-                  val.toLowerCase().includes('white') && 'bg-white',
-                  val.toLowerCase().includes('black') && 'bg-neutral-900',
-                  val.toLowerCase().includes('navy') && 'bg-sky-900',
-                  val.toLowerCase().includes('olive') && 'bg-olive-800 bg-emerald-900',
-                  val.toLowerCase().includes('beige') && 'bg-amber-100',
-                  !val.toLowerCase().includes('white') && !val.toLowerCase().includes('black') && !val.toLowerCase().includes('navy') && !val.toLowerCase().includes('olive') && !val.toLowerCase().includes('beige') && 'bg-neutral-300'
+                  'h-2.5 w-2.5 rounded-full border border-ink/15 inline-block',
+                  swatchClass(val)
                 )}
               />
             ))}
           </div>
         )}
-
-        {/* UNIQLO Bold Red Price Display */}
-        <div className="flex items-baseline gap-2 pt-0.5">
-          <span className={cn(
-            'font-sans text-body font-bold tabular-nums',
-            onSale ? 'text-[#E60012]' : 'text-neutral-950'
-          )}>
-            {formatMoney(price, currencyCode)}
-          </span>
-          {onSale && compareAtPrice && (
-            <span className="text-body-xs text-neutral-400 line-through tabular-nums">
-              {formatMoney(compareAtPrice, currencyCode)}
-            </span>
-          )}
-        </div>
-      </Link>
+      </div>
     </article>
   );
 }

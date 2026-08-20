@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { OptimizedImage } from '@/components/ui/Image';
-import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCcw, Play, Video } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCcw, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Product, ProductVariant } from '@/types/shopify';
 
@@ -17,48 +17,52 @@ interface ProductGalleryProps {
 export function ProductGallery({ product, selectedVariant, className }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  
-  // Hover lens zoom position on main image
   const [hoverZoom, setHoverZoom] = useState({ active: false, x: 50, y: 50 });
-
-  // Lightbox zoom level (1 = normal, 2 = 2x, 3 = 3x)
   const [zoomScale, setZoomScale] = useState(1);
+  const [showVideo, setShowVideo] = useState(false);
+  const pinchRef = useRef<{ startDist: number; startScale: number } | null>(null);
 
   const images = product.images.edges.map(({ node }) => node);
   const variantImage = selectedVariant?.image;
-  
-  // Determine display images - variant image first if available
-  const displayImages = variantImage && variantImage.url
-    ? [variantImage, ...images.filter((img) => img.url !== variantImage.url)]
-    : images;
+
+  const displayImages =
+    variantImage && variantImage.url
+      ? [variantImage, ...images.filter((img) => img.url !== variantImage.url)]
+      : images;
 
   const handleThumbnailClick = useCallback((index: number) => {
     setActiveIndex(index);
+    setShowVideo(false);
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - left) / width) * 100;
-    const y = ((e.clientY - top) / height) * 100;
-    setHoverZoom({ active: true, x, y });
+    setHoverZoom({
+      active: true,
+      x: ((e.clientX - left) / width) * 100,
+      y: ((e.clientY - top) / height) * 100,
+    });
   };
 
   const handleMouseLeave = () => {
     setHoverZoom({ active: false, x: 50, y: 50 });
   };
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'ArrowLeft') {
-      setActiveIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
-      setZoomScale(1);
-    } else if (e.key === 'ArrowRight') {
-      setActiveIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
-      setZoomScale(1);
-    } else if (e.key === 'Escape') {
-      setLightboxOpen(false);
-      setZoomScale(1);
-    }
-  }, [displayImages.length]);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setActiveIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
+        setZoomScale(1);
+      } else if (e.key === 'ArrowRight') {
+        setActiveIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
+        setZoomScale(1);
+      } else if (e.key === 'Escape') {
+        setLightboxOpen(false);
+        setZoomScale(1);
+      }
+    },
+    [displayImages.length]
+  );
 
   useEffect(() => {
     if (lightboxOpen) {
@@ -71,7 +75,6 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
     };
   }, [lightboxOpen, handleKeyDown]);
 
-  // Reset to first image when variant changes
   useEffect(() => {
     setActiveIndex(0);
   }, [selectedVariant?.id]);
@@ -82,20 +85,44 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
   const zoomOut = () => setZoomScale((prev) => Math.max(prev - 0.5, 1));
   const resetZoom = () => setZoomScale(1);
 
+  const handlePinchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      pinchRef.current = { startDist: dist, startScale: zoomScale };
+    }
+  };
+
+  const handlePinchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && pinchRef.current) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const next = pinchRef.current.startScale * (dist / pinchRef.current.startDist);
+      setZoomScale(Math.min(3, Math.max(1, next)));
+    }
+  };
+
+  const handlePinchEnd = () => {
+    pinchRef.current = null;
+  };
+
   const demoVideoUrl = 'https://assets.mixkit.co/videos/preview/mixkit-hand-holding-a-gold-ring-41564-large.mp4';
-  const [showVideo, setShowVideo] = useState(false);
 
   return (
     <div className={cn('relative group', className)}>
-      {/* Main Image / Video Container with In-Place Hover Zoom */}
+      {/* Main stage */}
       <div
-        className="relative aspect-4-5 overflow-hidden bg-cream-50 cursor-zoom-in"
+        className="relative aspect-4-5 overflow-hidden bg-sunken cursor-zoom-in"
         onMouseMove={showVideo ? undefined : handleMouseMove}
         onMouseLeave={showVideo ? undefined : handleMouseLeave}
         onClick={showVideo ? undefined : () => setLightboxOpen(true)}
       >
         {showVideo ? (
-          <div className="w-full h-full bg-neutral-950 flex items-center justify-center relative">
+          <div className="w-full h-full bg-night flex items-center justify-center relative">
             <video
               src={demoVideoUrl}
               controls
@@ -106,7 +133,7 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
             />
             <button
               onClick={() => setShowVideo(false)}
-              className="absolute top-4 right-4 bg-neutral-950/80 text-cream-50 p-2 rounded-full z-20 hover:bg-neutral-800"
+              className="absolute top-4 right-4 bg-night/80 text-accent-ink p-2 rounded-full z-20 hover:bg-night transition-colors"
               aria-label="Back to images"
             >
               <X className="h-5 w-5" />
@@ -130,14 +157,12 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
           </div>
         )}
 
-        {/* Hover Hint */}
         {!showVideo && (
-          <div className="absolute top-4 left-4 z-20 pointer-events-none bg-neutral-950/70 text-cream-50 text-caption px-3 py-1.5 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute top-4 left-4 z-20 pointer-events-none bg-night/70 text-accent-ink text-caption px-3 py-1.5 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
             Click for full screen view
           </div>
         )}
 
-        {/* Navigation Arrows — visible on touch, hover-revealed on desktop */}
         {!showVideo && displayImages.length > 1 && (
           <>
             <button
@@ -145,7 +170,7 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
                 e.stopPropagation();
                 setActiveIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
               }}
-              className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center bg-cream-50/90 backdrop-blur-md text-neutral-800 hover:text-neutral-950 transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100 z-20"
+              className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-canvas/90 backdrop-blur-md text-ink hover:text-accent transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100 z-20"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -155,7 +180,7 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
                 e.stopPropagation();
                 setActiveIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
               }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center bg-cream-50/90 backdrop-blur-md text-neutral-800 hover:text-neutral-950 transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100 z-20"
+              className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-canvas/90 backdrop-blur-md text-ink hover:text-accent transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100 z-20"
               aria-label="Next image"
             >
               <ChevronRight className="h-5 w-5" />
@@ -164,74 +189,68 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
         )}
       </div>
 
-      {/* Thumbnails Strip including Product Demo Video Tab */}
-      <div
-        className="flex gap-3 mt-4 overflow-x-auto pb-1 items-center"
-        role="tablist"
-        aria-label="Product media thumbnails"
-      >
+      {/* Thumbnail rail */}
+      <div className="flex gap-3 mt-4 overflow-x-auto pb-1 items-center scrollbar-hide" role="tablist" aria-label="Product media thumbnails">
         {displayImages.map((image, index) => (
           <button
             key={image.url}
-            onClick={() => { setShowVideo(false); handleThumbnailClick(index); }}
+            onClick={() => handleThumbnailClick(index)}
             role="tab"
             aria-selected={!showVideo && index === activeIndex}
             aria-label={`View image ${index + 1}`}
             className={cn(
               'relative flex-shrink-0 w-20 h-20 overflow-hidden transition-all duration-200',
-              !showVideo && index === activeIndex ? 'ring-2 ring-neutral-950' : 'opacity-60 hover:opacity-100'
+              !showVideo && index === activeIndex
+                ? 'ring-2 ring-accent ring-offset-2 ring-offset-canvas'
+                : 'opacity-60 hover:opacity-100'
             )}
           >
-            <OptimizedImage
-              src={image.url}
-              alt={image.altText || ''}
-              fill
-              objectFit="cover"
-            />
+            <OptimizedImage src={image.url} alt={image.altText || ''} fill objectFit="cover" />
           </button>
         ))}
 
-        {/* Demo Video Button */}
         <button
           type="button"
           onClick={() => setShowVideo(true)}
           role="tab"
           aria-selected={showVideo}
-          aria-label="Watch Product Demo Video"
+          aria-label="Watch product in motion"
           className={cn(
-            'relative flex-shrink-0 w-20 h-20 overflow-hidden transition-all duration-200 bg-neutral-950 text-cream-50 flex flex-col items-center justify-center gap-1 text-[10px] uppercase font-semibold tracking-wider',
-            showVideo ? 'ring-2 ring-gold-400 opacity-100' : 'opacity-75 hover:opacity-100'
+            'relative flex-shrink-0 w-20 h-20 overflow-hidden transition-all duration-200 bg-night text-accent-ink flex flex-col items-center justify-center gap-1 text-[10px] uppercase font-semibold tracking-wider',
+            showVideo ? 'ring-2 ring-accent opacity-100' : 'opacity-75 hover:opacity-100'
           )}
         >
           <Play className="h-5 w-5 text-gold-400 fill-gold-400" />
-          <span>Demo Video</span>
+          <span>In Motion</span>
         </button>
       </div>
 
-      {/* FULL SCREEN LIGHTBOX MODAL (Z-INDEX 100 OVERRIDE) */}
+      {/* Lightbox */}
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-[100] bg-neutral-950/95 backdrop-blur-lg flex flex-col justify-between p-4 sm:p-8 animate-fade-in"
+          className="fixed inset-0 z-lightbox bg-ink/95 backdrop-blur-lg flex flex-col justify-between p-4 sm:p-8 animate-fade-in"
           role="dialog"
           aria-modal="true"
           aria-label="Full screen image view"
-          onClick={() => { setLightboxOpen(false); setZoomScale(1); }}
+          onClick={() => {
+            setLightboxOpen(false);
+            setZoomScale(1);
+          }}
         >
-          {/* Top Control Bar */}
+          {/* Top control bar */}
           <div
             className="flex flex-wrap items-center justify-between gap-2 w-full z-[110] relative"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-cream-50 text-caption sm:text-body-sm font-medium tracking-wide bg-neutral-900/80 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-neutral-800">
+            <div className="text-caption sm:text-body-sm font-medium tracking-wide bg-canvas/10 text-accent-ink px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-accent-ink/15">
               {activeIndex + 1} / {displayImages.length}
             </div>
 
-            {/* Lightbox Zoom Controls & Close Button */}
             <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={zoomIn}
                 disabled={zoomScale >= 3}
-                className="p-2 sm:p-3 bg-neutral-900/90 text-cream-50 hover:bg-gold-500 hover:text-white rounded-full border border-neutral-700 shadow-strong transition-all disabled:opacity-30"
+                className="p-2 sm:p-3 bg-canvas/10 text-accent-ink hover:bg-accent hover:text-accent-ink rounded-full border border-accent-ink/15 transition-all disabled:opacity-30"
                 aria-label="Zoom in"
                 title="Zoom In"
               >
@@ -240,7 +259,7 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
               <button
                 onClick={zoomOut}
                 disabled={zoomScale <= 1}
-                className="p-2 sm:p-3 bg-neutral-900/90 text-cream-50 hover:bg-gold-500 hover:text-white rounded-full border border-neutral-700 shadow-strong transition-all disabled:opacity-30"
+                className="p-2 sm:p-3 bg-canvas/10 text-accent-ink hover:bg-accent hover:text-accent-ink rounded-full border border-accent-ink/15 transition-all disabled:opacity-30"
                 aria-label="Zoom out"
                 title="Zoom Out"
               >
@@ -249,17 +268,19 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
               {zoomScale > 1 && (
                 <button
                   onClick={resetZoom}
-                  className="p-2 sm:p-3 bg-neutral-900/90 text-cream-50 hover:bg-gold-500 hover:text-white rounded-full border border-neutral-700 shadow-strong transition-all"
+                  className="p-2 sm:p-3 bg-canvas/10 text-accent-ink hover:bg-accent hover:text-accent-ink rounded-full border border-accent-ink/15 transition-all"
                   aria-label="Reset zoom"
                   title="Reset Zoom"
                 >
                   <RotateCcw className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
               )}
-              {/* High visibility Close Button */}
               <button
-                onClick={() => { setLightboxOpen(false); setZoomScale(1); }}
-                className="p-2 sm:p-3 bg-gold-500 text-white hover:bg-gold-600 rounded-full shadow-strong transition-transform hover:scale-105 ml-1 sm:ml-2 flex items-center gap-1.5 px-3 sm:px-4 font-sans font-medium text-body-sm"
+                onClick={() => {
+                  setLightboxOpen(false);
+                  setZoomScale(1);
+                }}
+                className="p-2 sm:p-3 bg-accent text-accent-ink hover:bg-accent-hover rounded-full transition-transform hover:scale-105 ml-1 sm:ml-2 flex items-center gap-1.5 px-3 sm:px-4 font-sans font-medium text-body-sm"
                 aria-label="Close zoom modal"
               >
                 <X className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -268,30 +289,31 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
             </div>
           </div>
 
-          {/* Main Zoomed Image Container */}
+          {/* Main zoomed image */}
           <div
             className="flex-1 flex items-center justify-center relative overflow-hidden py-4 my-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Previous Arrow */}
             {displayImages.length > 1 && (
               <button
                 onClick={() => {
                   setActiveIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
                   setZoomScale(1);
                 }}
-                className="absolute left-2 sm:left-4 z-[110] p-2 sm:p-4 bg-neutral-900/80 text-cream-50 hover:text-white hover:bg-gold-500 rounded-full border border-neutral-700 shadow-strong transition-all"
+                className="absolute left-2 sm:left-4 z-[110] p-2 sm:p-4 bg-canvas/10 text-accent-ink hover:text-accent-ink hover:bg-accent rounded-full border border-accent-ink/15 transition-all"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="h-5 w-5 sm:h-8 sm:w-8" />
               </button>
             )}
 
-            {/* Click to Zoom Image View */}
             <div
-              className="relative max-w-5xl max-h-[80vh] w-full h-full flex items-center justify-center transition-transform duration-300 ease-out cursor-pointer"
+              className="relative max-w-5xl max-h-[80vh] w-full h-full flex items-center justify-center transition-transform duration-300 ease-out cursor-pointer touch-none"
               style={{ transform: `scale(${zoomScale})` }}
               onClick={() => setZoomScale((prev) => (prev === 1 ? 2 : 1))}
+              onTouchStart={handlePinchStart}
+              onTouchMove={handlePinchMove}
+              onTouchEnd={handlePinchEnd}
             >
               <OptimizedImage
                 src={currentImage?.url}
@@ -302,14 +324,13 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
               />
             </div>
 
-            {/* Next Arrow */}
             {displayImages.length > 1 && (
               <button
                 onClick={() => {
                   setActiveIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
                   setZoomScale(1);
                 }}
-                className="absolute right-2 sm:right-4 z-[110] p-2 sm:p-4 bg-neutral-900/80 text-cream-50 hover:text-white hover:bg-gold-500 rounded-full border border-neutral-700 shadow-strong transition-all"
+                className="absolute right-2 sm:right-4 z-[110] p-2 sm:p-4 bg-canvas/10 text-accent-ink hover:text-accent-ink hover:bg-accent rounded-full border border-accent-ink/15 transition-all"
                 aria-label="Next image"
               >
                 <ChevronRight className="h-5 w-5 sm:h-8 sm:w-8" />
@@ -317,7 +338,7 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
             )}
           </div>
 
-          {/* Lightbox Bottom Thumbnails */}
+          {/* Bottom thumbnails */}
           {displayImages.length > 1 && (
             <div
               className="flex justify-center gap-2 sm:gap-3 z-[110] relative pt-2 overflow-x-auto"
@@ -326,12 +347,15 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
               {displayImages.map((image, index) => (
                 <button
                   key={image.url}
-                  onClick={() => { setActiveIndex(index); setZoomScale(1); }}
+                  onClick={() => {
+                    setActiveIndex(index);
+                    setZoomScale(1);
+                  }}
                   className={cn(
                     'w-10 h-10 sm:w-14 sm:h-14 rounded-md overflow-hidden border-2 transition-all flex-shrink-0',
                     index === activeIndex
-                      ? 'border-gold-500 scale-105 shadow-strong'
-                      : 'border-neutral-800 opacity-60 hover:opacity-100'
+                      ? 'border-accent scale-105'
+                      : 'border-canvas/10 opacity-60 hover:opacity-100'
                   )}
                   aria-label={`View image ${index + 1}`}
                 >
@@ -353,11 +377,31 @@ export interface VariantSelectorProps {
   disabled?: boolean;
 }
 
+function isColorLike(name: string): boolean {
+  return ['Finish', 'Material', 'Color', 'Colour'].includes(name);
+}
+
+function swatchClass(value: string): string {
+  const v = value.toLowerCase();
+  if (v.includes('white') || v.includes('ivory') || v.includes('cream')) return 'bg-cream-100 border border-neutral-300';
+  if (v.includes('black')) return 'bg-neutral-950';
+  if (v.includes('navy')) return 'bg-sky-900';
+  if (v.includes('emerald')) return 'bg-emerald-800';
+  if (v.includes('olive')) return 'bg-emerald-900';
+  if (v.includes('rose') || v.includes('pink')) return 'bg-rose-300';
+  if (v.includes('maroon') || v.includes('burgundy')) return 'bg-red-900';
+  if (v.includes('mustard')) return 'bg-yellow-500';
+  if (v.includes('gold')) return 'bg-amber-400';
+  if (v.includes('pearl')) return 'bg-amber-50 border border-neutral-300';
+  if (v.includes('beige') || v.includes('sand')) return 'bg-amber-100';
+  return 'bg-neutral-400';
+}
+
 export function VariantSelector({ product, selectedOptions, onOptionChange, disabled = false }: VariantSelectorProps) {
   return (
     <div className="space-y-6" role="group" aria-label="Product options">
       {product.options.map((option) => {
-        const isColorOption = ['Finish', 'Material', 'Color', 'Colour'].includes(option.name);
+        const isColorOption = isColorLike(option.name);
 
         return (
           <fieldset key={option.id} className="space-y-3" disabled={disabled}>
@@ -372,7 +416,7 @@ export function VariantSelector({ product, selectedOptions, onOptionChange, disa
                 const isSelected = selectedOptions[option.name] === value;
                 const isAvailable = product.variants.edges.some(({ node: variant }) => {
                   const matches = variant.selectedOptions.every(
-                    (opt) => opt.name === option.name ? opt.value === value : selectedOptions[opt.name] === opt.value
+                    (opt) => (opt.name === option.name ? opt.value === value : selectedOptions[opt.name] === opt.value)
                   );
                   return matches && variant.availableForSale;
                 });
@@ -390,21 +434,14 @@ export function VariantSelector({ product, selectedOptions, onOptionChange, disa
                       onClick={() => !disabled && isAvailable && onOptionChange(option.name, value)}
                       disabled={!isAvailable || disabled}
                       className={cn(
-                        'relative w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-200 p-0.5',
-                        isSelected ? 'ring-2 ring-neutral-950 ring-offset-2 border-transparent' : 'border-neutral-950/20 hover:border-neutral-950',
+                        'relative w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-200 p-0.5',
+                        isSelected
+                          ? 'ring-2 ring-accent ring-offset-2 ring-offset-canvas border-transparent'
+                          : 'border-ink/20 hover:border-accent',
                         (!isAvailable || disabled) && 'opacity-35 cursor-not-allowed'
                       )}
                     >
-                      <span className={cn(
-                        'w-full h-full rounded-full inline-block',
-                        value.toLowerCase().includes('yellow gold') && 'bg-amber-400',
-                        value.toLowerCase().includes('gold') && !value.toLowerCase().includes('white') && !value.toLowerCase().includes('rose') && 'bg-amber-400',
-                        value.toLowerCase().includes('white') && 'bg-neutral-200 border border-neutral-300',
-                        value.toLowerCase().includes('rose') && 'bg-rose-300',
-                        value.toLowerCase().includes('emerald') && 'bg-emerald-700',
-                        value.toLowerCase().includes('pearl') && 'bg-amber-50 border border-neutral-300',
-                        !value.toLowerCase().includes('gold') && !value.toLowerCase().includes('white') && !value.toLowerCase().includes('rose') && !value.toLowerCase().includes('emerald') && !value.toLowerCase().includes('pearl') && 'bg-neutral-800'
-                      )} />
+                      <span className={cn('w-full h-full rounded-full inline-block', swatchClass(value))} />
                     </button>
                   );
                 }
@@ -419,12 +456,12 @@ export function VariantSelector({ product, selectedOptions, onOptionChange, disa
                     onClick={() => !disabled && isAvailable && onOptionChange(option.name, value)}
                     disabled={!isAvailable || disabled}
                     className={cn(
-                      'inline-flex min-h-[40px] items-center justify-center px-4 rounded-full text-caption font-medium border transition-colors duration-200',
+                      'inline-flex min-h-[42px] items-center justify-center px-4 rounded-full text-caption font-medium border transition-colors duration-200',
                       isSelected
-                        ? 'border-neutral-950 bg-neutral-950 text-cream-50'
+                        ? 'border-accent bg-accent text-accent-ink'
                         : isAvailable
-                        ? 'border-neutral-950/20 text-neutral-950 hover:border-neutral-950'
-                        : 'border-neutral-950/10 text-neutral-400 cursor-not-allowed line-through'
+                          ? 'border-ink/20 text-ink hover:border-accent'
+                          : 'border-ink/10 text-faint cursor-not-allowed line-through'
                     )}
                   >
                     {value}
@@ -452,11 +489,11 @@ export function QuantitySelector({ value, onChange, max = 99, disabled = false }
       <label htmlFor="quantity" className="text-caption font-medium uppercase tracking-[0.16em] text-neutral-700 whitespace-nowrap">
         Quantity
       </label>
-      <div className="flex items-center border border-neutral-950/20">
+      <div className="flex items-center border border-ink/20">
         <button
           onClick={() => onChange(Math.max(1, value - 1))}
           disabled={value <= 1 || disabled}
-          className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Decrease quantity"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -473,14 +510,14 @@ export function QuantitySelector({ value, onChange, max = 99, disabled = false }
           }}
           min="1"
           max={max}
-          className="w-14 text-center text-body font-medium text-neutral-950 border-x border-neutral-950/20 bg-transparent focus:outline-none focus:ring-0 tabular-nums"
+          className="w-14 text-center text-body font-medium text-ink border-x border-ink/20 bg-transparent focus:outline-none focus:ring-0 tabular-nums"
           aria-label="Quantity"
           disabled={disabled}
         />
         <button
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max || disabled}
-          className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Increase quantity"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

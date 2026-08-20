@@ -32,6 +32,10 @@ logs
 .DS_Store
 *.pem
 
+# test artifacts
+tests/e2e/test-results/
+tests/e2e/reports/
+
 # local env files
 .env.local
 .env*.local

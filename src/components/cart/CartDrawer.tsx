@@ -109,22 +109,22 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
   return (
     <>
       <div
-        className="fixed inset-0 z-40 bg-neutral-950/50 animate-fade-in"
+        className="fixed inset-0 z-40 bg-ink/50 animate-fade-in"
         onClick={closeCart}
         aria-hidden="true"
       />
       <aside
-        className="fixed top-0 right-0 bottom-0 z-drawer w-full max-w-md bg-cream-50 border-l border-neutral-950/10 animate-slide-in-right flex flex-col"
+        className="fixed top-0 right-0 bottom-0 z-drawer w-full max-w-md bg-surface border-l border-ink/10 animate-slide-in-right flex flex-col"
         role="dialog"
         aria-modal="true"
         aria-label="Shopping bag"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-neutral-950/10">
-          <h2 className="font-heading text-heading-lg tracking-tight text-neutral-950">Shopping Bag</h2>
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-ink/10">
+          <h2 className="font-heading text-heading-lg tracking-tight text-ink">Shopping Bag</h2>
           <button
             onClick={closeCart}
-            className="inline-flex h-11 w-11 items-center justify-center text-neutral-500 hover:text-neutral-950 transition-colors"
+            className="inline-flex h-11 w-11 items-center justify-center text-ink/60 hover:text-ink transition-colors"
             aria-label="Close cart"
           >
             <X className="h-6 w-6" />
@@ -135,22 +135,22 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {confirmation ? (
             <div className="flex flex-col h-full min-h-[300px] justify-center text-center" role="status">
-              <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-emerald-600" aria-hidden="true" />
-              <h3 className="font-heading text-heading-md text-neutral-950 mb-2">Order confirmed</h3>
-              <p className="text-caption text-neutral-500 mb-1">
+              <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-accent" aria-hidden="true" />
+              <h3 className="font-heading text-heading-md text-ink mb-2">Order confirmed</h3>
+              <p className="text-caption text-faint mb-1">
                 {confirmation.orderNumber} · {confirmation.status}
               </p>
-              <p className="text-body text-neutral-600 mb-6 max-w-xs mx-auto">
+              <p className="text-body text-faint mb-6 max-w-xs mx-auto">
                 Thank you, {confirmation.name || 'your order is in'}. We&apos;ll reach out on delivery
                 confirmation. Pay Cash on Delivery.
               </p>
-              <div className="flex justify-between text-body-sm text-neutral-700 mb-1">
+              <div className="flex justify-between text-body-sm text-ink/80 mb-1">
                 <span>Total</span>
-                <span className="font-medium text-neutral-950 tabular-nums">
+                <span className="font-medium text-ink tabular-nums">
                   {formatMoney(confirmation.total, confirmation.currencyCode)}
                 </span>
               </div>
-              <ul className="text-caption text-neutral-500 border-t border-neutral-950/10 mt-4 pt-4 space-y-1" role="list">
+              <ul className="text-caption text-faint border-t border-ink/10 mt-4 pt-4 space-y-1" role="list">
                 {confirmation.lineItems.map((item) => (
                   <li key={item.title} className="flex justify-between gap-3">
                     <span className="truncate">{item.title} × {item.quantity}</span>
@@ -163,8 +163,8 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
             </div>
           ) : isEmpty ? (
             <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
-              <h3 className="font-heading text-heading-md text-neutral-950 mb-2">Your bag is empty</h3>
-              <p className="text-body text-neutral-500 mb-6 max-w-xs">
+              <h3 className="font-heading text-heading-md text-ink mb-2">Your bag is empty</h3>
+              <p className="text-body text-faint mb-6 max-w-xs">
                 Explore our collections to find a piece worth keeping.
               </p>
               <Button onClick={closeCart} className="w-full sm:w-auto">
@@ -175,19 +175,19 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
             <>
               {/* Login for Exclusive Offers Alert Banner (Requirement 14) */}
               {!customer && (
-                <div className="mb-6 p-4 rounded-xl bg-gold-50 border border-gold-300 text-neutral-900 flex flex-col gap-2">
+                <div className="mb-6 p-4 rounded-xl bg-gold-50/80 border border-gold-300 text-ink flex flex-col gap-2">
                   <div className="flex items-center gap-2 font-heading text-body font-semibold text-gold-800">
                     <Sparkles className="h-4 w-4 text-gold-700" />
                     Login to unlock exclusive member offers!
                   </div>
-                  <p className="text-caption text-neutral-700">
+                  <p className="text-caption text-ink/80">
                     Sign in to your account to get 10% off member rewards, special gifts, and faster checkout.
                   </p>
                   <div className="pt-1">
                     <Link
                       href="/account"
                       onClick={closeCart}
-                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-gold-800 hover:text-gold-900 underline underline-offset-4"
+                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-gold-800 hover:text-gold-700 underline underline-offset-4"
                     >
                       <Lock className="h-3.5 w-3.5" /> Login / Register Now &rarr;
                     </Link>
@@ -209,10 +209,10 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
               </ul>
 
               {/* Shipping Address & Contact Form (Requirement 11 & 12) */}
-              <div className="mt-8 pt-6 border-t border-neutral-950/10 space-y-4">
+              <div className="mt-8 pt-6 border-t border-ink/10 space-y-4">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-gold-600" />
-                  <h3 className="font-heading text-body font-semibold text-neutral-950">Shipping & Client Details</h3>
+                  <MapPin className="h-4 w-4 text-accent" />
+                  <h3 className="font-heading text-body font-semibold text-ink">Shipping & Client Details</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-body-sm">
                   <div>
@@ -284,9 +284,9 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
                       id="create-account-checkbox"
                       checked={createAccount}
                       onChange={(e) => setCreateAccount(e.target.checked)}
-                      className="h-4 w-4 rounded border-neutral-300 text-neutral-950 focus:ring-neutral-950"
+                      className="h-4 w-4 rounded border-ink/20 text-accent focus:ring-accent/40"
                     />
-                    <label htmlFor="create-account-checkbox" className="text-caption font-medium text-neutral-800 cursor-pointer">
+                    <label htmlFor="create-account-checkbox" className="text-caption font-medium text-ink/80 cursor-pointer">
                       Create an account with these details for faster future orders
                     </label>
                   </div>
@@ -294,9 +294,9 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
               </div>
 
               {/* Gift Note */}
-              <div className="mt-8 pt-6 border-t border-neutral-950/10">
-                <label htmlFor="cart-note" className="flex items-center gap-2 text-body-sm font-medium text-neutral-700 mb-3">
-                  <Gift className="h-4 w-4 text-neutral-400" aria-hidden="true" />
+              <div className="mt-8 pt-6 border-t border-ink/10">
+                <label htmlFor="cart-note" className="flex items-center gap-2 text-body-sm font-medium text-ink/80 mb-3">
+                  <Gift className="h-4 w-4 text-ink/40" aria-hidden="true" />
                   Gift note (optional)
                 </label>
                 <textarea
@@ -308,7 +308,7 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
                   placeholder="Add a message for the recipient…"
                   aria-describedby="note-help"
                 />
-                <p id="note-help" className="mt-1.5 text-caption text-neutral-500">
+                <p id="note-help" className="mt-1.5 text-caption text-faint">
                   Included on a complimentary card with the order.
                 </p>
               </div>
@@ -321,25 +321,25 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
 
         {/* Footer */}
         {!isEmpty && !confirmation && (
-          <div className="border-t border-neutral-950/10 p-4 sm:p-6 space-y-4">
+          <div className="border-t border-ink/10 p-4 sm:p-6 space-y-4">
             <div className="flex justify-between text-body">
-              <span className="text-neutral-700">Subtotal</span>
-              <span className="font-medium text-neutral-950 tabular-nums">
+              <span className="text-ink/80">Subtotal</span>
+              <span className="font-medium text-ink tabular-nums">
                 {formatMoney(subtotal, currencyCode)}
               </span>
             </div>
-            <div className="flex justify-between text-body-sm text-neutral-500">
+            <div className="flex justify-between text-body-sm text-faint">
               <span>Shipping & taxes calculated at checkout</span>
             </div>
             <div className="divider" />
             <div className="flex justify-between text-heading-sm font-medium">
-              <span className="text-neutral-950">Total</span>
-              <span className="text-neutral-950 tabular-nums">{formatMoney(total, currencyCode)}</span>
+              <span className="text-ink">Total</span>
+              <span className="text-ink tabular-nums">{formatMoney(total, currencyCode)}</span>
             </div>
 
             <Button
               onClick={handleCheckout}
-              variant="gold"
+              variant="primary"
               className="w-full"
               size="lg"
               disabled={isLoading || isCheckingOut}
@@ -362,7 +362,7 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
               Continue Shopping
             </Button>
 
-            <p className="text-center text-caption text-neutral-500">
+            <p className="text-center text-caption text-faint">
               Cash on Delivery at checkout
             </p>
           </div>
@@ -388,7 +388,7 @@ function CartItem({ line, currencyCode, onQuantityChange, onRemove }: CartItemPr
 
   return (
     <li className="flex gap-4">
-      <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden bg-cream-100">
+      <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden bg-sunken">
         <OptimizedImage
           src={image?.url}
           alt={image?.altText || title}
@@ -399,18 +399,18 @@ function CartItem({ line, currencyCode, onQuantityChange, onRemove }: CartItemPr
 
       <div className="flex-1 min-w-0 flex flex-col justify-between">
         <div>
-          <h3 className="font-heading text-body font-medium text-neutral-950 truncate">
+          <h3 className="font-heading text-body font-medium text-ink truncate">
             {title}
           </h3>
 
           {selectedOptions.length > 0 && (
-            <p className="mt-1 text-body-sm text-neutral-500">
+            <p className="mt-1 text-body-sm text-faint">
               {selectedOptions.map((opt) => opt.value).join(' / ')}
             </p>
           )}
 
           {hasGiftWrap && (
-            <span className="mt-1.5 inline-flex items-center gap-1 text-caption text-neutral-500">
+            <span className="mt-1.5 inline-flex items-center gap-1 text-caption text-faint">
               <Gift className="h-3 w-3" aria-hidden="true" />
               Gift wrapped
             </span>
@@ -426,7 +426,7 @@ function CartItem({ line, currencyCode, onQuantityChange, onRemove }: CartItemPr
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-neutral-950/10 mt-3 gap-3">
+        <div className="flex items-center justify-between pt-3 border-t border-ink/10 mt-3 gap-3">
           <QuantitySelector
             quantity={quantity}
             onChange={onQuantityChange}
@@ -434,7 +434,7 @@ function CartItem({ line, currencyCode, onQuantityChange, onRemove }: CartItemPr
           />
           <button
             onClick={() => onRemove(line.id)}
-            className="inline-flex min-h-[44px] items-center text-body-sm text-neutral-400 hover:text-neutral-950 transition-colors"
+            className="inline-flex min-h-[44px] items-center text-body-sm text-faint hover:text-ink transition-colors"
             aria-label={`Remove ${title}`}
           >
             Remove
@@ -453,21 +453,21 @@ interface QuantitySelectorProps {
 
 function QuantitySelector({ quantity, onChange, line }: QuantitySelectorProps) {
   return (
-    <div className="flex items-center border border-neutral-950/20">
+    <div className="flex items-center border border-ink/20">
       <button
         onClick={() => onChange(line, -1)}
         disabled={quantity <= 1}
-        className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="inline-flex h-11 w-11 items-center justify-center text-ink/70 hover:text-ink transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         aria-label="Decrease quantity"
       >
         <Minus className="h-4 w-4" />
       </button>
-      <span className="px-2 text-body font-medium text-neutral-950 tabular-nums w-8 text-center" aria-live="polite">
+      <span className="px-2 text-body font-medium text-ink tabular-nums w-8 text-center" aria-live="polite">
         {quantity}
       </span>
       <button
         onClick={() => onChange(line, 1)}
-        className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors"
+        className="inline-flex h-11 w-11 items-center justify-center text-ink/70 hover:text-ink transition-colors"
         aria-label="Increase quantity"
       >
         <Plus className="h-4 w-4" />
@@ -494,23 +494,23 @@ function FreeShippingProgress({ subtotal, currencyCode, freeShippingThreshold = 
   const remaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
 
   return (
-    <div className="mt-8 pt-6 border-t border-neutral-950/10">
-      <div className="flex items-center justify-between mb-2">
+    <div className="mt-8 pt-6 border-t border-ink/10">
+      <div className="flex items-center justify-between mb-2 gap-3">
         <div className="flex items-center gap-2">
-          <Truck className="h-4 w-4 text-neutral-400" aria-hidden="true" />
-          <span className="text-body-sm font-medium text-neutral-700">
+          <Truck className="h-4 w-4 text-ink/40" aria-hidden="true" />
+          <span className="text-body-sm font-medium text-ink/80">
             {progress >= 100 ? 'Complimentary shipping unlocked' : `Complimentary shipping unlocked at ${freeShippingThreshold}`}
           </span>
         </div>
         {progress < 100 && (
-          <span className="text-body-sm font-medium text-neutral-950 tabular-nums">
+          <span className="text-body-sm font-medium text-ink tabular-nums whitespace-nowrap">
             {formatMoney(remaining, currencyCode)} to go
           </span>
         )}
       </div>
-      <div className="h-px bg-neutral-950/10 overflow-hidden">
+      <div className="h-1 bg-ink/10 rounded-full overflow-hidden">
         <div
-          className="h-full bg-neutral-950 transition-all duration-500"
+          className="h-full bg-accent rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
           role="progressbar"
           aria-valuenow={progress}

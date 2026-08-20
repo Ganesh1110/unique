@@ -1,11 +1,9 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ProductGrid } from '@/components/product/ProductGrid';
 import { SortDropdown } from '@/components/product/SortDropdown';
 import { OptimizedImage } from '@/components/ui/Image';
-import { LookbookStrip, SAREE_LOOKBOOKS } from '@/components/product/LookbookStrip';
-import { CollectionFilterPills } from './CollectionFilterPills';
+import { CollectionBrowser } from './CollectionBrowser';
 import { fetchCollection, fetchCollections, fetchShop } from '@/lib/shopify';
 import type { Product } from '@/types/shopify';
 
@@ -110,32 +108,24 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   // Determine if this is a saree collection for lookbook strips
   const isSareeCollection = resolvedParams.handle.includes('saree') || resolvedParams.handle.includes('silk');
 
-  // Extract unique fabric/occasion tags for filter pills
-  const allTags = new Set<string>();
-  rawProducts.forEach((p) => {
-    if (p.tags) {
-      (Array.isArray(p.tags) ? p.tags : [p.tags]).forEach((t: string) => allTags.add(t));
-    }
-  });
-
   return (
     <div className="flex flex-col">
       {/* Page Header */}
-      <header className="section-sm bg-white border-b border-neutral-950/10" aria-labelledby="page-title">
+      <header className="section-sm bg-surface border-b border-ink/10" aria-labelledby="page-title">
         <div className="container">
-          <nav className="flex items-center gap-2 text-caption text-neutral-500 mb-8" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-neutral-950 transition-colors">Home</Link>
+          <nav className="flex items-center gap-2 text-caption text-faint mb-8" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-ink transition-colors">Home</Link>
             <span aria-hidden="true">/</span>
-            <Link href="/collections" className="hover:text-neutral-950 transition-colors">Collections</Link>
+            <Link href="/collections" className="hover:text-ink transition-colors">Collections</Link>
             <span aria-hidden="true">/</span>
-            <span className="text-neutral-950 font-medium">{collection.title}</span>
+            <span className="text-ink font-medium">{collection.title}</span>
           </nav>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div className="max-w-2xl">
               <span className="overline mb-2 inline-block">Collection</span>
-              <h1 id="page-title" className="font-heading text-display-lg tracking-tight text-neutral-950 mb-3">{collection.title}</h1>
+              <h1 id="page-title" className="font-heading text-display-lg tracking-tight text-ink mb-3">{collection.title}</h1>
               {collection.description && (
-                <p className="text-body-lg text-neutral-600">{collection.description}</p>
+                <p className="text-body-lg text-faint">{collection.description}</p>
               )}
             </div>
             <div className="flex items-center gap-4" role="group" aria-label="Collection actions">
@@ -145,66 +135,45 @@ export default async function CollectionPage({ params, searchParams }: Collectio
         </div>
       </header>
 
-      {/* Filter Pills */}
-      <CollectionFilterPills
+      {/* Products + filters + interleaved lookbooks */}
+      <CollectionBrowser
         products={sortedProducts}
         collectionHandle={resolvedParams.handle}
+        interleaveLookbooks={isSareeCollection}
       />
 
-      {/* Products Grid */}
-      <section className="section" aria-labelledby="products-heading">
-        <div className="container">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-10">
-            <h2 id="products-heading" className="sr-only">Products</h2>
-            <p className="text-body-sm text-neutral-500">
-              {sortedProducts.length} {sortedProducts.length !== 1 ? 'pieces' : 'piece'}
-            </p>
-
-            {/* Pagination */}
-            {(hasPrevPage || hasNextPage) && (
-              <nav className="flex items-center gap-2" aria-label="Pagination">
-                {hasPrevPage && (
-                  <Link
-                    href={`/collections/${collection.handle}?page=${currentPage - 1}`}
-                    className="btn-secondary px-4"
-                    aria-label="Previous page"
-                  >
-                    Previous
-                  </Link>
-                )}
-                <span className="px-4 text-body text-neutral-500" aria-current="page">
-                  Page {currentPage}
-                </span>
-                {hasNextPage && (
-                  <Link
-                    href={`/collections/${collection.handle}?page=${currentPage + 1}`}
-                    className="btn-secondary px-4"
-                    aria-label="Next page"
-                  >
-                    Next
-                  </Link>
-                )}
-              </nav>
-            )}
-          </div>
-
-          <ProductGrid
-            products={sortedProducts}
-            columns={4}
-          />
-        </div>
-      </section>
-
-      {/* Lookbook Editorial Strip — only on saree collections */}
-      {isSareeCollection && SAREE_LOOKBOOKS.length > 0 && (
-        <LookbookStrip {...SAREE_LOOKBOOKS[0]} />
+      {/* Pagination */}
+      {(hasPrevPage || hasNextPage) && (
+        <nav className="container mb-16 flex items-center justify-center gap-2" aria-label="Pagination">
+          {hasPrevPage && (
+            <Link
+              href={`/collections/${collection.handle}?page=${currentPage - 1}`}
+              className="btn-secondary px-4"
+              aria-label="Previous page"
+            >
+              Previous
+            </Link>
+          )}
+          <span className="px-4 text-body text-faint" aria-current="page">
+            Page {currentPage}
+          </span>
+          {hasNextPage && (
+            <Link
+              href={`/collections/${collection.handle}?page=${currentPage + 1}`}
+              className="btn-secondary px-4"
+              aria-label="Next page"
+            >
+              Next
+            </Link>
+          )}
+        </nav>
       )}
 
       {/* Other Collections */}
-      <section className="section bg-white border-y border-neutral-950/10" aria-labelledby="other-collections-heading">
+      <section className="section bg-surface border-y border-ink/10" aria-labelledby="other-collections-heading">
         <div className="container">
           <header className="max-w-2xl mx-auto text-center mb-10 sm:mb-14">
-            <h2 id="other-collections-heading" className="font-heading text-display-sm sm:text-display-md tracking-tight text-neutral-950">
+            <h2 id="other-collections-heading" className="font-heading text-display-sm sm:text-display-md tracking-tight text-ink">
               Continue Exploring
             </h2>
           </header>
@@ -212,7 +181,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
             {allCollections
               .filter((c) => c.handle !== collection.handle)
               .slice(0, 4)
-              .map((otherCollection, index) => (
+              .map((otherCollection) => (
                 <Link
                   key={otherCollection.id}
                   href={`/collections/${otherCollection.handle}`}
@@ -227,11 +196,11 @@ export default async function CollectionPage({ params, searchParams }: Collectio
                         className="transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
                       />
                     ) : (
-                      <div className="aspect-4-5 bg-cream-100" />
+                      <div className="aspect-4-5 bg-sunken" />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/50 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-night/60 via-transparent to-transparent" />
                     <div className="absolute inset-x-0 bottom-0 p-3 sm:p-5">
-                      <h3 className="font-heading text-cream-50 text-body sm:text-heading-md font-medium">{otherCollection.title}</h3>
+                      <h3 className="font-heading text-accent-ink text-body sm:text-heading-md font-medium">{otherCollection.title}</h3>
                     </div>
                   </div>
                 </Link>

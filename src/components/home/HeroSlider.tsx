@@ -62,8 +62,8 @@ export function HeroSlider({
       ))}
 
       {/* Overlays — soft, editorial */}
-      <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/70 via-neutral-950/35 to-transparent" aria-hidden="true" />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-neutral-950/40 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-r from-night/70 via-night/35 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-night/40 to-transparent" aria-hidden="true" />
 
       {/* Content */}
       <div className="container relative z-10 py-20 sm:py-36 lg:py-44 text-center sm:text-left">{children}</div>
@@ -75,7 +75,7 @@ export function HeroSlider({
             type="button"
             onClick={() => goTo(current - 1)}
             aria-label="Previous slide"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-cream-50/10 text-cream-50 backdrop-blur-md transition-colors hover:bg-cream-50 hover:text-neutral-950"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-accent-ink/10 text-accent-ink backdrop-blur-md transition-colors hover:bg-accent-ink hover:text-night"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -92,7 +92,7 @@ export function HeroSlider({
                   index === current ? 'w-8' : 'w-1.5'
                 )}
               >
-                <span className={cn('h-1.5 w-full rounded-full transition-colors', index === current ? 'bg-cream-50' : 'bg-cream-50/40 hover:bg-cream-50/70')} />
+                <span className={cn('h-1.5 w-full rounded-full transition-colors', index === current ? 'bg-accent-ink' : 'bg-accent-ink/40 hover:bg-accent-ink/70')} />
               </button>
             ))}
           </div>
@@ -100,7 +100,7 @@ export function HeroSlider({
             type="button"
             onClick={next}
             aria-label="Next slide"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-cream-50/10 text-cream-50 backdrop-blur-md transition-colors hover:bg-cream-50 hover:text-neutral-950"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-accent-ink/10 text-accent-ink backdrop-blur-md transition-colors hover:bg-accent-ink hover:text-night"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

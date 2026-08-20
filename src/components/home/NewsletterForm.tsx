@@ -21,14 +21,14 @@ export function NewsletterForm() {
 
   if (status === 'success') {
     return (
-      <div className="border-t border-cream-50/15 pt-4 animate-fade-in space-y-2">
-        <h3 className="font-heading text-heading-md text-cream-50">Welcome to the Collective</h3>
-        <p className="text-body-sm text-cream-50/70">
+      <div className="border-t border-accent-ink/15 pt-4 animate-fade-in space-y-2">
+        <h3 className="font-heading text-heading-md text-accent-ink">Welcome to the Collective</h3>
+        <p className="text-body-sm text-accent-ink/70">
           Thank you for subscribing. We&apos;ve sent a welcome invitation to your inbox.
         </p>
         <button
           onClick={() => setStatus('idle')}
-          className="text-caption uppercase tracking-[0.16em] text-cream-50/70 hover:underline pt-1 inline-block min-h-[44px]"
+          className="text-caption uppercase tracking-[0.16em] text-accent-ink/70 hover:underline pt-1 inline-block min-h-[44px]"
         >
           Subscribe another email
         </button>
@@ -46,14 +46,14 @@ export function NewsletterForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email address"
-        className="flex-1 bg-transparent border border-cream-50/25 text-cream-50 placeholder:text-cream-50/40 text-body-sm px-4 py-3 min-h-[46px] focus:border-cream-50 focus:outline-none transition-colors"
+        className="flex-1 bg-transparent border border-accent-ink/25 text-accent-ink placeholder:text-accent-ink/40 text-body-sm px-4 py-3 min-h-[46px] focus:border-accent-ink focus:outline-none transition-colors"
         required
       />
       <Button
         type="submit"
         disabled={status === 'submitting'}
         variant="secondary"
-        className="whitespace-nowrap flex items-center justify-center gap-2 !border-cream-50/40 !text-cream-50 hover:!border-cream-50 hover:!bg-cream-50 hover:!text-neutral-950"
+        className="whitespace-nowrap flex items-center justify-center gap-2 !border-accent-ink/40 !text-accent-ink hover:!border-accent-ink hover:!bg-accent-ink hover:!text-neutral-950"
       >
         {status === 'submitting' ? (
           <>
