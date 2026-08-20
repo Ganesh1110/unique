@@ -24,162 +24,98 @@ export interface MegaCategory {
 
 export const MEGA_CATEGORIES: MegaCategory[] = [
   {
-    id: 'necklaces',
-    name: 'Necklaces',
-    href: '/collections/necklaces',
+    id: 'tops',
+    name: 'Tops & T-Shirts',
+    href: '/collections/tops',
+    badge: 'AIRism',
+    subsections: [
+      {
+        title: 'BY CATEGORY',
+        items: [
+          { label: 'AIRism Cotton T-Shirts', href: '/search?q=airism', isHot: true },
+          { label: 'Short Sleeve Shirts', href: '/search?q=shirt' },
+          { label: 'Sweatshirts & Hoodies', href: '/search?q=sweat' },
+          { label: 'Fine Merino Cardigans', href: '/search?q=merino' },
+        ],
+      },
+      {
+        title: 'POPULAR DROPS',
+        items: [
+          { label: 'AIRism Oversized Tee', href: '/products/airism-cotton-t-shirt' },
+          { label: 'Linen Blend Shirt', href: '/products/linen-blend-open-collar-shirt' },
+          { label: 'Merino V-Neck Cardigan', href: '/products/merino-blend-cardigan' },
+        ],
+      },
+      {
+        title: 'BY FABRIC',
+        items: [
+          { label: '100% AIRism Cotton', href: '/search?q=cotton' },
+          { label: 'Premium Linen Blend', href: '/search?q=linen' },
+          { label: 'Extra Fine Merino Wool', href: '/search?q=wool' },
+        ],
+      },
+    ],
+    featuredCard: {
+      title: 'AIRism Cotton Collection',
+      subtitle: 'Smooth, quick-drying comfort for everyday wear.',
+      image: '/images/Image1.jpeg',
+      link: '/collections/tops',
+    },
+  },
+  {
+    id: 'bottoms',
+    name: 'Bottoms & Pants',
+    href: '/collections/bottoms',
     badge: 'Popular',
     subsections: [
       {
-        title: 'BY STYLE',
+        title: 'BY CATEGORY',
         items: [
-          { label: 'Chokers & Collars', href: '/search?q=choker', isHot: true },
-          { label: 'Solitaire Pendants', href: '/search?q=pendant' },
-          { label: 'Layered Gold Chains', href: '/search?q=chain' },
-          { label: 'Heritage Necklaces', href: '/search?q=heritage' },
-          { label: 'Lariat Necklaces', href: '/search?q=necklace' },
+          { label: 'Waffle Easy Pants', href: '/products/waffle-easy-pants', isHot: true },
+          { label: 'Smart Stretch Chinos', href: '/products/stretch-chino-pants' },
+          { label: 'Relaxed Shorts', href: '/collections/bottoms' },
+          { label: 'Loungewear Bottoms', href: '/collections/bottoms' },
         ],
       },
       {
-        title: 'TOP PICKS',
+        title: 'FIT & STYLE',
         items: [
-          { label: 'Sapphire Halo Pendant', href: '/products/sapphire-halo-pendant' },
-          { label: 'The Solitaire Pendant', href: '/products/the-solitaire-pendant' },
-          { label: 'Rose Quartz Pendant', href: '/products/rose-quartz-pendant' },
-          { label: 'Heritage Chain Necklace', href: '/products/heritage-chain-necklace' },
-        ],
-      },
-      {
-        title: 'BY MATERIAL',
-        items: [
-          { label: '18k Yellow Gold', href: '/search?q=18k' },
-          { label: 'Rose Gold Finish', href: '/search?q=rose+gold' },
-          { label: 'Platinum & Diamond', href: '/search?q=diamond' },
-          { label: 'Akoya Pearl Strand', href: '/search?q=pearl' },
+          { label: 'Straight Easy Fit', href: '/collections/bottoms' },
+          { label: 'Smart Ankle Cut', href: '/collections/bottoms' },
+          { label: 'Wide Leg Trousers', href: '/collections/bottoms' },
         ],
       },
     ],
     featuredCard: {
-      title: 'Handcrafted Necklaces',
-      subtitle: 'Sculpted in 18k Gold & Diamond Solitaires',
-      image: '/images/Image1.jpeg',
-      link: '/collections/new-arrivals',
-    },
-  },
-  {
-    id: 'rings',
-    name: 'Rings',
-    href: '/collections/rings',
-    subsections: [
-      {
-        title: 'BY STYLE',
-        items: [
-          { label: 'Solitaire Engagement Rings', href: '/search?q=solitaire', isHot: true },
-          { label: 'Diamond Love Bands', href: '/search?q=love+band' },
-          { label: 'Halo Statement Rings', href: '/search?q=halo' },
-          { label: 'Moonstone Cocktail Rings', href: '/search?q=cocktail' },
-          { label: 'Mumbai Signet Rings', href: '/search?q=signet' },
-        ],
-      },
-      {
-        title: 'BEST LOVED',
-        items: [
-          { label: 'Halo Engagement Ring', href: '/products/halo-engagement-ring' },
-          { label: 'Mumbai Signet Ring', href: '/products/mumbai-signet-ring' },
-          { label: 'Moonstone Cocktail Ring', href: '/products/moonstone-cocktail-ring' },
-          { label: 'Diamond Love Band', href: '/products/diamond-love-band' },
-        ],
-      },
-      {
-        title: 'BY PRICE',
-        items: [
-          { label: 'Under ₹25,000', href: '/search?q=ring' },
-          { label: '₹25,000 – ₹50,000', href: '/search?q=ring' },
-          { label: 'Luxury Above ₹50,000', href: '/search?q=ring' },
-        ],
-      },
-    ],
-    featuredCard: {
-      title: 'Solitaire & Love Bands',
-      subtitle: 'Tailored ring sizes from 6 to 9',
-      image: '/images/Image2.jpeg',
-      link: '/collections/bestsellers',
-    },
-  },
-  {
-    id: 'earrings',
-    name: 'Earrings',
-    href: '/collections/earrings',
-    subsections: [
-      {
-        title: 'BY STYLE',
-        items: [
-          { label: 'Emerald Drop Earrings', href: '/products/emerald-drop-earrings', isHot: true },
-          { label: 'Ruby Stud Earrings', href: '/products/ruby-stud-earrings' },
-          { label: 'Daily Diamond Studs', href: '/search?q=stud' },
-          { label: 'Traditional Jhumkas', href: '/search?q=jhumka' },
-          { label: 'Hoops & Huggies', href: '/search?q=hoop' },
-        ],
-      },
-      {
-        title: 'GEMSTONE ACCENTS',
-        items: [
-          { label: 'Zambian Emeralds', href: '/search?q=emerald' },
-          { label: 'Ruby & Rose Gold', href: '/search?q=ruby' },
-          { label: 'Akoya Pearl Drops', href: '/search?q=pearl' },
-        ],
-      },
-    ],
-    featuredCard: {
-      title: 'Gemstone Drops & Studs',
-      subtitle: 'Vibrant handcrafted statement earrings',
+      title: 'Waffle Easy Pants',
+      subtitle: 'All-day comfort with textured waffle knit stretch.',
       image: '/images/Image5.jpeg',
-      link: '/collections/earrings',
+      link: '/products/waffle-easy-pants',
     },
   },
   {
-    id: 'bracelets',
-    name: 'Bracelets & Bangles',
-    href: '/collections/bracelets',
+    id: 'outerwear',
+    name: 'Outerwear & Jackets',
+    href: '/collections/outerwear',
     subsections: [
       {
         title: 'BY STYLE',
         items: [
-          { label: 'Gold Tennis Bracelet', href: '/products/gold-tennis-bracelet', isHot: true },
-          { label: 'Stackable Gold Bangles', href: '/products/stackable-gold-bangles' },
-          { label: 'Solid Gold Kadas', href: '/search?q=bangles' },
-          { label: 'Chain & Charm Bracelets', href: '/search?q=bracelet' },
+          { label: 'Ultra Light Down Jackets', href: '/products/ultra-light-down-jacket', isHot: true },
+          { label: 'Tailored Blazers', href: '/collections/outerwear' },
+          { label: 'Parkas & Windproofs', href: '/collections/outerwear' },
         ],
       },
     ],
     featuredCard: {
-      title: 'Gold Bangles & Bracelets',
-      subtitle: 'Flexible sizing and secure clasps',
-      image: '/images/Image6.jpeg',
-      link: '/collections/bracelets',
-    },
-  },
-  {
-    id: 'pendants',
-    name: 'Pendants',
-    href: '/collections/pendants',
-    subsections: [
-      {
-        title: 'BY DESIGN',
-        items: [
-          { label: 'Solitaire Diamond Pendants', href: '/products/the-solitaire-pendant' },
-          { label: 'Rose Quartz Pendants', href: '/products/rose-quartz-pendant' },
-          { label: 'Sapphire Halo Pendants', href: '/products/sapphire-halo-pendant' },
-        ],
-      },
-    ],
-    featuredCard: {
-      title: 'Pendant Creations',
-      subtitle: 'Signature AURA Atelier pendants',
+      title: 'Ultra Light Down',
+      subtitle: 'Lightweight warmth that packs down into your bag.',
       image: '/images/Image9.jpeg',
-      link: '/collections/new-arrivals',
+      link: '/products/ultra-light-down-jacket',
     },
   },
 ];
+
 
 export function useDynamicCategories(): MegaCategory[] {
   const [categories, setCategories] = useState<MegaCategory[]>(MEGA_CATEGORIES);

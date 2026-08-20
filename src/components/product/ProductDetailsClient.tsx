@@ -95,9 +95,9 @@ export function ProductDetailsClient({
       {/* Product Content */}
       <section className="section bg-white" aria-labelledby="product-title">
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-            {/* Gallery */}
-            <div className="lg:sticky lg:top-24">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
+            {/* Gallery (60% width on desktop) */}
+            <div className="lg:col-span-7 lg:sticky lg:top-24">
               <ProductGallery
                 product={product}
                 selectedVariant={selectedVariant}
@@ -107,7 +107,7 @@ export function ProductDetailsClient({
             </div>
 
             {/* Product Info */}
-            <div className="space-y-8">
+            <div className="lg:col-span-5 space-y-8">
               {/* Category */}
               {product.productType && (
                 <p className="overline text-neutral-600">{product.productType}</p>
@@ -120,9 +120,9 @@ export function ProductDetailsClient({
 
               {/* Price */}
               <div className="flex items-baseline gap-3 flex-wrap">
-                <span className="price text-display-sm tabular-nums">{formatMoney(price, currencyCode)}</span>
+                <span className="font-sans text-display-sm font-black text-[#E60012] tabular-nums">{formatMoney(price, currencyCode)}</span>
                 {onSale && compareAtPrice && (
-                  <span className="price-compare text-heading-md tabular-nums">{formatMoney(compareAtPrice, currencyCode)}</span>
+                  <span className="text-heading-md text-neutral-400 line-through tabular-nums">{formatMoney(compareAtPrice, currencyCode)}</span>
                 )}
               </div>
 
@@ -130,13 +130,13 @@ export function ProductDetailsClient({
               <div className="flex items-center gap-2 text-body-sm">
                 <span className={cn(
                   'w-1.5 h-1.5 rounded-full',
-                  availability.status === 'in_stock' && 'bg-neutral-950',
+                  availability.status === 'in_stock' && 'bg-[#E60012]',
                   availability.status === 'low_stock' && 'bg-amber-600',
                   availability.status === 'out_of_stock' && 'bg-neutral-400'
                 )} aria-hidden="true" />
                 <span className={cn(
-                  availability.status === 'in_stock' && 'text-neutral-700',
-                  availability.status === 'low_stock' && 'text-amber-700',
+                  availability.status === 'in_stock' && 'text-neutral-700 font-medium',
+                  availability.status === 'low_stock' && 'text-amber-700 font-medium',
                   availability.status === 'out_of_stock' && 'text-neutral-500'
                 )}>
                   {availability.message}
@@ -171,7 +171,7 @@ export function ProductDetailsClient({
                     onClick={handleAddToCart}
                     loading={cartLoading}
                     disabled={availability.status === 'out_of_stock'}
-                    className="w-full sm:w-auto min-w-[180px]"
+                    className="w-full sm:w-auto min-w-[180px] !bg-[#E60012] hover:!bg-red-700 !text-white font-bold"
                   >
                     {addedToCart ? (
                       <>
@@ -186,17 +186,17 @@ export function ProductDetailsClient({
                   </AddToCartButton>
 
                   <a
-                    href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I am interested in purchasing "${product.title}" (${window.location.href}). Please assist me.`)}`}
+                    href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I am interested in purchasing "${product.title}" (${typeof window !== 'undefined' ? window.location.href : ''}). Please assist me.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-secondary w-full sm:w-auto min-h-[52px] text-body font-medium flex items-center justify-center gap-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50"
+                    className="btn-secondary w-full sm:w-auto min-h-[52px] text-body-sm font-medium flex items-center justify-center gap-2 border-neutral-300 text-neutral-900 hover:bg-neutral-100"
                   >
                     Enquire on WhatsApp
                   </a>
                 </div>
               </div>
 
-              {/* Share Action (Wishlist hidden for now) */}
+              {/* Share Action */}
               <div className="flex items-center gap-6 pt-6 border-t border-neutral-950/10">
                 <button
                   type="button"
@@ -223,46 +223,53 @@ export function ProductDetailsClient({
                   aria-label="Share product"
                 >
                   <Share2 className="h-4 w-4" aria-hidden="true" />
-                  Share Piece
+                  Share Product
                 </button>
               </div>
 
-              {/* Care & Handling Instructions Accordion (Aarvee Jewel Style) */}
-              <div className="border-t border-neutral-950/10 pt-6 space-y-4">
-                <details className="group border border-neutral-950/10 rounded-lg p-4 bg-cream-50/50 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex items-center justify-between font-heading text-body font-medium text-neutral-950 cursor-pointer select-none">
-                    <span className="flex items-center gap-2">
-                      <Shield className="h-4 w-4 text-gold-600" />
-                      Care & Handling Instructions
-                    </span>
-                    <span className="transition duration-300 group-open:-rotate-180">
+              {/* Clothing Accordions */}
+              <div className="border-t border-neutral-950/10 pt-4 divide-y divide-neutral-950/10">
+                <details className="group py-4 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between text-body-sm font-bold text-neutral-950 cursor-pointer select-none">
+                    <span>Fabric Composition &amp; Care Instructions</span>
+                    <span className="transition duration-300 group-open:-rotate-180 text-neutral-400">
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
                       </svg>
                     </span>
                   </summary>
-                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed pt-2 border-t border-neutral-950/5">
-                    <p>&bull; <strong>Avoid Contact with Liquids:</strong> Keep your jewelry away from water, perfumes, hairsprays, lotions, and harsh household chemicals.</p>
-                    <p>&bull; <strong>Storage:</strong> Store each piece individually in an airtight pouch or soft velvet box to prevent oxidation and scratches.</p>
-                    <p>&bull; <strong>Cleaning:</strong> Gently wipe with a dry, soft lint-free cloth after each wear to restore shine. Never soak gemstone pieces in harsh cleaning solutions.</p>
-                    <p>&bull; <strong>Wear Advice:</strong> Put your jewelry on as the final touch after dressing and applying makeup/fragrance, and take off before exercising or sleeping.</p>
+                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed">
+                    <p>&bull; <strong>Fabric Material:</strong> 53% AIRism Cotton, 47% Polyester.</p>
+                    <p>&bull; <strong>Washing Instructions:</strong> Machine wash cold with like colors, gentle cycle.</p>
+                    <p>&bull; <strong>Drying &amp; Ironing:</strong> Tumble dry low, warm iron if needed. Do not dry clean.</p>
                   </div>
                 </details>
 
-                <details className="group border border-neutral-950/10 rounded-lg p-4 bg-cream-50/50 [&_summary::-webkit-details-marker]:hidden">
-                  <summary className="flex items-center justify-between font-heading text-body font-medium text-neutral-950 cursor-pointer select-none">
-                    <span className="flex items-center gap-2">
-                      <Truck className="h-4 w-4 text-gold-600" />
-                      Shipping & Delivery Details
-                    </span>
-                    <span className="transition duration-300 group-open:-rotate-180">
+                <details className="group py-4 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between text-body-sm font-bold text-neutral-950 cursor-pointer select-none">
+                    <span>Size &amp; Fit Guide</span>
+                    <span className="transition duration-300 group-open:-rotate-180 text-neutral-400">
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
                       </svg>
                     </span>
                   </summary>
-                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed pt-2 border-t border-neutral-950/5">
-                    <p>Complimentary insured shipping on all orders over {freeShippingThreshold}. Delivered in signature tamper-proof luxury packaging within 3 to 7 business days.</p>
+                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed">
+                    <p>Designed with a relaxed, slightly dropped shoulder fit. Take your true size for an easy silhouette or size down for a tailored look.</p>
+                  </div>
+                </details>
+
+                <details className="group py-4 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between text-body-sm font-bold text-neutral-950 cursor-pointer select-none">
+                    <span>Shipping &amp; Return Policy</span>
+                    <span className="transition duration-300 group-open:-rotate-180 text-neutral-400">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="mt-3 text-body-sm text-neutral-600 space-y-2 leading-relaxed">
+                    <p>Complimentary shipping on orders over {freeShippingThreshold}. 30-day hassle-free returns and exchanges at any AURA store or online.</p>
                   </div>
                 </details>
               </div>

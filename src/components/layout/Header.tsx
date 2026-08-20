@@ -76,7 +76,7 @@ export function Header({
     >
       {/* Announcement Bar */}
       {announcementEnabled && (
-        <div className="bg-neutral-950 text-cream-50 py-2.5 px-4 text-center text-caption uppercase tracking-[0.2em] font-medium overflow-hidden">
+        <div className="bg-brandEmerald-900 text-cream-50 py-2 px-4 text-center text-[11px] uppercase tracking-[0.2em] font-medium overflow-hidden border-b border-brandEmerald-950">
           {announcementMarquee ? (
             <div className="w-full overflow-hidden whitespace-nowrap">
               <div className="inline-block animate-marquee whitespace-nowrap">
@@ -96,73 +96,112 @@ export function Header({
         </div>
       )}
 
-      {/* Main Header */}
-      <div className="relative max-w-container-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden -ml-2 inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors"
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-
-          {/* Logo */}
-          <div className="flex-1 flex justify-center sm:justify-start lg:justify-center">
+      {/* Main UNIQLO-Style Header */}
+      <div className="max-w-container-wide mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-18 gap-4">
+          
+          {/* Left: Red Square Logo Badge & Department Tabs */}
+          <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="font-heading tracking-tight text-neutral-950 hover:opacity-85 transition-opacity"
+              className="flex-shrink-0 bg-[#E60012] text-white px-3 py-2 font-sans font-black text-xl sm:text-2xl tracking-tighter uppercase leading-none shadow-sm hover:opacity-95 transition-opacity"
               aria-label={`${shopName} Home`}
             >
-              <span className="flex items-baseline gap-2">
-                <span className="font-heading text-heading-lg sm:text-display-sm font-semibold tracking-tight">{shopName}</span>
-              </span>
+              AURA
             </Link>
+
+            {/* Department Navigation Tabs (UNIQLO Style) */}
+            <nav className="hidden md:flex items-center gap-6 font-sans text-body-sm font-semibold uppercase tracking-wider text-neutral-800" aria-label="Department navigation">
+              <Link
+                href="/collections/women"
+                className="relative py-5 text-neutral-950 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-neutral-950"
+              >
+                WOMEN
+              </Link>
+              <Link
+                href="/collections/men"
+                className="py-5 text-neutral-600 hover:text-neutral-950 transition-colors"
+              >
+                MEN
+              </Link>
+              <Link
+                href="/collections/kids"
+                className="py-5 text-neutral-600 hover:text-neutral-950 transition-colors"
+              >
+                KIDS
+              </Link>
+              <Link
+                href="/collections/new-arrivals"
+                className="py-5 text-neutral-600 hover:text-neutral-950 transition-colors"
+              >
+                NEW
+              </Link>
+            </nav>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center -mr-2 sm:gap-2">
-            {/* Search */}
+          {/* Center: Integrated Rounded Search Pill Input (UNIQLO Style) */}
+          <div className="flex-1 max-w-md hidden sm:block">
+            <form action="/search" className="relative flex items-center">
+              <input
+                type="search"
+                name="q"
+                placeholder="What are you looking for?"
+                className="w-full bg-neutral-100/90 border border-neutral-300 rounded-full py-2 pl-5 pr-11 text-body-sm text-neutral-950 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-950 focus:outline-none transition-all shadow-inner"
+              />
+              <button
+                type="submit"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-950 transition-colors"
+                aria-label="Search submit"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            </form>
+          </div>
+
+          {/* Right: Utility Icons Bar */}
+          <div className="flex items-center gap-2 sm:gap-4 text-neutral-800">
+            {/* Mobile Search Button */}
             <button
-              className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors sm:h-auto sm:w-auto sm:px-3"
+              className="sm:hidden inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors"
               onClick={() => setSearchOpen(true)}
               aria-label="Search"
             >
-              <Search className="h-5 w-5 sm:hidden" />
-              <span className="hidden sm:inline-flex items-center gap-2 text-body-sm font-medium uppercase tracking-[0.14em]">
-                <Search className="h-4 w-4" />
-                Search
-              </span>
+              <Search className="h-5 w-5" />
             </button>
+
+            {/* Wishlist */}
+            <Link
+              href="/account"
+              className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors"
+              aria-label="Wishlist"
+              title="Saved items"
+            >
+              <span className="sr-only">Wishlist</span>
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.684a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </Link>
 
             {/* Account */}
             <Link
               href="/account"
-              className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors sm:h-auto sm:w-auto sm:px-3"
+              className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors"
               aria-label="Account"
+              title="Account"
             >
-              <User className="h-5 w-5 sm:hidden" />
-              <span className="hidden sm:inline text-body-sm font-medium uppercase tracking-[0.14em]">Account</span>
+              <User className="h-5 w-5" />
             </Link>
 
             {/* Cart */}
             <button
               onClick={openCart}
-              className="relative inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors sm:h-auto sm:w-auto sm:px-3"
+              className="relative inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors"
               aria-label={`Shopping bag${totalQuantity > 0 ? `, ${totalQuantity} items` : ''}`}
             >
-              <ShoppingBag className="h-5 w-5 sm:hidden" />
-              <span className="hidden sm:inline-flex items-center gap-2 text-body-sm font-medium uppercase tracking-[0.14em]">
-                Bag
-                {totalQuantity > 0 && (
-                  <span className="text-neutral-950 font-medium" data-cart-count>({totalQuantity})</span>
-                )}
-              </span>
+              <ShoppingBag className="h-5 w-5" />
               {totalQuantity > 0 && (
                 <span
-                  className="sm:hidden absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center text-[9px] font-bold text-cream-50 bg-neutral-950 rounded-full"
+                  className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center text-[9px] font-bold text-white bg-[#E60012] rounded-full"
                   aria-live="polite"
                   data-cart-count
                 >
@@ -170,38 +209,20 @@ export function Header({
                 </span>
               )}
             </button>
-          </div>
-        </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:block border-t border-neutral-950/10" aria-label="Main navigation">
-          <div className="flex items-center justify-between py-2.5">
+            {/* All Categories Dropdown Trigger */}
             <button
               type="button"
               onClick={() => setMegaMenuOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-neutral-950 text-cream-50 text-caption font-medium uppercase tracking-[0.14em] hover:bg-neutral-800 transition-colors shadow-subtle"
+              className="inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-neutral-950 transition-colors"
               aria-expanded={megaMenuOpen}
-              aria-label="Browse all categories"
+              aria-label="Toggle all categories menu"
+              title="All Categories"
             >
-              <LayoutGrid className="h-4 w-4 text-gold-400" />
-              <span>Browse All Categories</span>
-              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${megaMenuOpen ? 'rotate-180 text-gold-400' : ''}`} />
+              <Menu className="h-6 w-6" />
             </button>
-
-            <ul className="flex items-center gap-10 text-body-sm font-medium tracking-[0.14em] uppercase text-neutral-700">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="hover:text-neutral-950 transition-colors duration-fast relative py-1 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-neutral-950 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
-        </nav>
+        </div>
       </div>
 
       {/* Desktop Mega Menu Overlay */}

@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ProductImage } from '@/components/ui/Image';
-import { ShoppingBag, Heart } from 'lucide-react';
-import { formatMoney } from '@/lib/utils';
+import { ShoppingBag } from 'lucide-react';
+import { formatMoney, cn } from '@/lib/utils';
 import type { Product, ProductVariant } from '@/types/shopify';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
-import { useWishlist } from '@/context/WishlistContext';
 
 interface ProductCardProps {
   product: Product;
@@ -20,15 +19,7 @@ interface ProductCardProps {
 export function ProductCard({ product, variant, priority = false, showQuickAdd = true }: ProductCardProps) {
   const { addToCart, isLoading: cartLoading } = useCart();
   const { showToast } = useToast();
-  const { isInWishlist, toggleWishlist } = useWishlist();
-  const isSaved = isInWishlist(product.id);
   const [quickAddLoading, setQuickAddLoading] = useState<string | null>(null);
-
-  const handleWishlistToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWishlist(product);
-  };
 
   const primaryVariant = variant || product.variants.edges[0]?.node;
   const price = primaryVariant?.price.amount || product.priceRange.minVariantPrice.amount;
@@ -38,6 +29,11 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
   const images = product.images.edges.map(({ node }) => node);
   const featuredImage = product.featuredImage;
 
+  // Extract material / finish swatch values if present
+  const finishOption = product.options.find((opt) =>
+    ['Finish', 'Material', 'Color', 'Colour'].includes(opt.name)
+  );
+
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -46,9 +42,9 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
     setQuickAddLoading(primaryVariant.id);
     try {
       await addToCart(primaryVariant.id, 1);
-      showToast(`Added "${product.title}" to cart`, 'success');
+      showToast(`Added "${product.title}" to bag`, 'success');
     } catch {
-      showToast('Could not add item to cart', 'error');
+      showToast('Could not add item to bag', 'error');
     } finally {
       setQuickAddLoading(null);
     }
@@ -57,66 +53,101 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
   const onSale = compareAtPrice && compareAtPrice > price;
 
   return (
-    <article className="group relative">
-      {/* Product Image Container — photo first, flat */}
-      <div className="relative overflow-hidden bg-cream-100">
+    <article className="group relative flex flex-col">
+      {/* Product Image Container — Fashion 3:4 Aspect Ratio */}
+      <div className={cn(
+        'relative overflow-hidden bg-neutral-100/90 transition-opacity duration-300',
+        !available && 'opacity-60'
+      )}>
         <Link
           href={`/products/${product.handle}`}
           aria-label={`${product.title}${onSale ? ' - Sale' : ''}`}
+          className="block w-full h-full overflow-hidden"
           data-testid="product-card-link"
         >
-          <ProductImage
-            images={images}
-            selectedVariantImage={featuredImage ? { url: featuredImage.url, altText: featuredImage.altText } : null}
-            aspectRatio="4:5"
-            priority={priority}
-          />
+          <div className="transition-transform duration-500 ease-expo group-hover:scale-[1.02]">
+            <ProductImage
+              images={images}
+              selectedVariantImage={featuredImage ? { url: featuredImage.url, altText: featuredImage.altText } : null}
+              aspectRatio="3:4"
+              priority={priority}
+            />
+          </div>
         </Link>
 
-        {/* Badges — flat, minimal */}
-        {onSale && (
-          <span className="absolute top-3 left-3 badge-gold text-caption z-10">
-            Sale
+        {/* UNIQLO Red Offer Tag */}
+        {onSale && available && (
+          <span className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[9px] uppercase font-black tracking-wider bg-[#E60012] text-white shadow-sm z-10">
+            LIMITED OFFER
           </span>
         )}
 
-        {/* Wishlist button hidden for now */}
-
+        {/* Muted Sold Out Overlay Tag */}
         {!available && (
-          <div className="absolute inset-0 bg-cream-50/70 backdrop-blur-[2px] flex items-center justify-center z-10">
-            <span className="badge-sold-out">Sold Out</span>
-          </div>
+          <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-neutral-900/80 text-white backdrop-blur-sm z-10">
+            Sold Out
+          </span>
         )}
 
-        {/* Quick Add — quiet hairline on hover */}
+        {/* Quick Add Overlay Button */}
         {showQuickAdd && available && (
-          <div className="absolute bottom-3 left-3 right-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-10">
+          <div className="absolute bottom-2.5 left-2.5 right-2.5 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 ease-expo z-10">
             <button
               onClick={handleQuickAdd}
               disabled={!primaryVariant?.id || quickAddLoading === primaryVariant?.id || cartLoading}
-              className="w-full min-h-[44px] bg-cream-50 text-neutral-950 text-body-sm font-medium px-2 flex items-center justify-center gap-2 transition-colors hover:bg-neutral-950 hover:text-cream-50"
+              className="w-full min-h-[40px] bg-white/95 backdrop-blur-sm text-neutral-950 text-caption font-bold uppercase tracking-wider px-3 flex items-center justify-center gap-2 border border-neutral-300 hover:bg-[#E60012] hover:text-white hover:border-[#E60012] transition-colors shadow-sm"
               aria-label={`Quick add ${product.title}`}
             >
-              <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-              <span>{quickAddLoading === primaryVariant?.id ? 'Adding…' : 'Add to Bag'}</span>
+              <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{quickAddLoading === primaryVariant?.id ? 'Adding…' : 'Quick Add'}</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Product Info — uncluttered */}
+      {/* Product Info — Clean UNIQLO Apparel Typography */}
       <Link
         href={`/products/${product.handle}`}
-        className="block pt-4 space-y-1.5"
+        className="block pt-3 space-y-1"
         data-testid="product-card-link"
       >
-        <h3 className="font-heading text-body-lg font-medium tracking-tight text-neutral-950 line-clamp-1">
+        <h3 className="font-sans text-body-sm font-semibold tracking-tight text-neutral-900 group-hover:text-[#E60012] transition-colors line-clamp-1">
           {product.title}
         </h3>
-        <div className="flex items-baseline gap-2">
-          <span className="price">{formatMoney(price, currencyCode)}</span>
-          {onSale && (
-            <span className="price-compare">{formatMoney(compareAtPrice!, currencyCode)}</span>
+
+        {/* Color Swatch Dots */}
+        {finishOption && finishOption.values.length > 0 && (
+          <div className="flex items-center gap-1.5 pt-0.5 pb-0.5">
+            {finishOption.values.slice(0, 5).map((val) => (
+              <span
+                key={val}
+                title={val}
+                className={cn(
+                  'w-2.5 h-2.5 rounded-full border border-neutral-400 inline-block',
+                  val.toLowerCase().includes('white') && 'bg-white',
+                  val.toLowerCase().includes('black') && 'bg-neutral-900',
+                  val.toLowerCase().includes('navy') && 'bg-sky-900',
+                  val.toLowerCase().includes('olive') && 'bg-olive-800 bg-emerald-900',
+                  val.toLowerCase().includes('beige') && 'bg-amber-100',
+                  !val.toLowerCase().includes('white') && !val.toLowerCase().includes('black') && !val.toLowerCase().includes('navy') && !val.toLowerCase().includes('olive') && !val.toLowerCase().includes('beige') && 'bg-neutral-300'
+                )}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* UNIQLO Bold Red Price Display */}
+        <div className="flex items-baseline gap-2 pt-0.5">
+          <span className={cn(
+            'font-sans text-body font-bold tabular-nums',
+            onSale ? 'text-[#E60012]' : 'text-neutral-950'
+          )}>
+            {formatMoney(price, currencyCode)}
+          </span>
+          {onSale && compareAtPrice && (
+            <span className="text-body-xs text-neutral-400 line-through tabular-nums">
+              {formatMoney(compareAtPrice, currencyCode)}
+            </span>
           )}
         </div>
       </Link>

@@ -356,46 +356,85 @@ export interface VariantSelectorProps {
 export function VariantSelector({ product, selectedOptions, onOptionChange, disabled = false }: VariantSelectorProps) {
   return (
     <div className="space-y-6" role="group" aria-label="Product options">
-      {product.options.map((option) => (
-        <fieldset key={option.id} className="space-y-3" disabled={disabled}>
-          <legend className="text-caption font-medium uppercase tracking-[0.16em] text-neutral-700">
-            {option.name}
-          </legend>
-          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={option.name}>
-            {option.values.map((value) => {
-              const isSelected = selectedOptions[option.name] === value;
-              const isAvailable = product.variants.edges.some(({ node: variant }) => {
-                const matches = variant.selectedOptions.every(
-                  (opt) => opt.name === option.name ? opt.value === value : selectedOptions[opt.name] === opt.value
-                );
-                return matches && variant.availableForSale;
-              });
+      {product.options.map((option) => {
+        const isColorOption = ['Finish', 'Material', 'Color', 'Colour'].includes(option.name);
 
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  role="radio"
-                  aria-checked={isSelected}
-                  aria-disabled={!isAvailable || disabled}
-                  onClick={() => !disabled && isAvailable && onOptionChange(option.name, value)}
-                  disabled={!isAvailable || disabled}
-                  className={cn(
-                    'inline-flex h-11 items-center justify-center px-5 text-body-sm font-medium border transition-colors duration-200',
-                    isSelected
-                      ? 'border-neutral-950 bg-neutral-950 text-cream-50'
-                      : isAvailable
-                      ? 'border-neutral-950/20 text-neutral-950 hover:border-neutral-950'
-                      : 'border-neutral-950/10 text-neutral-400 cursor-not-allowed line-through'
-                  )}
-                >
-                  {value}
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
-      ))}
+        return (
+          <fieldset key={option.id} className="space-y-3" disabled={disabled}>
+            <legend className="text-caption font-medium uppercase tracking-[0.16em] text-neutral-700 flex items-center justify-between w-full">
+              <span>{option.name}</span>
+              {selectedOptions[option.name] && (
+                <span className="text-neutral-500 font-normal normal-case">{selectedOptions[option.name]}</span>
+              )}
+            </legend>
+            <div className="flex flex-wrap gap-2.5" role="radiogroup" aria-label={option.name}>
+              {option.values.map((value) => {
+                const isSelected = selectedOptions[option.name] === value;
+                const isAvailable = product.variants.edges.some(({ node: variant }) => {
+                  const matches = variant.selectedOptions.every(
+                    (opt) => opt.name === option.name ? opt.value === value : selectedOptions[opt.name] === opt.value
+                  );
+                  return matches && variant.availableForSale;
+                });
+
+                if (isColorOption) {
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      aria-label={value}
+                      title={value}
+                      aria-disabled={!isAvailable || disabled}
+                      onClick={() => !disabled && isAvailable && onOptionChange(option.name, value)}
+                      disabled={!isAvailable || disabled}
+                      className={cn(
+                        'relative w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-200 p-0.5',
+                        isSelected ? 'ring-2 ring-neutral-950 ring-offset-2 border-transparent' : 'border-neutral-950/20 hover:border-neutral-950',
+                        (!isAvailable || disabled) && 'opacity-35 cursor-not-allowed'
+                      )}
+                    >
+                      <span className={cn(
+                        'w-full h-full rounded-full inline-block',
+                        value.toLowerCase().includes('yellow gold') && 'bg-amber-400',
+                        value.toLowerCase().includes('gold') && !value.toLowerCase().includes('white') && !value.toLowerCase().includes('rose') && 'bg-amber-400',
+                        value.toLowerCase().includes('white') && 'bg-neutral-200 border border-neutral-300',
+                        value.toLowerCase().includes('rose') && 'bg-rose-300',
+                        value.toLowerCase().includes('emerald') && 'bg-emerald-700',
+                        value.toLowerCase().includes('pearl') && 'bg-amber-50 border border-neutral-300',
+                        !value.toLowerCase().includes('gold') && !value.toLowerCase().includes('white') && !value.toLowerCase().includes('rose') && !value.toLowerCase().includes('emerald') && !value.toLowerCase().includes('pearl') && 'bg-neutral-800'
+                      )} />
+                    </button>
+                  );
+                }
+
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    aria-disabled={!isAvailable || disabled}
+                    onClick={() => !disabled && isAvailable && onOptionChange(option.name, value)}
+                    disabled={!isAvailable || disabled}
+                    className={cn(
+                      'inline-flex min-h-[40px] items-center justify-center px-4 rounded-full text-caption font-medium border transition-colors duration-200',
+                      isSelected
+                        ? 'border-neutral-950 bg-neutral-950 text-cream-50'
+                        : isAvailable
+                        ? 'border-neutral-950/20 text-neutral-950 hover:border-neutral-950'
+                        : 'border-neutral-950/10 text-neutral-400 cursor-not-allowed line-through'
+                    )}
+                  >
+                    {value}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+        );
+      })}
     </div>
   );
 }
