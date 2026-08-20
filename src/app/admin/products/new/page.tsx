@@ -39,15 +39,15 @@ export default function NewProductPage() {
   // Form State
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [productType, setProductType] = useState('Necklace');
+  const [productType, setProductType] = useState('Sarees');
   const [customProductType, setCustomProductType] = useState('');
   const [subcategory, setSubcategory] = useState('');
-  const [vendor, setVendor] = useState('AURA');
+  const [vendor, setVendor] = useState('AURA Atelier');
   const [price, setPrice] = useState<number | ''>('');
   const [compareAtPrice, setCompareAtPrice] = useState<number | ''>('');
   const [currencyCode, setCurrencyCode] = useState<string>('INR');
   const [defaultStoreCurrency, setDefaultStoreCurrency] = useState<string>('INR');
-  const [collectionHandle, setCollectionHandle] = useState('bestsellers');
+  const [collectionHandle, setCollectionHandle] = useState('sarees');
   const [tagsInput, setTagsInput] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -56,19 +56,19 @@ export default function NewProductPage() {
 
   const getSubcategoryPlaceholder = (type: string) => {
     switch (type.toLowerCase()) {
-      case 'necklace':
-        return 'e.g. Choker, Long Chain, Layered, Collar, Lariat';
-      case 'ring':
-        return 'e.g. Solitaire, Cocktail, Statement, Eternity Band';
-      case 'earrings':
-        return 'e.g. Studs, Jhumkas, Drops, Hoops, Chandelier';
-      case 'bracelet':
-      case 'bangles':
-        return 'e.g. Tennis Bracelet, Kada, Stackable Bangles';
-      case 'pendant':
-        return 'e.g. Locket, Religious, Gemstone, Solitaire';
+      case 'sarees':
+      case 'silk sarees':
+        return 'e.g. Kanjeevaram Silk, Banarasi Brocade, Organza, Linen, Georgette, Chanderi';
+      case 'lehengas':
+        return 'e.g. Bridal Velvet, Zardozi Embroidered, Anarkali Set, Kurta Set';
+      case 'tops & tunics':
+      case 'tops':
+        return 'e.g. AIRism Cotton Tee, Linen Blend Shirt, Tunics';
+      case 'bottoms & pants':
+      case 'bottoms':
+        return 'e.g. Waffle Easy Pants, Stretch Chinos, Loungewear';
       default:
-        return 'e.g. Enter subcategory (Choker, Statement, etc.)';
+        return 'e.g. Enter fabric or style (Silk, Linen, Cotton)';
     }
   };
 
@@ -90,10 +90,10 @@ export default function NewProductPage() {
   }, []);
 
   // Custom Variant Options State
-  const [optionName, setOptionName] = useState('Size');
-  const [optionValuesInput, setOptionValuesInput] = useState('6, 7, 8, 9');
+  const [optionName, setOptionName] = useState('Blouse & Size');
+  const [optionValuesInput, setOptionValuesInput] = useState('Unstitched Blouse Piece, Custom Stitched Blouse, S, M, L, XL');
   const [optionsList, setOptionsList] = useState<Array<{ name: string; values: string[] }>>([
-    { name: 'Size', values: ['6', '7', '8', '9'] },
+    { name: 'Blouse & Size', values: ['Unstitched Blouse Piece', 'Custom Stitched Blouse', 'S', 'M', 'L', 'XL'] },
   ]);
 
   // Handle Image File Uploads (PC / Mobile Camera / Photos)
@@ -359,7 +359,7 @@ export default function NewProductPage() {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       className="input min-h-[100px] resize-y"
-                      placeholder="Enter custom product details, diamond specifications, metal purity, or care instructions..."
+                      placeholder="Enter custom product details, fabric weave, silk purity, threadwork, or care instructions..."
                     />
                   </div>
 
@@ -372,12 +372,12 @@ export default function NewProductPage() {
                         onChange={(e) => setProductType(e.target.value)}
                         className="input"
                       >
-                        <option value="Necklace">Necklace</option>
-                        <option value="Ring">Ring</option>
-                        <option value="Earrings">Earrings</option>
-                        <option value="Pendant">Pendant</option>
-                        <option value="Bracelet">Bracelet</option>
-                        <option value="Bangles">Bangles</option>
+                        <option value="Sarees">Sarees</option>
+                        <option value="Silk Sarees">Silk Sarees</option>
+                        <option value="Lehengas">Lehengas &amp; Festive</option>
+                        <option value="Tops &amp; Tunics">Tops &amp; Tunics</option>
+                        <option value="Bottoms &amp; Pants">Bottoms &amp; Pants</option>
+                        <option value="Dupattas &amp; Stoles">Dupattas &amp; Stoles</option>
                         <option value="Other">Custom Category...</option>
                       </select>
                     </div>

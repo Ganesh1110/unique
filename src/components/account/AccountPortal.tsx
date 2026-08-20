@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Mail, Lock, Package, Heart, Settings, User, UserPlus, LogOut, CheckCircle2, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
 import { cn, formatMoney } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
@@ -20,12 +21,21 @@ interface Customer {
 }
 
 export function AccountPortal() {
+  const searchParams = useSearchParams();
   const { wishlist, removeFromWishlist, wishlistCount } = useWishlist();
   const { addToCart, openCart } = useCart();
   const { showToast } = useToast();
 
   const [activeTab, setActiveTab] = useState<Tab>('account');
   const [authMode, setAuthMode] = useState<AuthMode>('signin');
+
+  // Sync tab query parameter if present (e.g. /account?tab=wishlist)
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['account', 'orders', 'wishlist', 'settings'].includes(tabParam)) {
+      setActiveTab(tabParam as Tab);
+    }
+  }, [searchParams]);
 
   // Form fields
   const [name, setName] = useState('');

@@ -72,9 +72,9 @@ export async function GET() {
         badge: typeProducts.length > 2 ? 'Popular' : undefined,
         subsections: [
           ...(subcategoryItems.length > 0
-            ? [{ title: 'SUBCATEGORIES & TAGS', items: subcategoryItems }]
+            ? [{ title: 'SUBCATEGORIES & TAGS', href: `/search?q=${encodeURIComponent(typeName)}`, image: featuredImage, items: subcategoryItems }]
             : []),
-          { title: 'FEATURED PRODUCTS', items: topPicks },
+          { title: 'FEATURED PRODUCTS', href: `/search?q=${encodeURIComponent(typeName)}`, image: featuredImage, items: topPicks },
         ],
         featuredCard: featuredProduct
           ? {

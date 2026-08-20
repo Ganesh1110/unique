@@ -1,6 +1,10 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { AccountPortal } from '@/components/account/AccountPortal';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: 'Account',
@@ -26,7 +30,9 @@ export default function AccountPage() {
 
       <section className="section" aria-label="Account management portal">
         <div className="container">
-          <AccountPortal />
+          <Suspense fallback={<div className="py-12 text-center text-neutral-500">Loading portal...</div>}>
+            <AccountPortal />
+          </Suspense>
         </div>
       </section>
     </div>

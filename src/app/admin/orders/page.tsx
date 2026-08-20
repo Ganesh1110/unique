@@ -163,18 +163,31 @@ export default function AdminOrdersPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-neutral-950/10">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-neutral-950/10">
                     <div>
                       <p className="text-caption text-neutral-500">{order.name}</p>
                       <p className="text-body-sm font-semibold text-neutral-950">{formatMoney(order.total, order.currencyCode as 'INR' | 'USD')}</p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedOrder(order)}
-                      className="btn-primary text-body-sm px-4 py-2 min-h-[40px] font-medium"
-                    >
-                      Manage Order
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {order.status !== 'Fulfilled' && (
+                        <button
+                          type="button"
+                          disabled={updatingStatus}
+                          onClick={() => handleUpdateStatus(order.id, 'Fulfilled')}
+                          className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-caption font-semibold uppercase tracking-wider px-3 py-2 rounded-md hover:bg-emerald-700 transition-colors shadow-sm"
+                        >
+                          <Check className="h-3.5 w-3.5" />
+                          Fulfill
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedOrder(order)}
+                        className="btn-secondary text-caption font-semibold uppercase tracking-wider px-3 py-2 min-h-[36px]"
+                      >
+                        Manage
+                      </button>
+                    </div>
                   </div>
                 </li>
               ))}

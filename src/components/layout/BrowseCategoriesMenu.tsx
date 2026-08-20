@@ -185,13 +185,13 @@ export function BrowseCategoriesDesktopMenu({ activeId, onClose }: DesktopMenuPr
             {activeCategory.subsections.map((sub) => (
               <Link
                 key={sub.title}
-                href={sub.href}
+                href={sub.href || activeCategory.href || '/collections'}
                 onClick={onClose}
                 className="group relative block overflow-hidden bg-sunken"
               >
                 <div className="relative aspect-4-5 overflow-hidden">
                   <OptimizedImage
-                    src={sub.image}
+                    src={sub.image || activeCategory.featuredCard?.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop'}
                     alt={sub.title}
                     fill
                     objectFit="cover"
@@ -214,7 +214,7 @@ export function BrowseCategoriesDesktopMenu({ activeId, onClose }: DesktopMenuPr
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Link
-                          href={item.href}
+                          href={item.href || activeCategory.href || '/collections'}
                           onClick={onClose}
                           className="truncate hover:text-accent-ink transition-colors"
                         >
@@ -242,7 +242,7 @@ export function BrowseCategoriesDesktopMenu({ activeId, onClose }: DesktopMenuPr
               <div className="group relative block h-full overflow-hidden bg-sunken">
                 <div className="absolute inset-0">
                   <OptimizedImage
-                    src={activeCategory.featuredCard.image}
+                    src={activeCategory.featuredCard.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop'}
                     alt={activeCategory.featuredCard.title}
                     fill
                     objectFit="cover"
@@ -261,7 +261,7 @@ export function BrowseCategoriesDesktopMenu({ activeId, onClose }: DesktopMenuPr
                     {activeCategory.featuredCard.subtitle}
                   </p>
                   <Link
-                    href={activeCategory.featuredCard.link}
+                    href={activeCategory.featuredCard.link || activeCategory.href || '/collections'}
                     onClick={onClose}
                     className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-accent-ink/95 text-ink text-caption font-semibold uppercase tracking-wider transition-colors duration-fast hover:bg-accent-ink"
                   >
@@ -275,7 +275,7 @@ export function BrowseCategoriesDesktopMenu({ activeId, onClose }: DesktopMenuPr
                   {activeCategory.name}
                 </p>
                 <Link
-                  href={activeCategory.href}
+                  href={activeCategory.href || '/collections'}
                   onClick={onClose}
                   className="mt-4 inline-flex items-center gap-1.5 text-body-sm font-medium text-accent"
                 >
@@ -334,7 +334,7 @@ export function BrowseCategoriesMobileAccordion({ onClose }: BrowseCategoriesMen
                   {cat.subsections.map((sub) => (
                     <div key={sub.title} className="px-4 py-3">
                       <Link
-                        href={sub.href}
+                        href={sub.href || cat.href || '/collections'}
                         onClick={onClose}
                         className="text-caption font-semibold uppercase tracking-[0.14em] text-accent mb-2 flex items-center justify-between"
                       >
@@ -345,7 +345,7 @@ export function BrowseCategoriesMobileAccordion({ onClose }: BrowseCategoriesMen
                         {sub.items.map((item) => (
                           <li key={item.label}>
                             <Link
-                              href={item.href}
+                              href={item.href || cat.href || '/collections'}
                               onClick={onClose}
                               className="flex min-h-[36px] items-center justify-between gap-2 py-1 text-body-sm text-neutral-700 hover:text-ink transition-colors"
                             >

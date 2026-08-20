@@ -208,7 +208,7 @@ export function Header({
 
             {/* Wishlist */}
             <Link
-              href="/account"
+              href="/account?tab=wishlist"
               className="relative inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-ink transition-colors"
               aria-label={`Saved items${wishlistCount > 0 ? `, ${wishlistCount} saved` : ''}`}
               title="Saved items"
