@@ -65,6 +65,39 @@ export default function AdminDashboardPage() {
   const realizedRevenue = orders.reduce((sum, o) => sum + Number(o.total || 0), 0);
   const realizedProfit = Math.round(realizedRevenue * 0.55);
 
+  const handleExportFinancialCSV = () => {
+    const headers = ['Product Handle', 'Title', 'Category', 'Stock Qty', 'Retail Price (INR)', 'Est. Unit Cost (INR)', 'Est. Unit Profit (INR)', 'Total Retail Value (INR)', 'Projected Gross Profit (INR)'];
+    const rows = customProducts.map((p) => {
+      const price = p.priceRange.minVariantPrice.amount || 0;
+      const qty = p.totalInventory || 10;
+      const estCost = Math.round(price * 0.45);
+      const estProfit = price - estCost;
+      const totalVal = price * qty;
+      const projProfit = estProfit * qty;
+      return [
+        `"${p.handle}"`,
+        `"${p.title.replace(/"/g, '""')}"`,
+        `"${p.productType || 'Sarees'}"`,
+        qty,
+        price,
+        estCost,
+        estProfit,
+        totalVal,
+        projProfit
+      ].join(',');
+    });
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `AURA_Financial_Profit_Report_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Financial & Profit CSV report downloaded successfully!', 'success');
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-cream-50">
       {/* Header */}
@@ -80,9 +113,16 @@ export default function AdminDashboardPage() {
               <h1 className="font-heading text-display-md text-neutral-950">Financial &amp; Profit Analytics</h1>
             </div>
             <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={handleExportFinancialCSV}
+                className="btn-secondary inline-flex items-center gap-2 text-emerald-800 border-emerald-300 bg-emerald-50 hover:bg-emerald-100"
+              >
+                Export Financial CSV
+              </button>
               <Link href="/admin/orders" className="btn-secondary inline-flex items-center gap-2">
                 <ShoppingBag className="h-4 w-4" />
-                Manage Orders ({orders.length})
+                Orders ({orders.length})
               </Link>
               <Link href="/admin/inventory" className="btn-secondary inline-flex items-center gap-2">
                 <Package className="h-4 w-4" />

@@ -338,6 +338,23 @@ export default function InventoryDashboardPage() {
               <p className="text-caption text-emerald-600 font-medium">Current stock value</p>
             </div>
           </div>
+
+          {/* Weaver Supplier Contact Directory */}
+          <div className="mt-6 bg-neutral-900 text-white rounded-xl p-5 border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gold-400">Direct Weaver Re-Order Contacts</span>
+              <p className="text-body-sm font-medium text-white">Need to restock low-inventory Kanjeevaram or Banarasi sarees?</p>
+              <p className="text-caption text-neutral-400">Kanchipuram Master Weaver: +91 98400 12345 · Varanasi Zari Artisan: +91 98390 67890</p>
+            </div>
+            <a
+              href="https://wa.me/919840012345?text=Hi%20Master%20Weaver!%20We%20need%20to%20place%20a%20restock%20order%20for%20AURA%20sarees."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-caption font-bold uppercase tracking-wider px-4 py-2.5 rounded-md transition-colors shrink-0"
+            >
+              WhatsApp Weaver Direct
+            </a>
+          </div>
         </div>
       </section>
 

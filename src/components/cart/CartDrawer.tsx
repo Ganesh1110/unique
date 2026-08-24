@@ -16,11 +16,28 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerProps = {}) {
-  const { cart, isCartOpen, closeCart, updateQuantity, removeLine, updateNote, isLoading } = useCart();
+  const {
+    cart,
+    isCartOpen,
+    closeCart,
+    updateQuantity,
+    removeLine,
+    updateNote,
+    isLoading,
+    appliedCoupon,
+    couponLabel,
+    discountAmount,
+    finalTotal,
+    applyCoupon,
+    removeCoupon,
+  } = useCart();
+
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<CheckoutOrderSuccess['order'] | null>(null);
   const [customer, setCustomer] = useState<{ name: string; email: string } | null>(null);
+  const [couponInput, setCouponInput] = useState('');
+  const [couponMsg, setCouponMsg] = useState<{ success: boolean; text: string } | null>(null);
 
   // Address details state for guest & logged-in checkout
   const [customerName, setCustomerName] = useState('');
@@ -31,6 +48,14 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
   const [state, setState] = useState('');
   const [pincode, setPincode] = useState('');
   const [createAccount, setCreateAccount] = useState(false);
+
+  const handleApplyCoupon = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!couponInput.trim()) return;
+    const res = applyCoupon(couponInput);
+    setCouponMsg({ success: res.success, text: res.message });
+    if (res.success) setCouponInput('');
+  };
 
   useEffect(() => {
     fetch('/api/auth/customer/me')
@@ -322,19 +347,67 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
         {/* Footer */}
         {!isEmpty && !confirmation && (
           <div className="border-t border-ink/10 p-4 sm:p-6 space-y-4">
+            {/* Promo Code Form */}
+            <div className="space-y-2">
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-md p-2.5 text-body-xs">
+                  <div className="flex items-center gap-2 text-emerald-800">
+                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                    <span><strong className="uppercase">{appliedCoupon}</strong> — {couponLabel}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeCoupon}
+                    className="text-emerald-700 hover:text-red-600 text-caption font-bold"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value)}
+                    placeholder="Promo code (e.g. AURA10)"
+                    className="input uppercase text-body-xs min-h-[38px] py-1.5 flex-1"
+                  />
+                  <button
+                    type="submit"
+                    className="btn-secondary px-3 text-caption font-bold uppercase tracking-wider min-h-[38px]"
+                  >
+                    Apply
+                  </button>
+                </form>
+              )}
+              {couponMsg && !appliedCoupon && (
+                <p className={`text-caption ${couponMsg.success ? 'text-emerald-600' : 'text-red-600'}`}>
+                  {couponMsg.text}
+                </p>
+              )}
+            </div>
+
             <div className="flex justify-between text-body">
               <span className="text-ink/80">Subtotal</span>
               <span className="font-medium text-ink tabular-nums">
                 {formatMoney(subtotal, currencyCode)}
               </span>
             </div>
+
+            {discountAmount > 0 && (
+              <div className="flex justify-between text-body-sm text-emerald-700 font-semibold">
+                <span>Promo Discount ({appliedCoupon})</span>
+                <span className="tabular-nums">-{formatMoney(discountAmount, currencyCode)}</span>
+              </div>
+            )}
+
             <div className="flex justify-between text-body-sm text-faint">
-              <span>Shipping & taxes calculated at checkout</span>
+              <span>Complimentary shipping applied over ₹15,000</span>
             </div>
             <div className="divider" />
             <div className="flex justify-between text-heading-sm font-medium">
               <span className="text-ink">Total</span>
-              <span className="text-ink tabular-nums">{formatMoney(total, currencyCode)}</span>
+              <span className="text-ink tabular-nums">{formatMoney(finalTotal, currencyCode)}</span>
             </div>
 
             <Button

@@ -7,6 +7,11 @@ import { ProductGallery, VariantSelector, QuantitySelector, AddToCartButton } fr
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { CompleteTheLook } from '@/components/product/CompleteTheLook';
 import { FitGuideModal } from '@/components/product/FitGuideModal';
+import { RecentlyViewed, recordRecentlyViewed } from '@/components/product/RecentlyViewed';
+import { BlouseCustomizer } from '@/components/product/BlouseCustomizer';
+import { PetticoatAddon } from '@/components/product/PetticoatAddon';
+import { addToCompareList } from '@/components/product/CompareDrawer';
+import { Layers } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -55,6 +60,13 @@ export function ProductDetailsClient({
 
   // Saree-specific PDP treatment
   const isSaree = product.productType?.toLowerCase().includes('saree');
+
+  // Record recently viewed product on mount
+  useEffect(() => {
+    if (product) {
+      recordRecentlyViewed(product);
+    }
+  }, [product]);
 
   // Initialize selected options with first available variant
   useEffect(() => {
@@ -220,6 +232,14 @@ export function ProductDetailsClient({
                 />
               )}
 
+              {/* Saree Tailoring & Petticoat Addons */}
+              {isSaree && (
+                <div className="space-y-3 pt-2">
+                  <BlouseCustomizer />
+                  <PetticoatAddon />
+                </div>
+              )}
+
               {/* Quantity & Add to Cart & WhatsApp Inquiry */}
               <div className="flex flex-col sm:flex-row gap-4 items-start pt-8 border-t border-ink/10">
                 <QuantitySelector
@@ -248,18 +268,32 @@ export function ProductDetailsClient({
                   </AddToCartButton>
 
                   <a
-                    href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi! I am interested in purchasing "${product.title}" (${typeof window !== 'undefined' ? window.location.href : ''}). Please assist me.`)}`}
+                    href={`https://wa.me/919876543210?text=${encodeURIComponent(
+                      `Hi AURA Team! I would like to order:\n🛍️ Product: ${product.title}\n💰 Price: ${formatMoney(price, currencyCode)}\n✨ Variant: ${selectedVariant?.title !== 'Default Title' ? selectedVariant?.title : 'Standard Drape'}\n🔗 Link: ${typeof window !== 'undefined' ? window.location.href : ''}\n\nPlease confirm availability & delivery.`
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-secondary w-full sm:w-auto min-h-[52px] text-body-sm font-medium flex items-center justify-center gap-2"
+                    className="btn-secondary w-full sm:w-auto min-h-[52px] text-body-sm font-bold flex items-center justify-center gap-2 border-emerald-600 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition-colors"
                   >
-                    Enquire on WhatsApp
+                    <span>Order via WhatsApp</span>
                   </a>
                 </div>
               </div>
 
-              {/* Share Action */}
+              {/* Share & Compare Action */}
               <div className="flex items-center gap-6 pt-6 border-t border-ink/10">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const res = addToCompareList(product);
+                    showToast(res.message, res.success ? 'success' : 'info');
+                  }}
+                  className="inline-flex items-center gap-2 text-body-sm text-faint hover:text-ink transition-colors min-h-[44px]"
+                >
+                  <Layers className="h-4 w-4" />
+                  <span>Compare Saree</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={async () => {
@@ -398,6 +432,9 @@ export function ProductDetailsClient({
           </AddToCartButton>
         </div>
       </div>
+
+      {/* Recently Viewed Drapes */}
+      <RecentlyViewed currentProductId={product.id} />
 
       {/* Mobile spacer so the last section clears the sticky bar */}
       <div className="h-20 sm:hidden" aria-hidden="true" />

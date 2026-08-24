@@ -110,7 +110,7 @@ export function ProductGallery({ product, selectedVariant, className }: ProductG
     pinchRef.current = null;
   };
 
-  const demoVideoUrl = 'https://assets.mixkit.co/videos/preview/mixkit-hand-holding-a-gold-ring-41564-large.mp4';
+  const demoVideoUrl = 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-in-a-traditional-dress-41584-large.mp4';
 
   return (
     <div className={cn('relative group', className)}>

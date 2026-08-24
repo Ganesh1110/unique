@@ -7,6 +7,9 @@ import { CartDrawer } from '@/components/cart/CartDrawer';
 import { CookieConsent } from '@/components/ui/CookieConsent';
 import type { Menu, ShopPolicy } from '@/types/shopify';
 
+import { GuestWelcomeModal } from '@/components/ui/GuestWelcomeModal';
+import { LiveSalesToast } from '@/components/ui/LiveSalesToast';
+import { CompareDrawer } from '@/components/product/CompareDrawer';
 import { MessageCircle } from 'lucide-react';
 
 interface StorefrontLayoutWrapperProps {
@@ -70,6 +73,11 @@ export function StorefrontLayoutWrapper({
       <Footer menus={menus} policies={policies} shopName={shopName} shopEmail={shopEmail} />
       <CartDrawer freeShippingThreshold={freeShippingThreshold} />
       <CookieConsent />
+
+      {/* Feature Flagged Storefront Modules */}
+      <GuestWelcomeModal />
+      <LiveSalesToast />
+      <CompareDrawer />
 
       {/* Floating WhatsApp Action Button */}
       {cleanPhone && (

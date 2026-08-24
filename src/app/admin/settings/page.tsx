@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useToast } from '@/context/ToastContext';
 import { useTheme, type Theme } from '@/context/ThemeContext';
-import { ArrowLeft, Store, KeyRound, Palette, Bell, Info, Check } from 'lucide-react';
+import { ArrowLeft, Store, KeyRound, Palette, Bell, Info, Check, Eye } from 'lucide-react';
 import { SUPPORTED_CURRENCIES } from '@/lib/currencies';
+import { getLocalFeatureFlags, saveLocalFeatureFlags, type FeatureFlags } from '@/lib/feature-flags';
 
 interface ConfigRow {
   key: string;
@@ -41,7 +42,15 @@ export default function AdminSettingsPage() {
   const { theme, setTheme } = useTheme();
   const [config, setConfig] = useState<ConfigRow[]>(DEFAULT_CONFIG);
   const [alerts, setAlerts] = useState(DEFAULT_ALERTS);
+  const [flags, setFlags] = useState<FeatureFlags>(getLocalFeatureFlags());
   const [saved, setSaved] = useState(false);
+
+  const toggleFlag = (key: keyof FeatureFlags) => {
+    const updated = { ...flags, [key]: !flags[key] };
+    setFlags(updated);
+    saveLocalFeatureFlags(updated);
+    showToast(`Feature flag "${key}" updated!`, 'info');
+  };
 
   useEffect(() => {
     fetch('/api/admin/settings')
@@ -177,6 +186,50 @@ export default function AdminSettingsPage() {
               <p className="text-body-sm text-neutral-600">
                 Demo placeholder — enter your own passcode to restrict access to this suite.
               </p>
+            </div>
+          </div>
+
+          {/* Storefront Feature Visibility Control Center */}
+          <div className="card p-6 space-y-4">
+            <div className="flex items-center gap-2 mb-2 border-b border-neutral-200 pb-3">
+              <Eye className="h-4 w-4 text-gold-600" />
+              <h2 className="font-heading text-heading-md text-neutral-950">Storefront Feature Visibility Toggles</h2>
+            </div>
+            <p className="text-body-sm text-neutral-600">
+              Easily turn storefront features ON or OFF. Switched-off features automatically hide themselves from customers without affecting core store functionality.
+            </p>
+
+            <div className="divide-y divide-neutral-200">
+              {[
+                { key: 'guestWelcomeOffer' as keyof FeatureFlags, title: 'Guest Welcome Offer Popup', desc: 'Shows first-time visitors a discount modal (WELCOME10 for 10% off)' },
+                { key: 'blouseCustomizer' as keyof FeatureFlags, title: 'Blouse Tailoring Customizer', desc: 'Allows buyers to select unstitched vs custom stitched blouse options on PDPs' },
+                { key: 'matchingPetticoatAddon' as keyof FeatureFlags, title: 'Matching Petticoat Add-on', desc: 'Enables 1-click matching cotton/satin petticoat checkbox on PDPs' },
+                { key: 'liveSalesToasts' as keyof FeatureFlags, title: 'Live Purchase Toasts', desc: 'Shows subtle recent purchase notifications in bottom-left corner' },
+                { key: 'compareDrawer' as keyof FeatureFlags, title: 'Compare Sarees Drawer', desc: 'Enables side-by-side comparison modal for comparing up to 3 sarees' },
+                { key: 'luxuryGiftWrap' as keyof FeatureFlags, title: 'Luxury Gift Packaging Option', desc: 'Enables gold gift packaging & handwritten note selector in cart drawer' },
+              ].map((item) => (
+                <div key={item.key} className="flex items-center justify-between py-3.5">
+                  <div className="pr-4">
+                    <p className="text-body-sm font-semibold text-neutral-950">{item.title}</p>
+                    <p className="text-caption text-neutral-500">{item.desc}</p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={flags[item.key]}
+                    onClick={() => toggleFlag(item.key)}
+                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors flex-shrink-0 ${
+                      flags[item.key] ? 'bg-emerald-600' : 'bg-neutral-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                        flags[item.key] ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
 
