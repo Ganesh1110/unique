@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ShoppingBag, PackageOpen, Search, CheckCircle2, X, Truck, Clock, Check } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, PackageOpen, Search, CheckCircle2, X, Truck, Clock, Check, Printer } from 'lucide-react';
 import { formatMoney } from '@/lib/utils';
 import { OptimizedImage } from '@/components/ui/Image';
 import type { StoredOrder } from '@/types/admin';
@@ -169,6 +169,15 @@ export default function AdminOrdersPage() {
                       <p className="text-body-sm font-semibold text-neutral-950">{formatMoney(order.total, order.currencyCode as 'INR' | 'USD')}</p>
                     </div>
                     <div className="flex items-center gap-2">
+                      <Link
+                        href={`/admin/orders/${order.id}/print`}
+                        target="_blank"
+                        className="inline-flex items-center gap-1.5 bg-neutral-100 text-neutral-800 border border-neutral-300 text-caption font-semibold uppercase tracking-wider px-3 py-2 rounded-md hover:bg-neutral-200 transition-colors"
+                      >
+                        <Printer className="h-3.5 w-3.5" />
+                        Print Invoice
+                      </Link>
+
                       {order.status !== 'Fulfilled' && (
                         <button
                           type="button"

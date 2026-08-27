@@ -83,6 +83,9 @@ export interface StoredOrder {
   orderNumber: string;
   name: string;
   email: string;
+  phone?: string;
+  address?: { addressLine?: string; city?: string; state?: string; pincode?: string };
+  paymentMethod?: string;
   createdAt: string;
   total: number;
   currencyCode: string;

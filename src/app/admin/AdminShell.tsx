@@ -3,13 +3,16 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Plus, Package, LogOut, Eye, ShieldCheck, ShoppingBag, Settings } from 'lucide-react';
+import { LayoutDashboard, Plus, Package, LogOut, Eye, ShieldCheck, ShoppingBag, Settings, Users, Tag, Truck } from 'lucide-react';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Add Product', href: '/admin/products/new', icon: Plus },
   { name: 'Inventory', href: '/admin/inventory', icon: Package },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
+  { name: 'Customers', href: '/admin/customers', icon: Users },
+  { name: 'Discounts', href: '/admin/discounts', icon: Tag },
+  { name: 'Weavers', href: '/admin/suppliers', icon: Truck },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

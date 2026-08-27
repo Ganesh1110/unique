@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Package, Archive, ExternalLink, ShieldCheck, Tag, DollarSign, Layers, TrendingUp, Sparkles, ShoppingBag, ArrowUpRight, Award } from 'lucide-react';
+import { Plus, Package, Archive, ExternalLink, ShieldCheck, Tag, DollarSign, Layers, TrendingUp, Sparkles, ShoppingBag, ArrowUpRight, Award, Users, Truck, Printer, Settings, Eye, LayoutGrid, FileText, ChevronRight } from 'lucide-react';
 import { formatMoney } from '@/lib/utils';
 import type { Product } from '@/types/shopify';
 import type { StoredOrder } from '@/types/admin';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/context/ToastContext';
 import { OptimizedImage } from '@/components/ui/Image';
+import { AnalyticsCharts } from '@/components/admin/AnalyticsCharts';
 
 export default function AdminDashboardPage() {
   const { showToast } = useToast();
@@ -137,6 +138,48 @@ export default function AdminDashboardPage() {
         </div>
       </header>
 
+      {/* ── Admin Suite Operations Command Hub ── */}
+      <section className="py-6 bg-cream-100/60 border-b border-neutral-200" aria-label="Admin command hub">
+        <div className="container space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="h-4 w-4 text-gold-600" />
+              <h2 className="font-heading text-heading-md text-neutral-950">Enterprise Admin Operations Suite</h2>
+            </div>
+            <span className="text-caption font-bold text-neutral-500 uppercase tracking-widest">8 Active Modules</span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
+            {[
+              { title: 'Add Product', desc: 'Catalog Editor', href: '/admin/products/new', icon: Plus, badge: 'New', color: 'bg-red-50 text-[#E60012] border-red-200' },
+              { title: 'Inventory', desc: `${customProducts.length} Items`, href: '/admin/inventory', icon: Package, badge: 'Stock', color: 'bg-amber-50 text-amber-800 border-amber-200' },
+              { title: 'Orders', desc: `${orders.length} Placed`, href: '/admin/orders', icon: ShoppingBag, badge: 'Invoices', color: 'bg-purple-50 text-purple-800 border-purple-200' },
+              { title: 'Customers', desc: 'CRM & LTV', href: '/admin/customers', icon: Users, badge: 'Loyalty', color: 'bg-sky-50 text-sky-800 border-sky-200' },
+              { title: 'Discounts', desc: 'Promo Coupons', href: '/admin/discounts', icon: Tag, badge: 'Offers', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+              { title: 'Weavers', desc: 'Restock POs', href: '/admin/suppliers', icon: Truck, badge: 'Supply', color: 'bg-indigo-50 text-indigo-800 border-indigo-200' },
+              { title: 'CSV Report', desc: 'Financial COGS', href: '#', onClick: handleExportFinancialCSV, icon: FileText, badge: 'Export', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+              { title: 'Settings', desc: 'Feature Flags', href: '/admin/settings', icon: Settings, badge: 'Toggles', color: 'bg-neutral-100 text-neutral-800 border-neutral-300' },
+            ].map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                onClick={item.onClick}
+                className={`p-3.5 rounded-xl border ${item.color} hover:shadow-md transition-all flex flex-col justify-between group space-y-2`}
+              >
+                <div className="flex items-center justify-between">
+                  <item.icon className="h-5 w-5" />
+                  <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-white/80 border border-current opacity-80">{item.badge}</span>
+                </div>
+                <div>
+                  <h3 className="font-heading text-body-xs font-bold truncate group-hover:underline">{item.title}</h3>
+                  <p className="text-[10px] opacity-80 truncate">{item.desc}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Financial & Profit Stat Cards ── */}
       <section className="py-8 bg-white border-b border-neutral-200" aria-label="Store financial stats">
         <div className="container space-y-6">
@@ -222,6 +265,13 @@ export default function AdminDashboardPage() {
               </Link>
             </div>
           </div>
+
+          {/* ── Visual Analytics Charts ── */}
+          <AnalyticsCharts
+            products={customProducts}
+            totalRevenue={realizedRevenue || totalRetailValue * 0.3}
+            totalProfit={realizedProfit || projectedGrossProfit * 0.3}
+          />
         </div>
       </section>
 
