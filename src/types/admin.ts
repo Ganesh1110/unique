@@ -87,6 +87,9 @@ export interface StoredOrder {
   address?: { addressLine?: string; city?: string; state?: string; pincode?: string };
   paymentMethod?: string;
   createdAt: string;
+  subtotal?: number;
+  tax?: number;
+  shipping?: number;
   total: number;
   currencyCode: string;
   lineItems: StoredOrderItem[];

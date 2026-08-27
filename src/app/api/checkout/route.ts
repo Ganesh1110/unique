@@ -3,18 +3,18 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { gidToId, toImage } from '@/lib/db-mappers';
 import { applyMovement, InsufficientStockError } from '@/lib/inventory';
+import { checkoutSchema } from '@/lib/validation';
 
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({})) as {
-    cartId?: string;
-    customerName?: string;
-    customerEmail?: string;
-    customerPhone?: string;
-    address?: { addressLine?: string; city?: string; state?: string; pincode?: string };
-    createAccount?: boolean;
-    password?: string;
-  };
-  if (!body.cartId) return NextResponse.json({ error: 'cartId is required' }, { status: 400 });
+  const bodyRaw = await req.json().catch(() => ({}));
+  const validation = checkoutSchema.safeParse(bodyRaw);
+
+  if (!validation.success) {
+    const errorMsg = validation.error.errors[0]?.message || 'Invalid request body';
+    return NextResponse.json({ error: errorMsg }, { status: 400 });
+  }
+
+  const body = validation.data;
   const id = gidToId(body.cartId);
   if (id == null) return NextResponse.json({ error: 'Invalid cart id' }, { status: 400 });
 
@@ -31,10 +31,30 @@ export async function POST(req: Request) {
   const phone = body.customerPhone?.trim() || '';
   const addressJson = body.address || null;
 
+  // Validate guest account creation password requirement
+  if (body.createAccount && email) {
+    if (!body.password || body.password.length < 6) {
+      return NextResponse.json({ error: 'Password of at least 6 characters is required to create an account' }, { status: 400 });
+    }
+  }
+
   try {
     const order = await prisma.$transaction(async (tx) => {
+      // Calculate subtotal
       const subtotal = lines.reduce((sum, l) => sum + Number(l.variant.price) * l.quantity, 0);
       const currency = lines[0].variant.currencyCode || 'INR';
+
+      // Load settings for Tax (GST) & Shipping calculation
+      const settings = await tx.setting.findMany();
+      const settingsMap = new Map(settings.map((s) => [s.key, s.value]));
+      const freeShippingThreshold = Number(settingsMap.get('free_shipping_threshold') || '2999');
+      const flatShippingRate = Number(settingsMap.get('flat_shipping_rate') || '100');
+      const gstRate = Number(settingsMap.get('gst_rate') || '5');
+
+      const shipping = subtotal >= freeShippingThreshold ? 0 : flatShippingRate;
+      const tax = Math.round((subtotal * (gstRate / 100)) * 100) / 100;
+      const discount = 0;
+      const total = subtotal - discount + tax + shipping;
 
       const created = await tx.order.create({
         data: {
@@ -45,7 +65,10 @@ export async function POST(req: Request) {
           customerPhone: phone,
           address: addressJson ? JSON.stringify(addressJson) : null,
           subtotal,
-          total: subtotal,
+          tax,
+          discount,
+          shipping,
+          total,
           currencyCode: currency,
           paymentMethod: 'COD',
           items: {
@@ -57,6 +80,7 @@ export async function POST(req: Request) {
               price: Number(l.variant.price),
               quantity: l.quantity,
               image: l.variant.image ? JSON.stringify(l.variant.image) : null,
+              customizations: l.customizations || null,
             })),
           },
         },
@@ -75,12 +99,11 @@ export async function POST(req: Request) {
       }
 
       // If guest user opted to create account during checkout
-      if (body.createAccount && email) {
+      if (body.createAccount && email && body.password) {
         const existingCustomer = await tx.customer.findUnique({ where: { email } });
         if (!existingCustomer) {
           const bcrypt = await import('bcryptjs');
-          const defaultPassword = body.password && body.password.length >= 6 ? body.password : 'JewelryPass@123';
-          const passwordHash = await bcrypt.hash(defaultPassword, 10);
+          const passwordHash = await bcrypt.hash(body.password, 10);
           await tx.customer.create({
             data: {
               email,
@@ -92,25 +115,29 @@ export async function POST(req: Request) {
       }
 
       await tx.cart.delete({ where: { id } });
-      return created;
+      return updatedOrder;
     });
 
     return NextResponse.json({
       ok: true,
       order: {
         id: order.id,
-        orderNumber: `#${1000 + order.id}`,
+        orderNumber: order.orderNumber,
         name: order.customerName,
         email: order.customerEmail,
         createdAt: order.createdAt.toISOString(),
+        subtotal: Number(order.subtotal),
+        tax: Number(order.tax),
+        shipping: Number(order.shipping),
         total: Number(order.total),
         currencyCode: order.currencyCode,
         status: order.status,
         lineItems: order.items.map((i) => ({
           title: i.title,
-          image: (i.image as { url?: string } | null)?.url || '/placeholder.svg',
+          image: (i.image as { url?: string } | null)?.url || (typeof i.image === 'string' && i.image.startsWith('{') ? (JSON.parse(i.image) as any)?.url : i.image) || '/placeholder.svg',
           quantity: i.quantity,
           variantTitle: i.variant?.title ?? null,
+          customizations: i.customizations ? JSON.parse(i.customizations) : null,
         })),
       },
     });

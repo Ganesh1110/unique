@@ -49,7 +49,9 @@ describe('POST /api/checkout (DB-backed order creation)', () => {
     expect(order).toBeTruthy();
     expect(order!.items.length).toBe(1);
     expect(order!.items[0].quantity).toBe(2);
-    expect(Number(order!.total)).toBe(25000);
+    expect(Number(order!.subtotal)).toBe(25000);
+    expect(Number(order!.tax)).toBe(1250);
+    expect(Number(order!.total)).toBe(26350);
     expect(order!.status).toBe('Processing');
     expect(order!.items[0].variantId).toBe(scope.variantIds[0]);
 

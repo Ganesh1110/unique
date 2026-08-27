@@ -40,8 +40,9 @@ export default function OrderPrintInvoicePage() {
     );
   }
 
-  const taxAmount = Math.round(order.total * 0.05); // 5% GST on Sarees & Textiles
-  const subtotal = order.total - taxAmount;
+  const subtotal = order.subtotal ?? (order.total - Math.round(order.total * 0.05));
+  const taxAmount = order.tax ?? Math.round(order.total * 0.05);
+  const shippingFee = order.shipping ?? 0;
 
   return (
     <div className="min-h-screen bg-neutral-100 p-4 sm:p-8 print:p-0 print:bg-white text-neutral-950 font-sans">
@@ -100,9 +101,9 @@ export default function OrderPrintInvoicePage() {
 
           <div className="space-y-2 border-l border-neutral-200 pl-6">
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400 block mb-1">Dispatch Details</span>
-            <p className="text-neutral-700"><strong>Courier Partner:</strong> Delhivery Express / BlueDart Surface</p>
+            <p className="text-neutral-700"><strong>Courier Partner:</strong> Standard Express Courier</p>
             <p className="text-neutral-700"><strong>AWB Airway Bill:</strong> AURA-{order.orderNumber.replace('#', '')}-IND</p>
-            <p className="text-neutral-700"><strong>Payment Method:</strong> {order.paymentMethod || 'Prepaid Online / COD'}</p>
+            <p className="text-neutral-700"><strong>Payment Method:</strong> {order.paymentMethod || 'COD'}</p>
           </div>
         </div>
 
@@ -124,6 +125,11 @@ export default function OrderPrintInvoicePage() {
                 <tr key={idx}>
                   <td className="py-3 px-3 font-semibold text-neutral-950">
                     {item.title}
+                    {(item as any).customizations && (
+                      <div className="text-[10px] text-neutral-500 font-normal mt-0.5">
+                        {Object.entries((item as any).customizations).map(([k, v]) => `${k}: ${v}`).join(' · ')}
+                      </div>
+                    )}
                   </td>
                   <td className="py-3 px-3 text-center text-neutral-500 font-mono text-[11px]">5007 (Silk)</td>
                   <td className="py-3 px-3 text-center font-bold text-neutral-950">{item.quantity}</td>
@@ -148,7 +154,9 @@ export default function OrderPrintInvoicePage() {
             </div>
             <div className="flex justify-between text-neutral-600">
               <span>Shipping Charge:</span>
-              <span className="font-semibold text-emerald-700">COMPLIMENTARY</span>
+              <span className="font-semibold text-emerald-700">
+                {shippingFee > 0 ? formatMoney(shippingFee, order.currencyCode) : 'COMPLIMENTARY'}
+              </span>
             </div>
             <div className="border-t-2 border-neutral-950 pt-2 flex justify-between text-body font-bold text-neutral-950">
               <span>Total Amount Paid:</span>

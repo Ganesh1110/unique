@@ -8,6 +8,8 @@ import { ProductGrid } from '@/components/product/ProductGrid';
 import { CompleteTheLook } from '@/components/product/CompleteTheLook';
 import { FitGuideModal } from '@/components/product/FitGuideModal';
 import { RecentlyViewed, recordRecentlyViewed } from '@/components/product/RecentlyViewed';
+import ProductReviews from '@/components/product/ProductReviews';
+import { ProductJsonLd } from '@/components/seo/JsonLd';
 import { BlouseCustomizer } from '@/components/product/BlouseCustomizer';
 import { PetticoatAddon } from '@/components/product/PetticoatAddon';
 import { addToCompareList } from '@/components/product/CompareDrawer';
@@ -432,6 +434,14 @@ export function ProductDetailsClient({
           </AddToCartButton>
         </div>
       </div>
+
+      {/* Customer Reviews Section */}
+      <div className="container">
+        <ProductReviews productHandle={product.handle} />
+      </div>
+
+      {/* SEO Schema.org JSON-LD */}
+      <ProductJsonLd product={product} />
 
       {/* Recently Viewed Drapes */}
       <RecentlyViewed currentProductId={product.id} />

@@ -12,6 +12,7 @@ model User {
   email        String   @unique
   name         String
   passwordHash String
+  role         String   @default("SUPER_ADMIN")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -91,6 +92,7 @@ model Product {
   variants         ProductVariant[]
   cartItems        CartItem[]
   orderItems       OrderItem[]
+  reviews          ProductReview[]
 
   @@index([deletedAt, createdAt])
 }
@@ -139,6 +141,8 @@ model Order {
   customerPhone String?
   address       String?
   subtotal      Decimal
+  tax           Decimal     @default(0)
+  discount      Decimal     @default(0)
   shipping      Decimal     @default(0)
   total         Decimal
   currencyCode  String      @default("INR")
@@ -150,18 +154,19 @@ model Order {
 }
 
 model OrderItem {
-  id        Int           @id @default(autoincrement())
-  orderId   Int
-  productId Int
-  variantId Int
-  title     String
-  handle    String
-  price     Decimal
-  quantity  Int
-  image     String?
-  order     Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product       @relation(fields: [productId], references: [id])
-  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  id             Int           @id @default(autoincrement())
+  orderId        Int
+  productId      Int
+  variantId      Int
+  title          String
+  handle         String
+  price          Decimal
+  quantity       Int
+  image          String?
+  customizations String?
+  order          Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product        Product       @relation(fields: [productId], references: [id])
+  variant        ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
 }
 
 model Cart {
@@ -174,16 +179,33 @@ model Cart {
 }
 
 model CartItem {
-  id        Int           @id @default(autoincrement())
-  cartId    Int
-  productId Int
-  variantId Int
-  quantity  Int
-  cart      Cart          @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product   Product       @relation(fields: [productId], references: [id])
-  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  id             Int           @id @default(autoincrement())
+  cartId         Int
+  productId      Int
+  variantId      Int
+  quantity       Int
+  customizations String?
+  cart           Cart          @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product        Product       @relation(fields: [productId], references: [id])
+  variant        ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, variantId])
+}
+
+model ProductReview {
+  id          Int      @id @default(autoincrement())
+  productId   Int
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating      Int
+  authorName  String
+  authorEmail String
+  title       String?
+  comment     String
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([productId, status])
 }
 
 model Blog {

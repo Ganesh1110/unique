@@ -6,8 +6,8 @@ import type { Menu, ShopPolicy } from '@/types/shopify';
 import { NewsletterForm } from '@/components/home/NewsletterForm';
 
 interface FooterProps {
-  menus: Menu[];
-  policies: {
+  menus?: Menu[];
+  policies?: {
     privacyPolicy: ShopPolicy | null;
     refundPolicy: ShopPolicy | null;
     termsOfService: ShopPolicy | null;
@@ -21,7 +21,7 @@ const socialLinks = [
   { name: 'Instagram', href: 'https://instagram.com', ariaLabel: 'Follow us on Instagram' },
 ];
 
-export function Footer({ menus, policies, shopName = 'AURA', shopEmail = 'hello@aura.com' }: FooterProps) {
+export function Footer({ menus = [], policies, shopName = 'AURA', shopEmail = 'hello@aura.com' }: FooterProps) {
   const displayShopName = shopName.toLowerCase().includes('jewel') || shopName.toLowerCase().includes('statement') ? 'AURA' : shopName;
   const displayShopEmail = shopEmail.toLowerCase().includes('statement') ? 'hello@aura.com' : shopEmail;
   const mainMenu = menus.find((m) => m.handle === 'main-menu' || m.handle === 'footer');

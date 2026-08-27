@@ -136,13 +136,16 @@ export function cartRecordToCart(cart: DbCart, items: Array<DbCartItem & { varia
     .map((item): { node: CartLine } => {
       const merchandise = variantRecordToVariant(item.variant);
       const amount = Number(item.variant.price) * item.quantity;
+      const customAttrs = item.customizations
+        ? Object.entries(parseJson<Record<string, any>>(item.customizations, {})).map(([key, value]) => ({ key, value: String(value) }))
+        : [];
       return {
         node: {
           id: `${GID_PREFIX}/CartLine/${item.id}`,
           quantity: item.quantity,
           merchandise,
           cost: { totalAmount: { amount, currencyCode: merchandise.price.currencyCode }, amountPerQuantity: { amount: Number(item.variant.price), currencyCode: merchandise.price.currencyCode } },
-          attributes: [],
+          attributes: customAttrs,
           discounts: [],
         },
       };

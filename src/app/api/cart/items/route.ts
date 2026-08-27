@@ -20,7 +20,7 @@ function cartJson(cart: NonNullable<Awaited<ReturnType<typeof getCart>>>['cart']
 }
 
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({})) as { cartId?: string; lines?: Array<{ merchandiseId: string; quantity: number }> };
+  const body = await req.json().catch(() => ({})) as { cartId?: string; lines?: Array<{ merchandiseId: string; quantity: number; customizations?: Record<string, any> }> };
   if (!body.cartId || !Array.isArray(body.lines)) return NextResponse.json({ error: 'cartId and lines are required' }, { status: 400 });
   const found = await getCart(body.cartId);
   if (!found) return NextResponse.json({ error: 'Cart not found' }, { status: 404 });
@@ -29,10 +29,11 @@ export async function POST(req: Request) {
   for (const line of body.lines) {
     const variant = await resolveVariant(line.merchandiseId);
     if (!variant || variant.deletedAt || !variant.availableForSale) continue;
+    const custStr = line.customizations ? JSON.stringify(line.customizations) : null;
     await prisma.cartItem.upsert({
       where: { cartId_variantId: { cartId: id, variantId: variant.id } },
-      update: { quantity: { increment: Math.max(1, line.quantity) } },
-      create: { cartId: id, productId: variant.productId, variantId: variant.id, quantity: Math.max(1, line.quantity) },
+      update: { quantity: { increment: Math.max(1, line.quantity) }, customizations: custStr },
+      create: { cartId: id, productId: variant.productId, variantId: variant.id, quantity: Math.max(1, line.quantity), customizations: custStr },
     });
   }
   const updated = await prisma.cart.findUnique({ where: { id }, include: { items: { include: { variant: { include: { product: true } } } } } });

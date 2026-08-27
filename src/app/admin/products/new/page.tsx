@@ -97,21 +97,28 @@ export default function NewProductPage() {
   ]);
 
   // Handle Image File Uploads (PC / Mobile Camera / Photos)
-  const handleFileUpload = (files: FileList | null) => {
+  const handleFileUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
-    Array.from(files).forEach((file) => {
-      if (!file.type.startsWith('image/')) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        if (result) {
-          setImages((prev) => [...prev, result]);
+    for (const file of Array.from(files)) {
+      if (!file.type.startsWith('image/')) continue;
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const res = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          setImages((prev) => [...prev, data.url]);
+        } else {
+          showToast(data.error || 'Failed to upload image', 'error');
         }
-      };
-      reader.readAsDataURL(file);
-    });
+      } catch {
+        showToast('Image upload failed', 'error');
+      }
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
