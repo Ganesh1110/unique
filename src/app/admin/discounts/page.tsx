@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Tag, Plus, ArrowLeft, Trash2, Check, Sparkles, AlertCircle } from 'lucide-react';
+import { Tag, Plus, ArrowLeft, Trash2, Check, Sparkles, Copy, Percent, DollarSign } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 import { formatMoney } from '@/lib/utils';
 import type { StoredDiscount } from '@/app/api/admin/discounts/route';
@@ -83,11 +83,18 @@ export default function AdminDiscountsPage() {
     } catch {}
   };
 
+  const copyCouponCode = (couponCode: string) => {
+    if (typeof navigator !== 'undefined') {
+      navigator.clipboard.writeText(couponCode);
+      showToast(`Copied code "${couponCode}" to clipboard!`, 'success');
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-cream-50">
+    <div className="flex flex-col min-h-screen bg-[#F9F6F0]">
       {/* Header */}
-      <header className="section-sm bg-white border-b border-neutral-200">
-        <div className="container space-y-4">
+      <header className="section-sm bg-white border-b border-neutral-200 shadow-sm">
+        <div className="container space-y-4 max-w-5xl">
           <Link
             href="/admin"
             className="inline-flex items-center gap-1.5 text-body-xs text-neutral-500 hover:text-neutral-950 transition-colors"
@@ -97,41 +104,45 @@ export default function AdminDiscountsPage() {
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <span className="overline text-gold-600 block mb-1">Store Marketing</span>
-              <h1 className="font-heading text-display-md text-neutral-950">Promo Coupon &amp; Discount Manager</h1>
+              <span className="overline text-gold-600 block mb-1">Store Marketing &amp; Campaigns</span>
+              <h1 className="font-heading text-display-md text-neutral-950">Promo Coupon &amp; Offer Manager</h1>
             </div>
+            <span className="badge-gold text-[10px] uppercase font-bold self-start sm:self-auto">Cart Drawer Integration Active</span>
           </div>
         </div>
       </header>
 
-      <section className="section" aria-label="Promo coupons">
-        <div className="container max-w-4xl space-y-8">
+      <section className="section py-8" aria-label="Promo coupons">
+        <div className="container max-w-5xl space-y-8">
           {/* Create Coupon Form Card */}
-          <div className="card p-6 space-y-4 bg-white border border-neutral-200">
-            <div className="flex items-center gap-2 border-b border-neutral-200 pb-3">
-              <Tag className="h-4 w-4 text-gold-600" />
-              <h2 className="font-heading text-heading-md text-neutral-950">Create New Promo Code</h2>
+          <div className="card p-6 sm:p-8 space-y-6 bg-white border border-neutral-200 shadow-sm">
+            <div className="flex items-center justify-between border-b border-neutral-200 pb-4">
+              <div className="flex items-center gap-2.5">
+                <Tag className="h-5 w-5 text-gold-600" />
+                <h2 className="font-heading text-heading-md text-neutral-950">Create New Promo Code</h2>
+              </div>
+              <span className="text-caption font-bold text-neutral-400 uppercase tracking-widest">Instant Activation</span>
             </div>
 
             <form onSubmit={handleCreateDiscount} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <div>
-                <label className="label text-[10px]">Promo Code Name</label>
+                <label className="label text-body-xs font-bold text-neutral-950">Promo Code String</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. DIWALI25"
+                  placeholder="e.g. DIWALI20"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  className="input uppercase text-body-sm min-h-[42px]"
+                  className="input uppercase text-body-sm font-bold min-h-[44px] py-2.5 bg-neutral-50"
                 />
               </div>
 
               <div>
-                <label className="label text-[10px]">Discount Type</label>
+                <label className="label text-body-xs font-bold text-neutral-950">Discount Type</label>
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value as any)}
-                  className="input text-body-sm min-h-[42px]"
+                  className="input text-body-sm font-semibold min-h-[44px] py-2.5 bg-neutral-50 cursor-pointer"
                 >
                   <option value="percent">Percentage Off (%)</option>
                   <option value="fixed">Fixed Amount Off (₹)</option>
@@ -139,7 +150,7 @@ export default function AdminDiscountsPage() {
               </div>
 
               <div>
-                <label className="label text-[10px]">Discount Value</label>
+                <label className="label text-body-xs font-bold text-neutral-950">Discount Value</label>
                 <input
                   type="number"
                   required
@@ -147,37 +158,41 @@ export default function AdminDiscountsPage() {
                   placeholder="10"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
-                  className="input text-body-sm min-h-[42px]"
+                  className="input text-body-sm font-semibold min-h-[44px] py-2.5 bg-neutral-50"
                 />
               </div>
 
               <div>
-                <label className="label text-[10px]">Min. Order Subtotal (₹)</label>
+                <label className="label text-body-xs font-bold text-neutral-950">Min. Order Subtotal (₹)</label>
                 <input
                   type="number"
                   placeholder="0"
                   value={minSubtotal}
                   onChange={(e) => setMinSubtotal(e.target.value)}
-                  className="input text-body-sm min-h-[42px]"
+                  className="input text-body-sm font-semibold min-h-[44px] py-2.5 bg-neutral-50"
                 />
               </div>
 
-              <div className="sm:col-span-4 flex justify-end">
+              <div className="sm:col-span-4 flex justify-end pt-2">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-primary text-body-xs font-bold uppercase tracking-wider px-6 py-2.5 bg-[#E60012] hover:bg-red-700 text-white min-h-[42px] inline-flex items-center gap-2"
+                  className="btn-primary text-body-xs font-bold uppercase tracking-wider px-6 py-3 bg-[#E60012] hover:bg-red-700 text-white min-h-[44px] inline-flex items-center gap-2 rounded-xl shadow-md"
                 >
-                  <Plus className="h-4 w-4" /> Create Coupon Code
+                  <Plus className="h-4 w-4" /> Create Promo Code
                 </button>
               </div>
             </form>
           </div>
 
           {/* Active Coupons List */}
-          <div className="card overflow-hidden bg-white border border-neutral-200">
-            <div className="p-4 border-b border-neutral-200 flex items-center justify-between">
-              <h2 className="font-heading text-heading-md text-neutral-950">Active Promo Coupons ({discounts.length})</h2>
+          <div className="card overflow-hidden bg-white border border-neutral-200 shadow-sm rounded-2xl">
+            <div className="p-5 border-b border-neutral-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-amber-600" />
+                <h2 className="font-heading text-heading-md text-neutral-950">Active Promo Coupons ({discounts.length})</h2>
+              </div>
+              <span className="text-caption text-neutral-500 font-semibold">Available for storefront cart drawer</span>
             </div>
 
             {loading ? (
@@ -187,39 +202,51 @@ export default function AdminDiscountsPage() {
             ) : (
               <div className="divide-y divide-neutral-200">
                 {discounts.map((d) => (
-                  <div key={d.id} className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-neutral-50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-red-50 text-[#E60012] flex items-center justify-center font-bold shrink-0">
-                        <Tag className="h-5 w-5" />
+                  <div key={d.id} className="p-5 sm:p-6 flex items-center justify-between gap-4 hover:bg-neutral-50/60 transition-colors">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="w-12 h-12 rounded-2xl bg-red-50 text-[#E60012] flex items-center justify-center font-bold shrink-0 border border-red-200">
+                        {d.type === 'percent' ? <Percent className="h-5 w-5" /> : <DollarSign className="h-5 w-5" />}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <strong className="font-heading text-body-sm font-bold text-neutral-950 tracking-wider uppercase">{d.code}</strong>
-                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${d.active ? 'bg-emerald-100 text-emerald-800' : 'bg-neutral-200 text-neutral-600'}`}>
-                            {d.active ? 'Active' : 'Disabled'}
+
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <strong className="font-mono text-body-sm font-bold text-neutral-950 tracking-wider uppercase bg-neutral-100 border border-neutral-300 px-2.5 py-0.5 rounded-md">
+                            {d.code}
+                          </strong>
+                          <button
+                            type="button"
+                            onClick={() => copyCouponCode(d.code)}
+                            className="text-neutral-400 hover:text-neutral-950 transition-colors p-1"
+                            title="Copy promo code"
+                          >
+                            <Copy className="h-3.5 w-3.5" />
+                          </button>
+                          <span className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full ${d.active ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-neutral-200 text-neutral-600'}`}>
+                            {d.active ? 'Active in Cart' : 'Disabled'}
                           </span>
                         </div>
-                        <p className="text-caption text-neutral-500 mt-0.5">
-                          {d.type === 'percent' ? `${d.value}% OFF` : `₹${d.value} OFF`}
+
+                        <p className="text-body-xs text-neutral-600 font-medium truncate">
+                          Discount: <strong className="text-[#E60012]">{d.type === 'percent' ? `${d.value}% OFF` : `₹${d.value} OFF`}</strong>
                           {d.minSubtotal ? ` on orders over ${formatMoney(d.minSubtotal, 'INR')}` : ' on all orders'}
-                          <span className="mx-1">•</span>
-                          Used {d.usedCount} times
+                          <span className="mx-2 text-neutral-300">•</span>
+                          Total Redemptions: <strong className="text-neutral-950">{d.usedCount} times</strong>
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 shrink-0">
                       <button
                         type="button"
                         onClick={() => handleToggleActive(d.id, d.active)}
-                        className={`btn-secondary text-caption py-1.5 px-3 ${d.active ? 'text-amber-700 border-amber-300' : 'text-emerald-700 border-emerald-300'}`}
+                        className={`btn-secondary text-caption font-bold py-1.5 px-3.5 rounded-xl transition-all ${d.active ? 'text-amber-800 border-amber-300 bg-amber-50 hover:bg-amber-100' : 'text-emerald-800 border-emerald-300 bg-emerald-50 hover:bg-emerald-100'}`}
                       >
                         {d.active ? 'Disable' : 'Enable'}
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(d.id)}
-                        className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
+                        className="p-2 text-neutral-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
                         title="Delete coupon"
                       >
                         <Trash2 className="h-4 w-4" />

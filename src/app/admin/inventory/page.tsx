@@ -266,31 +266,31 @@ export default function InventoryDashboardPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-cream-50">
+    <div className="flex flex-col min-h-screen bg-[#F9F6F0]">
       {/* Header */}
-      <header className="section-sm bg-white border-b border-neutral-950/10">
-        <div className="container">
-          <Link href="/admin" className="inline-flex items-center gap-1.5 text-body-sm text-neutral-500 hover:text-neutral-950 mb-4 transition-colors min-h-[44px]">
+      <header className="section-sm bg-white border-b border-neutral-200 shadow-sm">
+        <div className="container space-y-4">
+          <Link href="/admin" className="inline-flex items-center gap-1.5 text-body-xs text-neutral-500 hover:text-neutral-950 transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to Admin Dashboard
           </Link>
 
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div>
-              <span className="overline text-gold-600 block mb-1">Store Owner Operations</span>
-              <h1 className="font-heading text-display-md text-neutral-950">Inventory & Stock Control Center</h1>
+              <span className="overline text-gold-600 block mb-1">Stock Control &amp; Ledger</span>
+              <h1 className="font-heading text-display-md text-neutral-950">Inventory &amp; Stock Control Center</h1>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={() => { loadInventory(); loadArchived(); }}
-                className="btn-secondary text-body-sm inline-flex items-center gap-2"
+                className="btn-secondary text-body-xs font-bold inline-flex items-center gap-2 py-2.5 px-4 rounded-xl border-neutral-300"
                 title="Refresh Stock Data"
               >
                 <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                 Refresh Stock Data
               </button>
-              <Link href="/admin/products/new" className="btn-primary text-body-sm inline-flex items-center gap-2">
+              <Link href="/admin/products/new" className="btn-primary text-body-xs font-bold uppercase tracking-wider py-2.5 px-5 bg-[#E60012] hover:bg-red-700 text-white rounded-xl shadow-md inline-flex items-center gap-2">
                 <Plus className="h-4 w-4" /> Add Product
               </Link>
             </div>
@@ -299,42 +299,42 @@ export default function InventoryDashboardPage() {
       </header>
 
       {/* Overview Metrics Cards */}
-      <section className="py-6 lg:py-8 bg-white border-b border-neutral-950/10" aria-label="Inventory metrics">
+      <section className="py-6 lg:py-8 bg-white border-b border-neutral-200" aria-label="Inventory metrics">
         <div className="container">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            <div className="card p-5 space-y-2 border-l-[3px] border-l-gold-500">
+            <div className="card p-5 space-y-2 border-l-4 border-l-gold-500 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
               <div className="flex items-center justify-between text-neutral-500">
-                <span className="text-caption uppercase font-medium">Total Items in Stock</span>
+                <span className="text-caption uppercase font-semibold">Total Items in Stock</span>
                 <Layers className="h-5 w-5 text-gold-600" />
               </div>
-              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate">{totalUnits} units</p>
+              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate tabular-nums">{totalUnits} units</p>
               <p className="text-caption text-neutral-400">Across {allLiveVariants.length} variants</p>
             </div>
 
-            <div className="card p-5 space-y-2 border-l-[3px] border-l-amber-500">
+            <div className="card p-5 space-y-2 border-l-4 border-l-amber-500 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
               <div className="flex items-center justify-between text-amber-600">
-                <span className="text-caption uppercase font-medium">Low Stock Warning</span>
+                <span className="text-caption uppercase font-semibold">Low Stock Warning</span>
                 <AlertTriangle className="h-5 w-5" />
               </div>
-              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate">{lowStockCount} variants</p>
+              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate tabular-nums">{lowStockCount} variants</p>
               <p className="text-caption text-amber-600 font-medium">At or below variant threshold</p>
             </div>
 
-            <div className="card p-5 space-y-2 border-l-[3px] border-l-red-500">
+            <div className="card p-5 space-y-2 border-l-4 border-l-red-500 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
               <div className="flex items-center justify-between text-red-600">
-                <span className="text-caption uppercase font-medium">Out of Stock</span>
+                <span className="text-caption uppercase font-semibold">Out of Stock</span>
                 <XCircle className="h-5 w-5" />
               </div>
-              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate">{outOfStockCount} variants</p>
+              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate tabular-nums">{outOfStockCount} variants</p>
               <p className="text-caption text-red-600 font-medium">Displays &ldquo;Sold Out&rdquo; on PDP</p>
             </div>
 
-            <div className="card p-5 space-y-2 border-l-[3px] border-l-emerald-500">
+            <div className="card p-5 space-y-2 border-l-4 border-l-emerald-500 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
               <div className="flex items-center justify-between text-emerald-600">
-                <span className="text-caption uppercase font-medium">Total Inventory Value</span>
+                <span className="text-caption uppercase font-semibold">Total Inventory Value</span>
                 <DollarSign className="h-5 w-5" />
               </div>
-              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate">{formatMoney(totalValuation, 'INR')}</p>
+              <p className="font-heading text-heading-lg lg:text-display-sm text-neutral-950 truncate tabular-nums">{formatMoney(totalValuation, 'INR')}</p>
               <p className="text-caption text-emerald-600 font-medium">Current stock value</p>
             </div>
           </div>

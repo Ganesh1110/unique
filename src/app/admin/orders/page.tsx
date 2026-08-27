@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ShoppingBag, PackageOpen, Search, CheckCircle2, X, Truck, Clock, Check, Printer } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, PackageOpen, Search, CheckCircle2, X, Truck, Clock, Check, Printer, User, MapPin, Mail, Phone, ExternalLink } from 'lucide-react';
 import { formatMoney } from '@/lib/utils';
 import { OptimizedImage } from '@/components/ui/Image';
 import type { StoredOrder } from '@/types/admin';
 import { useToast } from '@/context/ToastContext';
-import { Button } from '@/components/ui/Button';
 
 const STATUS_STYLES: Record<string, string> = {
-  Fulfilled: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  Processing: 'bg-amber-100 text-amber-800 border-amber-200',
-  Shipped: 'bg-blue-100 text-blue-800 border-blue-200',
+  Fulfilled: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+  Processing: 'bg-amber-100 text-amber-900 border-amber-300',
+  Shipped: 'bg-sky-100 text-sky-900 border-sky-300',
 };
 
 const AVAILABLE_STATUSES = ['Processing', 'Shipped', 'Fulfilled'] as const;
@@ -32,7 +31,7 @@ export default function AdminOrdersPage() {
       .catch(() => setOrders([]));
   }, []);
 
-  const statuses = ['All', ...Array.from(new Set(orders.map((o) => o.status)))];
+  const statuses = ['All', 'Processing', 'Shipped', 'Fulfilled'];
 
   const filtered = orders.filter((o) => {
     const matchesStatus = statusFilter === 'All' || o.status === statusFilter;
@@ -54,7 +53,7 @@ export default function AdminOrdersPage() {
       });
       if (!res.ok) throw new Error('Failed to update order status');
       const updatedOrder = (await res.json()) as StoredOrder;
-      
+
       setOrders((prev) => prev.map((o) => (o.id === orderId ? updatedOrder : o)));
       if (selectedOrder?.id === orderId) {
         setSelectedOrder(updatedOrder);
@@ -68,32 +67,40 @@ export default function AdminOrdersPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-cream-50">
-      <header className="section-sm bg-white border-b border-neutral-950/10">
-        <div className="container">
-          <Link href="/admin" className="inline-flex items-center gap-1.5 text-body-sm text-neutral-500 hover:text-neutral-950 mb-4 transition-colors min-h-[44px]">
+    <div className="flex flex-col min-h-screen bg-[#F9F6F0]">
+      {/* Header */}
+      <header className="section-sm bg-white border-b border-neutral-200 shadow-sm">
+        <div className="container max-w-6xl space-y-4">
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-1.5 text-body-xs text-neutral-500 hover:text-neutral-950 transition-colors"
+          >
             <ArrowLeft className="h-4 w-4" /> Back to Admin Dashboard
           </Link>
-          <span className="overline text-gold-600 block mb-1">Store Owner Operations</span>
-          <h1 className="font-heading text-display-md text-neutral-950 mb-1">Order Management</h1>
-          <p className="text-body-sm text-neutral-600">
-            {orders.length} order{orders.length !== 1 ? 's' : ''} captured from the storefront checkout handoff.
-          </p>
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <span className="overline text-gold-600 block mb-1">Customer Order Operations</span>
+              <h1 className="font-heading text-display-md text-neutral-950 mb-1">Storefront Orders &amp; Dispatch</h1>
+            </div>
+            <span className="badge-gold text-[10px] uppercase font-bold self-start sm:self-auto">{orders.length} Total Orders</span>
+          </div>
         </div>
       </header>
 
-      <section className="section" aria-label="Orders list">
-        <div className="container space-y-6">
+      <section className="section py-8" aria-label="Orders list">
+        <div className="container max-w-6xl space-y-6">
+          {/* Controls Bar: Search & Status Filter */}
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex bg-white p-1 rounded-xl border border-neutral-950/10 w-full lg:w-auto overflow-x-auto" role="tablist" aria-label="Order status filters">
+            <div className="flex bg-white p-1 rounded-xl border border-neutral-200 shadow-sm w-full lg:w-auto overflow-x-auto scrollbar-hide" role="tablist" aria-label="Order status filters">
               {statuses.map((status) => (
                 <button
                   key={status}
                   role="tab"
                   aria-selected={statusFilter === status}
                   onClick={() => setStatusFilter(status)}
-                  className={`flex items-center gap-2 h-11 px-4 text-body-sm font-medium rounded-lg whitespace-nowrap transition-all flex-1 lg:flex-none justify-center ${
-                    statusFilter === status ? 'bg-neutral-950 text-cream-50' : 'text-neutral-600 hover:text-neutral-950'
+                  className={`flex items-center gap-2 py-2 px-4 text-body-xs font-bold uppercase tracking-wider rounded-lg whitespace-nowrap transition-all flex-1 lg:flex-none justify-center ${
+                    statusFilter === status ? 'bg-neutral-950 text-white shadow-md' : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
                   }`}
                 >
                   {status}
@@ -108,73 +115,91 @@ export default function AdminOrdersPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by order no., customer, email..."
-                className="input pl-10 text-body-sm min-h-[48px]"
+                className="input pl-10 text-body-sm min-h-[44px] bg-white border-neutral-200 shadow-sm"
               />
             </div>
           </div>
 
           {filtered.length === 0 ? (
-            <div className="card p-12 text-center space-y-3 max-w-md mx-auto">
+            <div className="card p-12 text-center space-y-3 max-w-md mx-auto bg-white border border-neutral-200 rounded-2xl shadow-sm">
               <PackageOpen className="h-10 w-10 text-neutral-300 mx-auto" />
               <h2 className="font-heading text-heading-md text-neutral-950">No Orders Found</h2>
-              <p className="text-body-sm text-neutral-500">Orders appear here once a customer checks out.</p>
+              <p className="text-body-sm text-neutral-500">Customer checkout orders will automatically populate here.</p>
             </div>
           ) : (
-            <ul className="grid lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {filtered.map((order) => (
-                <li key={order.orderNumber} className="card p-5 flex flex-col justify-between">
-                  <div>
-                    <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-full bg-neutral-100 border border-neutral-950/10 flex items-center justify-center text-neutral-500">
-                          <ShoppingBag className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-neutral-950">{order.orderNumber}</p>
-                          <p className="text-caption text-neutral-500">
-                            {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                          </p>
-                        </div>
+                <div
+                  key={order.id}
+                  className="card p-6 bg-white border border-neutral-200 rounded-2xl shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between"
+                >
+                  <div className="space-y-4">
+                    {/* Header bar */}
+                    <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
+                      <div>
+                        <span className="font-mono text-body-xs font-bold text-neutral-950 bg-neutral-100 border border-neutral-300 px-2.5 py-0.5 rounded-md">
+                          {order.orderNumber}
+                        </span>
+                        <p className="text-caption text-neutral-400 mt-1">
+                          {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </p>
                       </div>
-                      <span className={`inline-flex items-center gap-1 px-3 h-8 rounded-full text-caption font-semibold uppercase tracking-wider border ${STATUS_STYLES[order.status] || 'bg-neutral-100 text-neutral-700 border-neutral-200'}`}>
+
+                      <span
+                        className={`inline-flex items-center gap-1.5 text-caption font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border ${
+                          STATUS_STYLES[order.status] || 'bg-neutral-100 text-neutral-800 border-neutral-200'
+                        }`}
+                      >
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         {order.status}
                       </span>
                     </div>
 
-                    <div className="space-y-2.5 mb-4">
+                    {/* Customer Contact */}
+                    <div className="bg-neutral-50/80 p-3 rounded-xl border border-neutral-200 text-body-xs space-y-1">
+                      <p className="font-bold text-neutral-950 flex items-center gap-1.5">
+                        <User className="h-3.5 w-3.5 text-gold-600" /> {order.name}
+                      </p>
+                      <p className="text-caption text-neutral-500 flex items-center gap-1.5">
+                        <Mail className="h-3 w-3 text-neutral-400" /> {order.email}
+                      </p>
+                    </div>
+
+                    {/* Line Items */}
+                    <div className="space-y-2.5">
                       {order.lineItems.map((item, i) => (
                         <div key={i} className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded bg-neutral-100 overflow-hidden flex-shrink-0 border border-neutral-200">
+                          <div className="w-12 h-12 rounded-lg bg-neutral-100 overflow-hidden flex-shrink-0 border border-neutral-200">
                             <OptimizedImage src={item.image} alt={item.title} width={48} height={48} objectFit="cover" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-body-sm font-medium text-neutral-950 truncate">
+                            <p className="text-body-xs font-bold text-neutral-950 truncate">
                               {item.title}
-                              {item.variantTitle && item.variantTitle !== 'Default Title' ? ` — ${item.variantTitle}` : ''}
                             </p>
                             <p className="text-caption text-neutral-500">Qty: {item.quantity}</p>
                           </div>
-                          <span className="text-body-sm text-neutral-500 tabular-nums font-medium">
-                            {formatMoney((Number(order.total) / order.lineItems.reduce((a, b) => a + b.quantity, 0)) * item.quantity, order.currencyCode as 'INR' | 'USD')}
+                          <span className="text-body-xs font-bold text-[#E60012] tabular-nums">
+                            {formatMoney(order.total, order.currencyCode as 'INR')}
                           </span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-neutral-950/10">
+                  {/* Actions & Total Bar */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-neutral-200">
                     <div>
-                      <p className="text-caption text-neutral-500">{order.name}</p>
-                      <p className="text-body-sm font-semibold text-neutral-950">{formatMoney(order.total, order.currencyCode as 'INR' | 'USD')}</p>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 block">Total Amount</span>
+                      <p className="text-body-sm font-bold text-[#E60012] tabular-nums">{formatMoney(order.total, order.currencyCode as 'INR')}</p>
                     </div>
+
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/admin/orders/${order.id}/print`}
                         target="_blank"
-                        className="inline-flex items-center gap-1.5 bg-neutral-100 text-neutral-800 border border-neutral-300 text-caption font-semibold uppercase tracking-wider px-3 py-2 rounded-md hover:bg-neutral-200 transition-colors"
+                        className="inline-flex items-center gap-1.5 bg-white text-neutral-800 border border-neutral-300 text-caption font-bold uppercase tracking-wider px-3 py-2 rounded-xl hover:bg-neutral-100 transition-colors shadow-sm"
                       >
-                        <Printer className="h-3.5 w-3.5" />
+                        <Printer className="h-3.5 w-3.5 text-neutral-600" />
                         Print Invoice
                       </Link>
 
@@ -183,135 +208,20 @@ export default function AdminOrdersPage() {
                           type="button"
                           disabled={updatingStatus}
                           onClick={() => handleUpdateStatus(order.id, 'Fulfilled')}
-                          className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-caption font-semibold uppercase tracking-wider px-3 py-2 rounded-md hover:bg-emerald-700 transition-colors shadow-sm"
+                          className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-caption font-bold uppercase tracking-wider px-3.5 py-2 rounded-xl hover:bg-emerald-700 transition-colors shadow-sm"
                         >
                           <Check className="h-3.5 w-3.5" />
                           Fulfill
                         </button>
                       )}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedOrder(order)}
-                        className="btn-secondary text-caption font-semibold uppercase tracking-wider px-3 py-2 min-h-[36px]"
-                      >
-                        Manage
-                      </button>
                     </div>
                   </div>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       </section>
-
-      {/* Order Management Dialog */}
-      {selectedOrder && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
-          <div
-            className="fixed inset-0 bg-neutral-950/60 backdrop-blur-sm transition-opacity"
-            onClick={() => !updatingStatus && setSelectedOrder(null)}
-            aria-hidden="true"
-          />
-
-          <div className="relative w-full max-w-xl rounded-2xl bg-white p-6 sm:p-8 shadow-2xl border border-neutral-200 z-10 space-y-6 animate-in zoom-in-95 duration-200">
-            <button
-              type="button"
-              onClick={() => setSelectedOrder(null)}
-              disabled={updatingStatus}
-              className="absolute top-5 right-5 p-2 rounded-full text-neutral-400 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
-              aria-label="Close dialog"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            {/* Header info */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <h2 className="font-heading text-display-xs text-neutral-950">
-                  Order {selectedOrder.orderNumber}
-                </h2>
-                <span className={`inline-flex items-center gap-1 px-3 h-7 rounded-full text-caption font-semibold uppercase tracking-wider border ${STATUS_STYLES[selectedOrder.status] || 'bg-neutral-100 text-neutral-700 border-neutral-200'}`}>
-                  {selectedOrder.status}
-                </span>
-              </div>
-              <p className="text-body-sm text-neutral-500">
-                Placed on {new Date(selectedOrder.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </p>
-            </div>
-
-            {/* Customer Details */}
-            <div className="card p-4 bg-cream-50/80 border-neutral-200 space-y-2">
-              <span className="overline text-gold-600 block">Customer Information</span>
-              <div className="text-body-sm space-y-0.5">
-                <p className="font-medium text-neutral-950">{selectedOrder.name}</p>
-                {selectedOrder.email && <p className="text-neutral-600">{selectedOrder.email}</p>}
-              </div>
-            </div>
-
-            {/* Line Items */}
-            <div className="space-y-3">
-              <span className="overline text-neutral-500 block">Order Line Items</span>
-              <div className="divide-y divide-neutral-100 border border-neutral-200 rounded-xl overflow-hidden bg-white">
-                {selectedOrder.lineItems.map((item, idx) => (
-                  <div key={idx} className="p-3.5 flex items-center gap-3">
-                    <div className="w-12 h-12 rounded bg-neutral-100 overflow-hidden flex-shrink-0 border border-neutral-200">
-                      <OptimizedImage src={item.image} alt={item.title} width={48} height={48} objectFit="cover" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-body-sm font-medium text-neutral-950 truncate">{item.title}</p>
-                      {item.variantTitle && item.variantTitle !== 'Default Title' && (
-                        <p className="text-caption text-neutral-500">{item.variantTitle}</p>
-                      )}
-                      <p className="text-caption text-neutral-500">Qty: {item.quantity}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Total */}
-            <div className="flex items-center justify-between p-4 bg-neutral-950 text-cream-50 rounded-xl">
-              <span className="text-body-sm font-medium text-cream-50/80">Total Order Amount</span>
-              <span className="font-heading text-heading-lg text-cream-50">
-                {formatMoney(selectedOrder.total, selectedOrder.currencyCode as 'INR' | 'USD')}
-              </span>
-            </div>
-
-            {/* Update Status Actions */}
-            <div className="space-y-2 pt-2">
-              <span className="overline text-neutral-500 block">Update Order Status</span>
-              <div className="grid grid-cols-3 gap-2">
-                {AVAILABLE_STATUSES.map((st) => {
-                  const isCurrent = selectedOrder.status === st;
-                  return (
-                    <button
-                      key={st}
-                      type="button"
-                      disabled={updatingStatus || isCurrent}
-                      onClick={() => handleUpdateStatus(selectedOrder.id, st)}
-                      className={`h-11 px-3 rounded-lg text-caption font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all ${
-                        isCurrent
-                          ? 'bg-neutral-950 text-cream-50 cursor-default ring-2 ring-gold-400/50'
-                          : 'bg-white border border-neutral-300 text-neutral-800 hover:bg-neutral-50 hover:border-neutral-950'
-                      }`}
-                    >
-                      {isCurrent && <Check className="h-3.5 w-3.5 text-gold-400" />}
-                      {st}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <Button variant="secondary" onClick={() => setSelectedOrder(null)} disabled={updatingStatus}>
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

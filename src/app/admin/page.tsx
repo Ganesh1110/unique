@@ -100,38 +100,38 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-cream-50">
+    <div className="flex flex-col min-h-screen bg-[#F9F6F0]">
       {/* Header */}
-      <header className="section-sm bg-white border-b border-neutral-200">
+      <header className="section-sm bg-white border-b border-neutral-200 shadow-sm">
         <div className="container">
-          <nav className="flex items-center gap-2 text-caption text-neutral-500 mb-4" aria-label="Breadcrumb">
-            <span className="text-neutral-950 font-medium">Store Admin</span>
+          <nav className="flex items-center gap-2 text-caption text-neutral-500 mb-2" aria-label="Breadcrumb">
+            <span className="text-neutral-950 font-medium">Store Admin Console</span>
           </nav>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <span className="overline text-gold-600 block mb-1">Entrepreneur Dashboard</span>
+              <span className="overline text-gold-600 block mb-1">Executive Dashboard</span>
               <h1 className="font-heading text-display-md text-neutral-950">Financial &amp; Profit Analytics</h1>
             </div>
             <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
               <button
                 type="button"
                 onClick={handleExportFinancialCSV}
-                className="btn-secondary inline-flex items-center gap-2 text-emerald-800 border-emerald-300 bg-emerald-50 hover:bg-emerald-100"
+                className="btn-secondary text-body-xs font-bold uppercase tracking-wider py-2.5 px-4 rounded-xl inline-flex items-center gap-2 text-emerald-800 border-emerald-300 bg-emerald-50 hover:bg-emerald-100 transition-colors"
               >
                 Export Financial CSV
               </button>
-              <Link href="/admin/orders" className="btn-secondary inline-flex items-center gap-2">
+              <Link href="/admin/orders" className="btn-secondary text-body-xs font-bold py-2.5 px-4 rounded-xl inline-flex items-center gap-2 border-neutral-300">
                 <ShoppingBag className="h-4 w-4" />
                 Orders ({orders.length})
               </Link>
-              <Link href="/admin/inventory" className="btn-secondary inline-flex items-center gap-2">
+              <Link href="/admin/inventory" className="btn-secondary text-body-xs font-bold py-2.5 px-4 rounded-xl inline-flex items-center gap-2 border-neutral-300">
                 <Package className="h-4 w-4" />
                 Inventory Stock
               </Link>
-              <Link href="/admin/products/new" className="btn-primary inline-flex items-center gap-2">
+              <Link href="/admin/products/new" className="btn-primary text-body-xs font-bold uppercase tracking-wider py-2.5 px-5 bg-[#E60012] hover:bg-red-700 text-white rounded-xl shadow-md inline-flex items-center gap-2">
                 <Plus className="h-4 w-4" />
-                Add New Product
+                Add Product
               </Link>
             </div>
           </div>

@@ -305,27 +305,32 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-cream-50">
+    <div className="flex flex-col min-h-screen bg-[#F9F6F0]">
       {/* Top Bar */}
-      <header className="section-sm bg-white border-b border-neutral-200">
-        <div className="container">
-          <Link href="/admin" className="inline-flex items-center gap-1.5 text-body-sm text-neutral-500 hover:text-neutral-950 mb-4 transition-colors">
+      <header className="section-sm bg-white border-b border-neutral-200 shadow-sm">
+        <div className="container space-y-4">
+          <Link href="/admin" className="inline-flex items-center gap-1.5 text-body-xs text-neutral-500 hover:text-neutral-950 transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to Admin Catalog
           </Link>
-          <span className="overline text-gold-600 block mb-1">Store Owner Portal</span>
-          <h1 className="font-heading text-display-md text-neutral-950">Add Custom Product</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <span className="overline text-gold-600 block mb-1">Catalog Management</span>
+              <h1 className="font-heading text-display-md text-neutral-950">Add New Saree / Apparel Product</h1>
+            </div>
+            <span className="badge-gold text-[10px] uppercase font-bold self-start sm:self-auto">Live Store Handoff</span>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <section className="section" aria-label="Add custom product form">
-        <div className="container">
+      <section className="section py-8" aria-label="Add custom product form">
+        <div className="container max-w-6xl">
           {success ? (
-            <div className="card p-10 max-w-md mx-auto text-center space-y-4 animate-fade-in">
+            <div className="card p-10 max-w-md mx-auto text-center space-y-4 shadow-sm bg-white rounded-2xl border border-neutral-200 animate-fade-in">
               <CheckCircle2 className="h-12 w-12 text-gold-600 mx-auto" />
               <h2 className="font-heading text-heading-lg text-neutral-950">Product Published!</h2>
               <p className="text-body-sm text-neutral-600">
-                &ldquo;{title}&rdquo; is now active on your store.
+                &ldquo;{title}&rdquo; is now active on your storefront.
               </p>
             </div>
           ) : (
@@ -333,10 +338,13 @@ export default function NewProductPage() {
               {/* Left Column: Custom Form */}
               <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-8">
                 {/* 1. Basic Product Info */}
-                <div className="card p-6 space-y-5">
-                  <h2 className="font-heading text-heading-md text-neutral-950 border-b border-neutral-200 pb-3">
-                    1. Basic Product Details
-                  </h2>
+                <div className="card p-6 sm:p-8 space-y-5 bg-white border border-neutral-200 rounded-2xl shadow-sm">
+                  <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
+                    <h2 className="font-heading text-heading-md text-neutral-950">
+                      1. Basic Product Details
+                    </h2>
+                    <span className="text-caption font-bold text-neutral-400 uppercase tracking-widest">Required Info</span>
+                  </div>
 
                   <div className="space-y-2">
                     <label htmlFor="product-title" className="label">Product Title *</label>
