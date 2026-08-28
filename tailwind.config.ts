@@ -89,6 +89,21 @@ const config: Config = {
           800: '#563C29',
         },
 
+        // ---- Greige neutral — quiet UI chrome (NAP-inspired) -------
+        // Warmer than cool grey; recedes behind product photography
+        greige: {
+          50: '#F7F5F2',
+          100: '#EDE9E4',
+          200: '#DDD8D0',
+          300: '#C9C4BC',
+          400: '#AFA8A0',
+          500: '#928B82',
+          600: '#716B63',
+          700: '#524D47',
+          800: '#37332E',
+        },
+
+
         // ---- Semantic surfaces --------------------------------------
         canvas: 'rgb(var(--canvas) / <alpha-value>)',
         surface: 'rgb(var(--surface) / <alpha-value>)',
@@ -211,7 +226,11 @@ const config: Config = {
         DEFAULT: '250ms',
         normal: '250ms',
         slower: '700ms',
+        // Luxury: slow, deliberate image crossfades (product card hover)
+        elegant: '600ms',
+        'very-slow': '900ms',
       },
+
 
       zIndex: {
         sticky: '30',

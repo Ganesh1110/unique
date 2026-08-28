@@ -251,22 +251,25 @@ export function BrowseCategoriesDesktopMenu({ activeId, onClose }: DesktopMenuPr
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" aria-hidden="true" />
                 </div>
                 <div className="relative flex h-full min-h-[340px] flex-col justify-end p-5">
-                  <span className="text-caption font-semibold uppercase tracking-[0.18em] text-gold-300 mb-2">
-                    Featured Highlight
+                  {/* Featured card */}
+                  <span className="section-label text-gold-300 mb-2 inline-block">
+                    Featured
                   </span>
-                  <h4 className="font-heading text-heading-lg font-medium text-accent-ink mb-1.5">
+                  <h4 className="font-heading text-heading-lg font-medium text-accent-ink mb-1.5 italic">
                     {activeCategory.featuredCard.title}
                   </h4>
-                  <p className="text-body-xs text-accent-ink/70 mb-4 line-clamp-2">
+                  <p className="text-body-xs text-accent-ink/70 mb-5 line-clamp-2">
                     {activeCategory.featuredCard.subtitle}
                   </p>
                   <Link
                     href={activeCategory.featuredCard.link || activeCategory.href || '/collections'}
                     onClick={onClose}
-                    className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-accent-ink/95 text-ink text-caption font-semibold uppercase tracking-wider transition-colors duration-fast hover:bg-accent-ink"
+                    className="inline-flex min-h-[44px] items-center justify-center gap-2 bg-accent-ink/95 text-ink text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors duration-fast hover:bg-accent-ink px-6"
+                    style={{ borderRadius: 0 }}
                   >
                     Explore <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
+
                 </div>
               </div>
             ) : (

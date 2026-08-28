@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { HeroSlider } from '@/components/home/HeroSlider';
 import { Testimonials } from '@/components/home/Testimonials';
@@ -25,15 +25,46 @@ const heroSlides = [
 ];
 
 /* ──────────────────────────────────────────────
-   Category Grid — reduced to 6 clean icons
+   Category Grid — Uniqlo-style portrait tiles
+   (3:4 image cards, not circle icons)
    ────────────────────────────────────────────── */
-const categoryIcons = [
-  { label: 'Silk Sarees', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&auto=format&fit=crop', href: '/collections/silk-sarees' },
-  { label: 'Banarasi', image: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400&auto=format&fit=crop', href: '/collections/sarees' },
-  { label: 'Organza', image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400&auto=format&fit=crop', href: '/collections/sarees' },
-  { label: 'Linen', image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?w=400&auto=format&fit=crop', href: '/collections/sarees' },
-  { label: 'Lehengas', image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&auto=format&fit=crop', href: '/collections/lehengas' },
-  { label: 'Tops & Tunics', image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400&auto=format&fit=crop', href: '/collections/tops' },
+const categoryTiles = [
+  {
+    label: 'Silk Sarees',
+    sublabel: 'Pure mulberry, Kanjeevaram',
+    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop',
+    href: '/collections/silk-sarees',
+  },
+  {
+    label: 'Banarasi',
+    sublabel: 'Zari brocade, katan silk',
+    image: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=600&auto=format&fit=crop',
+    href: '/collections/sarees',
+  },
+  {
+    label: 'Organza',
+    sublabel: 'Chanderi & tissue weaves',
+    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=600&auto=format&fit=crop',
+    href: '/collections/sarees',
+  },
+  {
+    label: 'Linen',
+    sublabel: 'Handloom everyday drapes',
+    image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?w=600&auto=format&fit=crop',
+    href: '/collections/sarees',
+  },
+  {
+    label: 'Lehengas',
+    sublabel: 'Bridal & festive sets',
+    image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&auto=format&fit=crop',
+    href: '/collections/lehengas',
+  },
+  {
+    label: 'Tops & Tunics',
+    sublabel: 'Modern ethnic separates',
+    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop',
+    href: '/collections/tops',
+  },
 ];
 
 async function getHomepageData() {
@@ -56,74 +87,122 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col bg-surface text-ink">
 
-      {/* ── Hero Banner — Single confident CTA ── */}
-      <HeroSlider slides={heroSlides} className="min-h-[70svh] sm:min-h-[80svh]">
-        <div className="max-w-2xl text-left">
-          <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-accent-ink/80 mb-4">
+      {/* ── Hero Banner — Full-bleed, restrained CTA (NAP pattern) ── */}
+      <HeroSlider slides={heroSlides} className="min-h-[72svh] sm:min-h-[82svh]">
+        <div className="max-w-xl text-left">
+          {/* NAP-style eyebrow */}
+          <span className="section-label mb-5 inline-block text-accent-ink/70">
             Handwoven Heritage
           </span>
-          <h1 className="font-heading font-medium text-4xl sm:text-display-md lg:text-display-lg tracking-tight text-accent-ink mb-4 drop-shadow-md">
-            Sarees that tell <br className="hidden sm:block" />a story
+          {/* Confident serif display headline */}
+          <h1 className="font-heading font-medium text-display-md sm:text-display-lg lg:text-display-xl tracking-tight text-accent-ink mb-5 leading-[1.08] drop-shadow-sm">
+            Sarees that tell<br className="hidden sm:block" /> a story
           </h1>
-          <p className="text-body-sm sm:text-body text-accent-ink/85 max-w-md mb-8 leading-relaxed drop-shadow">
+          {/* Quiet body copy */}
+          <p className="text-body-sm sm:text-body text-accent-ink/80 max-w-sm mb-10 leading-relaxed">
             Pure mulberry silk, hand-woven by master artisans. Each drape carries generations of craft.
           </p>
-          <Link
-            href="/collections/sarees"
-            className="inline-flex items-center gap-2 bg-accent-ink text-night font-sans font-bold text-body-sm uppercase tracking-wider px-8 py-3.5 hover:bg-accent hover:text-accent-ink transition-colors shadow-md"
-          >
-            <span>Shop Sarees</span>
-            <ChevronRight className="h-4 w-4" />
-          </Link>
+          {/* Primary CTA — sharp, bold */}
+          <div className="flex flex-col xs:flex-row items-start gap-4">
+            <Link
+              href="/collections/sarees"
+              className="btn-primary"
+            >
+              Shop Sarees
+            </Link>
+            {/* Secondary ghost link — NAP pattern */}
+            <Link
+              href="/collections"
+              className="inline-flex items-center gap-2 text-accent-ink/80 font-sans text-[11px] font-semibold uppercase tracking-[0.16em] py-4 hover:text-accent-ink transition-colors"
+            >
+              All Collections
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </HeroSlider>
 
-      {/* ── Category Grid — 6 clean circles ── */}
-      <section className="py-14 sm:py-20 bg-surface" aria-labelledby="category-heading">
+      {/* ── Category Grid — Uniqlo portrait tile pattern ── */}
+      <section className="py-16 sm:py-24 bg-surface" aria-labelledby="category-heading">
         <div className="max-w-container-wide mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 id="category-heading" className="font-sans text-heading-lg sm:text-display-xs font-bold tracking-tight text-ink mb-10 sm:mb-14">
-            Shop by category
-          </h2>
 
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 sm:gap-8 lg:gap-10 mb-12">
-            {categoryIcons.map((cat, idx) => (
+          {/* Section header */}
+          <div className="flex items-end justify-between mb-8 sm:mb-12">
+            <div>
+              <span className="section-label mb-2 inline-block">Browse</span>
+              <h2
+                id="category-heading"
+                className="font-sans text-heading-lg sm:text-display-xs font-semibold tracking-tight text-ink"
+              >
+                Shop by category
+              </h2>
+            </div>
+            <Link
+              href="/collections"
+              className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink/60 hover:text-ink transition-colors"
+            >
+              View all
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          {/*
+            Portrait tile grid — 3:4 aspect, no circles
+            Desktop: 6 columns | Tablet: 3 columns | Mobile: 2 columns
+          */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
+            {categoryTiles.map((cat, idx) => (
               <Link
                 key={idx}
                 href={cat.href}
-                className="group flex flex-col items-center text-center space-y-3"
+                className="group flex flex-col"
               >
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-sunken border border-ink/10 group-hover:border-accent transition-all">
+                {/* Portrait image tile */}
+                <div className="relative aspect-[3/4] overflow-hidden bg-sunken mb-3">
                   <OptimizedImage
                     src={cat.image}
                     alt={cat.label}
                     fill
                     objectFit="cover"
-                    className="group-hover:scale-105 transition-transform duration-500 ease-expo"
+                    className="transition-transform duration-[900ms] ease-expo group-hover:scale-[1.04]"
                   />
+                  {/* Subtle bottom gradient for legibility if ever overlaid */}
+                  <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-neutral-950/15 to-transparent" />
                 </div>
-                <span className="font-sans text-body-xs sm:text-body-sm font-semibold text-ink/80 group-hover:text-accent transition-colors leading-tight">
+
+                {/* Text below tile — Uniqlo style */}
+                <span className="font-sans text-[12px] sm:text-body-sm font-semibold text-ink uppercase tracking-[0.08em] leading-tight group-hover:text-accent transition-colors duration-fast">
                   {cat.label}
+                </span>
+                <span className="font-sans text-[11px] text-faint mt-0.5 leading-tight hidden sm:block">
+                  {cat.sublabel}
                 </span>
               </Link>
             ))}
           </div>
 
-          <div className="text-center">
+          {/* Mobile "View All" */}
+          <div className="mt-8 sm:hidden text-center">
             <Link
               href="/collections"
-              className="inline-flex items-center justify-center border border-ink text-ink font-sans font-bold text-caption uppercase tracking-wider px-10 py-3 rounded-full hover:bg-accent hover:border-accent hover:text-accent-ink transition-colors"
+              className="inline-flex items-center gap-2 border border-ink/20 text-ink font-sans text-[11px] font-semibold uppercase tracking-[0.14em] px-8 py-3.5 hover:bg-accent hover:border-accent hover:text-accent-ink transition-colors"
             >
-              VIEW ALL COLLECTIONS
+              View All Collections
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Editorial Lookbook Strip ── */}
-      <section className="bg-sunken/60 border-y border-ink/10">
+      {/* ── Editorial Lookbook Strip — NAP-style content block ── */}
+      <section className="bg-cream-100 border-y border-ink/10" aria-label="Editorial">
         <div className="max-w-container-wide mx-auto">
-          <div className="grid lg:grid-cols-2 min-h-[420px]">
-            {/* Left: Full-width image */}
+          {/*
+            Asymmetric split: image 55% / copy 45%
+            NAP pattern: image dominates, copy breathes
+          */}
+          <div className="grid lg:grid-cols-[55fr_45fr] min-h-[480px] lg:min-h-[560px]">
+
+            {/* Left: Full-bleed image with subtle editorial label */}
             <div className="relative min-h-[320px] lg:min-h-full overflow-hidden">
               <OptimizedImage
                 src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200&auto=format&fit=crop"
@@ -132,64 +211,101 @@ export default async function HomePage() {
                 priority
                 className="object-cover"
               />
+              {/* Editorial story number — NAP detail */}
+              <span className="absolute top-6 left-6 section-label text-accent-ink/60">
+                Story No. 01
+              </span>
             </div>
 
-            {/* Right: Editorial copy */}
-            <div className="flex flex-col justify-center px-8 sm:px-14 lg:px-16 py-14 lg:py-20">
-              <span className="overline mb-4 inline-block text-faint">
-                The AURA Edit
-              </span>
-              <h2 className="font-heading text-display-sm sm:text-display-md font-medium tracking-tight text-ink mb-4">
-                Woven with intention
+            {/* Right: Editorial copy — generous breathing room */}
+            <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 xl:px-20 py-16 lg:py-24">
+              {/* Thin rule + eyebrow — NAP pattern */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-px bg-accent" aria-hidden="true" />
+                <span className="section-label">The AURA Edit</span>
+              </div>
+
+              {/* Heading */}
+              <h2 className="font-heading text-display-sm sm:text-display-md font-medium tracking-tight text-ink mb-5 leading-[1.1]">
+                Woven with<br /> intention
               </h2>
-              <p className="text-body text-faint leading-relaxed max-w-md mb-8">
+
+              {/* Body */}
+              <p className="text-body text-faint leading-relaxed max-w-[38ch] mb-8">
                 From the looms of Kanchipuram to your wardrobe — each AURA saree is handcrafted by master weavers using techniques passed down through generations. Pure mulberry silk, real gold zari, timeless drapes.
               </p>
-              <div>
-                <Link
-                  href="/collections/silk-sarees"
-                  className="group inline-flex items-center gap-2 text-ink font-sans font-bold text-body-sm uppercase tracking-wider hover:text-accent transition-colors"
-                >
-                  <span>Explore Silk Sarees</span>
-                  <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                </Link>
-              </div>
+
+              {/* Arrow link — NAP editorial style */}
+              <Link
+                href="/collections/silk-sarees"
+                className="group inline-flex items-center gap-3 text-ink font-sans text-[11px] font-semibold uppercase tracking-[0.16em] hover:text-accent transition-colors"
+              >
+                <span>Explore Silk Sarees</span>
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1.5" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Featured Collection Grid ── */}
-      <section className="py-14 sm:py-20 bg-surface" aria-labelledby="featured-heading">
+      <section className="py-16 sm:py-24 lg:py-32 bg-surface" aria-labelledby="featured-heading">
         <div className="max-w-container-wide mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section header */}
           <div className="flex items-end justify-between mb-10 sm:mb-14">
             <div>
-              <span className="overline mb-2 block text-accent">
-                Curated for you
-              </span>
-              <h2 id="featured-heading" className="font-sans text-heading-lg sm:text-display-xs font-bold tracking-tight text-ink">
+              <span className="section-label mb-2 block text-accent">New Arrivals</span>
+              <h2
+                id="featured-heading"
+                className="font-sans text-heading-lg sm:text-display-xs font-semibold tracking-tight text-ink"
+              >
                 Featured Collection
               </h2>
             </div>
             <Link
               href="/collections"
-              className="hidden sm:inline-flex items-center gap-1 text-body-sm font-bold text-ink/80 hover:text-accent transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink/60 hover:text-ink transition-colors"
             >
-              <span>View All</span>
-              <ChevronRight className="h-4 w-4" />
+              View All &nbsp;&rarr;
             </Link>
           </div>
 
           <ProductGrid products={featuredProducts} columns={4} />
 
+          {/* Mobile view all */}
           <div className="text-center mt-10 sm:hidden">
             <Link
               href="/collections"
-              className="inline-flex items-center gap-1 text-body-sm font-bold text-ink/80 hover:text-accent transition-colors"
+              className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink/70 hover:text-ink transition-colors"
             >
-              <span>View All Products</span>
-              <ChevronRight className="h-4 w-4" />
+              View All Products &nbsp;&rarr;
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Service Promise Strip — quiet trust cues (NAP pattern) ── */}
+      <section className="border-y border-ink/10 bg-cream-50" aria-label="Service promises">
+        <div className="max-w-container-wide mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-ink/8">
+            {[
+              { title: 'Complimentary Shipping', body: 'On orders above ₹15,000' },
+              { title: 'Authentic Handwoven', body: 'GI-certified artisan weaves' },
+              { title: '14-Day Returns', body: 'No-questions-asked policy' },
+              { title: 'WhatsApp Concierge', body: 'Styling advice on demand' },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="flex flex-col items-center text-center px-6 sm:px-8 py-8 sm:py-10"
+              >
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-ink mb-1.5">
+                  {item.title}
+                </p>
+                <p className="text-body-xs text-faint leading-relaxed">
+                  {item.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

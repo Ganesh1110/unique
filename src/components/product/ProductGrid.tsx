@@ -45,7 +45,7 @@ export function ProductGrid({
 
   return (
     <div
-      className={cn('grid gap-x-4 gap-y-10 sm:gap-x-5 sm:gap-y-14 lg:gap-x-6 lg:gap-y-16', columnClasses[columns], className)}
+      className={cn('grid gap-x-4 gap-y-10 sm:gap-x-5 sm:gap-y-14 lg:gap-x-6 lg:gap-y-20', columnClasses[columns], className)}
       role="list"
       aria-label="Products"
     >
@@ -59,6 +59,7 @@ export function ProductGrid({
       ))}
     </div>
   );
+
 }
 
 function ProductCardSkeleton() {

@@ -145,39 +145,41 @@
     @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-prose;
   }
 
-  /* ---------- Buttons — flat, crisp, no default shadows ---------- */
+  /* ---------- Buttons — flat, crisp, sharp-cornered luxury editorial ---------- */
   .btn {
     @apply inline-flex items-center justify-center gap-2 font-sans font-medium text-body-sm
            tracking-wide transition-all duration-normal ease-expo
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40
-           disabled:opacity-30 disabled:pointer-events-none rounded-md active:scale-[0.99];
+           disabled:opacity-30 disabled:pointer-events-none active:scale-[0.99];
+    /* Zero radius: editorial luxury standard (NAP/luxury houses use sharp edges) */
+    border-radius: 0;
   }
 
   .btn-primary {
     @apply btn bg-accent !text-accent-ink hover:bg-accent-hover
-           px-6 py-3 min-h-[46px];
+           px-8 py-3.5 min-h-[48px] uppercase tracking-[0.12em] text-[11px] font-semibold;
   }
 
   .btn-secondary {
-    @apply btn bg-transparent !text-ink border border-ink/20
+    @apply btn bg-transparent !text-ink border border-ink/25
            hover:border-accent hover:bg-accent hover:!text-accent-ink
-           px-6 py-3 min-h-[46px];
+           px-8 py-3.5 min-h-[48px] uppercase tracking-[0.12em] text-[11px] font-semibold;
   }
 
   .btn-ghost {
-    @apply btn bg-transparent !text-neutral-800 hover:!text-ink
+    @apply btn bg-transparent !text-neutral-800 hover:!text-ink rounded-none
            px-3 py-2.5 min-h-[44px];
   }
 
   .btn-link {
-    @apply btn bg-transparent !text-neutral-800 hover:!text-ink
+    @apply btn bg-transparent !text-neutral-800 hover:!text-ink rounded-none
            px-0 py-1 lowercase tracking-normal font-normal
            underline underline-offset-4 decoration-neutral-300 hover:decoration-ink;
   }
 
   .btn-gold {
     @apply btn bg-accent !text-accent-ink hover:bg-accent-hover
-           px-6 py-3 min-h-[46px];
+           px-8 py-3.5 min-h-[48px] uppercase tracking-[0.12em] text-[11px] font-semibold;
   }
 
   /* ---------- Inputs ---------- */
@@ -222,14 +224,27 @@
     @apply font-heading font-medium tracking-tight text-ink;
   }
 
+  /* NAP-style section label: wide-tracked, small caps, quiet — used as eyebrows above headings */
+  .section-label {
+    @apply text-[10px] font-sans font-semibold text-faint uppercase tracking-[0.22em];
+  }
+
+  /* Slightly wider tracking than section-label — used above major content blocks */
   .overline {
-    @apply text-caption font-sans font-medium text-faint uppercase tracking-[0.2em];
+    @apply text-caption font-sans font-medium text-faint uppercase tracking-[0.22em];
+  }
+
+  /* NAP-style editorial "→" arrow link */
+  .editorial-link {
+    @apply inline-flex items-center gap-2 font-sans text-body-sm font-medium text-ink
+           uppercase tracking-[0.12em] hover:text-accent transition-colors duration-fast;
   }
 
   .eyebrow {
-    @apply inline-flex items-center rounded-full border border-ink/10 bg-surface px-3 py-1
-           text-meta-xs font-medium uppercase tracking-[0.18em] text-neutral-600;
+    @apply inline-flex items-center border border-ink/10 bg-sunken px-3 py-1
+           text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-600;
   }
+
 
   .price {
     @apply font-sans font-medium text-ink tabular-nums text-body;
@@ -243,9 +258,11 @@
     @apply text-faint line-through text-body-sm font-normal ml-2;
   }
 
-  /* ---------- Badges — flat, square, not pills ---------- */
+  /* ---------- Badges — flat, square, not pills. Luxury = restrained, not colourful ---------- */
   .badge {
-    @apply inline-flex items-center px-2 py-0.5 text-caption font-medium tracking-[0.12em] uppercase bg-ink/[0.06] text-neutral-700 rounded-sm;
+    @apply inline-flex items-center px-2 py-0.5 text-[9px] font-semibold tracking-[0.14em] uppercase bg-ink/[0.06] text-neutral-700;
+    /* Zero radius matches button treatment */
+    border-radius: 0;
   }
 
   .badge-neutral {
@@ -256,9 +273,15 @@
     @apply badge bg-accent text-accent-ink;
   }
 
-  .badge-sold-out {
-    @apply badge bg-sunken text-neutral-600;
+  /* Luxury sale: near-black, never the brand accent colour */
+  .badge-sale {
+    @apply badge bg-neutral-900 text-cream-50;
   }
+
+  .badge-sold-out {
+    @apply badge bg-neutral-700/80 text-cream-50/90 backdrop-blur-sm;
+  }
+
 
   /* ---------- Status badges (admin; toggle the `.status-*` swatch) ---------- */
   .badge-status {

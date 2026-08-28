@@ -91,7 +91,7 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
       <div
         className={cn(
           'relative overflow-hidden bg-sunken transition-opacity duration-300',
-          !available && 'opacity-70'
+          !available && 'opacity-60'
         )}
       >
         <a
@@ -104,7 +104,9 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
             {/* Primary image */}
             <div
               className={cn(
-                'absolute inset-0 transition-opacity duration-500 ease-expo',
+                'absolute inset-0 transition-opacity ease-expo',
+                // Luxury: slow, deliberate crossfade — 700ms
+                'duration-[700ms]',
                 isHovered && secondaryImage ? 'opacity-0' : 'opacity-100'
               )}
             >
@@ -115,7 +117,9 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
                 priority={priority}
                 objectFit="cover"
                 className={cn(
-                  'transition-transform duration-[900ms] ease-expo',
+                  'transition-transform ease-expo',
+                  // Subtle scale on hover — slower for luxury feel
+                  'duration-[1100ms]',
                   isHovered && 'scale-[1.03]'
                 )}
               />
@@ -125,7 +129,7 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
             {secondaryImage && (
               <div
                 className={cn(
-                  'absolute inset-0 transition-opacity duration-500 ease-expo',
+                  'absolute inset-0 transition-opacity ease-expo duration-[700ms]',
                   isHovered ? 'opacity-100' : 'opacity-0'
                 )}
               >
@@ -144,17 +148,18 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
         <button
           onClick={handleWishlistToggle}
           className={cn(
-            'absolute top-3 right-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/95 backdrop-blur-sm shadow-subtle transition-all duration-200',
+            'absolute top-3 right-3 z-20 inline-flex h-8 w-8 items-center justify-center bg-white/95 backdrop-blur-sm shadow-subtle transition-all duration-200',
             'dark:bg-white/95',
             'sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100',
             isSaved && 'sm:opacity-100'
           )}
+          style={{ borderRadius: 0 }}
           aria-label={isSaved ? `Remove ${product.title} from saved items` : `Save ${product.title} to saved items`}
           aria-pressed={isSaved}
         >
           <Heart
             className={cn(
-              'h-4 w-4 transition-colors duration-fast',
+              'h-3.5 w-3.5 transition-colors duration-fast',
               isSaved
                 ? 'fill-accent text-accent'
                 : 'text-neutral-700 dark:text-neutral-800 hover:text-accent'
@@ -162,40 +167,42 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
           />
         </button>
 
-        {/* Sale tag */}
+        {/* Sale tag — near-black for luxury restraint (not brand accent) */}
         {onSale && available && (
-          <span className="absolute top-3 left-3 z-10 rounded-sm bg-accent px-2 py-1 text-[9px] uppercase font-bold tracking-[0.14em] text-accent-ink shadow-sm">
-            Limited Offer
+          <span className="absolute top-3 left-3 z-10 badge-sale">
+            Sale
           </span>
         )}
 
         {/* Sold out */}
         {!available && (
-          <span className="absolute top-3 left-3 z-10 rounded-sm bg-night/85 px-2.5 py-1 text-[10px] uppercase font-bold tracking-[0.12em] text-accent-ink backdrop-blur-sm">
+          <span className="absolute top-3 left-3 z-10 badge-sold-out">
             Sold Out
           </span>
         )}
 
-        {/* Quick add — hover-reveal, photo-overlay chip stays light */}
+        {/* Quick add — hover-reveal, sharp-cornered */}
         {showQuickAdd && available && (
-          <div className="absolute bottom-3 left-3 right-3 translate-y-2 opacity-0 transition-all duration-250 ease-expo group-hover:translate-y-0 group-hover:opacity-100 z-10">
+          <div className="absolute bottom-0 left-0 right-0 translate-y-1 opacity-0 transition-all duration-250 ease-expo group-hover:translate-y-0 group-hover:opacity-100 z-10">
             <button
               onClick={handleQuickAdd}
               disabled={!primaryVariant?.id || quickAddLoading === primaryVariant?.id || cartLoading}
-              className="w-full min-h-[42px] rounded-sm bg-white/95 backdrop-blur-sm text-neutral-950 text-caption font-bold uppercase tracking-[0.12em] px-3 flex items-center justify-center gap-2 border border-ink/10 hover:bg-accent hover:text-accent-ink hover:border-accent transition-colors duration-fast shadow-subtle dark:bg-white/95"
+              className="w-full min-h-[40px] bg-white/95 backdrop-blur-sm text-neutral-950 text-[10px] font-semibold uppercase tracking-[0.14em] px-3 flex items-center justify-center gap-2 border-t border-ink/10 hover:bg-accent hover:text-accent-ink transition-colors duration-fast dark:bg-white/95"
+              style={{ borderRadius: 0 }}
               aria-label={`Quick add ${product.title}`}
             >
-              <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
+              <ShoppingBag className="h-3 w-3" aria-hidden="true" />
               <span>{quickAddLoading === primaryVariant?.id ? 'Adding…' : 'Quick Add'}</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Product info — name + price only */}
-      <div className="pt-3 space-y-1.5">
+      {/* Product info — name + price, editorial typographic restraint */}
+      <div className="pt-3.5 space-y-1">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-body-sm font-medium text-ink leading-snug line-clamp-1 m-0">
+          {/* Title: font-normal for quieter NAP editorial tone */}
+          <h3 className="text-body-sm font-normal text-ink leading-snug line-clamp-2 m-0">
             <a
               href={`/products/${product.handle}`}
               className="hover:text-accent transition-colors duration-fast"
@@ -206,11 +213,12 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
           </h3>
         </div>
 
-        <p className="flex items-center gap-2 m-0">
+        {/* Price */}
+        <p className="flex items-baseline gap-2 m-0">
           <span
             className={cn(
-              'text-body font-medium tabular-nums',
-              onSale ? 'text-accent' : 'text-ink'
+              'text-body font-medium tabular-nums tracking-tight',
+              onSale ? 'text-ink' : 'text-ink'
             )}
           >
             {formatMoney(price, currencyCode)}
@@ -222,6 +230,7 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
           )}
         </p>
 
+        {/* Colour swatches */}
         {finishOption && finishOption.values.length > 0 && (
           <div className="flex items-center gap-1.5 pt-0.5">
             {finishOption.values.slice(0, 5).map((val) => (
@@ -234,6 +243,11 @@ export function ProductCard({ product, variant, priority = false, showQuickAdd =
                 )}
               />
             ))}
+            {finishOption.values.length > 5 && (
+              <span className="text-[9px] text-faint font-medium">
+                +{finishOption.values.length - 5}
+              </span>
+            )}
           </div>
         )}
       </div>

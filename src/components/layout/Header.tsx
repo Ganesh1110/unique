@@ -111,19 +111,19 @@ export function Header({
   return (
     <header
       className={cn(
-        'sticky top-0 left-0 right-0 z-header bg-canvas/92 backdrop-blur-md border-b border-ink/10 transition-shadow duration-normal',
-        scrolled && 'shadow-[0_12px_32px_-24px_rgba(0,0,0,0.25)]'
+        'sticky top-0 left-0 right-0 z-header bg-canvas/95 backdrop-blur-md border-b border-ink/10 transition-shadow duration-normal',
+        scrolled && 'shadow-[0_8px_24px_-16px_rgba(0,0,0,0.18)]'
       )}
       onKeyDown={handleKeyDown}
       role="banner"
     >
-      {/* Announcement Bar */}
+      {/* Announcement Bar — quiet, minimal */}
       {announcementEnabled && (
-        <div className="bg-night text-accent-ink/75 py-2 px-4 text-center text-[11px] uppercase tracking-[0.2em] font-medium overflow-hidden border-b border-white/5">
+        <div className="bg-night text-accent-ink/60 py-2 px-4 text-center text-[10px] uppercase tracking-[0.22em] font-medium overflow-hidden">
           {announcementMarquee ? (
             <div className="marquee-track">
               <span>{displayText}</span>
-              <span aria-hidden="true">{displayText}</span>
+              <span aria-hidden="true">&nbsp;&nbsp;·&nbsp;&nbsp;{displayText}</span>
             </div>
           ) : (
             <div>{displayText}</div>
@@ -133,11 +133,12 @@ export function Header({
 
       {/* Main Row */}
       <div className="max-w-container-wide mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-3 sm:gap-5">
-          {/* Left: Wordmark */}
-          <div className="flex items-center gap-5 lg:gap-7 flex-shrink-0">
+        <div className="flex items-center justify-between h-[60px] gap-3 sm:gap-6">
+          {/* Left: Wordmark + Dept nav */}
+          <div className="flex items-center gap-6 lg:gap-8 flex-shrink-0">
+            {/* Wordmark — more confident, luxury presence */}
             <Link href="/" className="group flex items-baseline gap-1.5" aria-label={`${shopName} home`}>
-              <span className="font-heading text-[1.45rem] sm:text-[1.6rem] font-semibold tracking-[0.02em] text-ink leading-none">
+              <span className="font-heading text-[1.6rem] sm:text-[1.8rem] font-medium tracking-[0.04em] text-ink leading-none">
                 {shopName}
               </span>
               <span
@@ -146,9 +147,9 @@ export function Header({
               />
             </Link>
 
-            {/* Department navigation — slim, Uniqlo-style */}
+            {/* Department navigation — Uniqlo-style: small, uppercase, tracked */}
             <nav
-              className="hidden lg:flex items-center gap-7"
+              className="hidden lg:flex items-center gap-6 xl:gap-8"
               aria-label="Department navigation"
               onMouseLeave={scheduleCloseDepartment}
             >
@@ -159,7 +160,7 @@ export function Header({
                   onMouseEnter={() => openDepartment(dept.menuId)}
                   onFocus={() => openDepartment(dept.menuId)}
                   className={cn(
-                    'relative py-5 text-body-sm font-medium text-neutral-700 hover:text-ink transition-colors duration-fast',
+                    'relative py-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-600 hover:text-ink transition-colors duration-fast',
                     'after:absolute after:left-0 after:right-0 after:bottom-3 after:h-[2px] after:bg-accent after:scale-x-0 after:origin-left after:transition-transform after:duration-250 after:ease-expo hover:after:scale-x-100'
                   )}
                 >
@@ -169,24 +170,25 @@ export function Header({
             </nav>
           </div>
 
-          {/* Center: Search pill */}
-          <div className="flex-1 max-w-md hidden md:block">
+          {/* Center: Search — sharp-cornered, refined */}
+          <div className="flex-1 max-w-sm hidden md:block">
             <form action="/search" className="relative flex items-center group">
               <Search
-                className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-faint pointer-events-none transition-colors duration-fast group-focus-within:text-accent"
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-faint pointer-events-none transition-colors duration-fast group-focus-within:text-accent"
                 aria-hidden="true"
               />
               <input
                 type="search"
                 name="q"
                 placeholder="Search sarees, silk, linen…"
-                className="w-full bg-sunken/80 border border-ink/10 rounded-full py-2.5 pl-11 pr-4 text-body-sm text-ink placeholder:text-faint focus:bg-surface focus:border-accent/50 focus:outline-none transition-all duration-fast"
+                className="w-full bg-sunken border border-ink/10 py-2 pl-10 pr-4 text-body-sm text-ink placeholder:text-neutral-500 focus:bg-surface focus:border-accent/40 focus:outline-none transition-all duration-fast"
+                style={{ borderRadius: 0 }}
               />
             </form>
           </div>
 
-          {/* Right: Utility icons */}
-          <div className="flex items-center gap-0.5 sm:gap-1 text-ink">
+          {/* Right: Utility icons — tighter cluster */}
+          <div className="flex items-center gap-0 text-ink">
             {/* Mobile search */}
             <button
               className="md:hidden inline-flex h-11 w-11 items-center justify-center text-neutral-700 hover:text-ink transition-colors"

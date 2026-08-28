@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { X, Plus, Minus, Gift, Truck, CheckCircle2, Sparkles, MapPin, UserCheck, Lock } from 'lucide-react';
+import { X, Plus, Minus, Gift, Truck, CheckCircle2, MapPin, UserCheck, Lock } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/Button';
@@ -145,16 +145,21 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
         aria-label="Shopping bag"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-ink/10">
-          <h2 className="font-heading text-heading-lg tracking-tight text-ink">Shopping Bag</h2>
+        <div className="flex items-center justify-between px-5 sm:px-6 py-5 border-b border-ink/10">
+          <div>
+            <span className="section-label text-faint block mb-0.5">Your</span>
+            <h2 className="font-heading text-heading-lg font-medium tracking-tight text-ink">Shopping Bag</h2>
+          </div>
           <button
             onClick={closeCart}
-            className="inline-flex h-11 w-11 items-center justify-center text-ink/60 hover:text-ink transition-colors"
+            className="inline-flex h-10 w-10 items-center justify-center text-ink/50 hover:text-ink transition-colors"
+            style={{ borderRadius: 0 }}
             aria-label="Close cart"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
+
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
@@ -198,27 +203,25 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
             </div>
           ) : (
             <>
-              {/* Login for Exclusive Offers Alert Banner (Requirement 14) */}
+              {/* Member offer — quiet, left-border accent (NAP style) */}
               {!customer && (
-                <div className="mb-6 p-4 rounded-xl bg-gold-50/80 border border-gold-300 text-ink flex flex-col gap-2">
-                  <div className="flex items-center gap-2 font-heading text-body font-semibold text-gold-800">
-                    <Sparkles className="h-4 w-4 text-gold-700" />
-                    Login to unlock exclusive member offers!
-                  </div>
-                  <p className="text-caption text-ink/80">
-                    Sign in to your account to get 10% off member rewards, special gifts, and faster checkout.
+                <div className="mb-6 border-l-2 border-accent pl-4 py-2">
+                  <p className="text-body-sm font-medium text-ink mb-0.5">
+                    Sign in for member benefits
                   </p>
-                  <div className="pt-1">
-                    <Link
-                      href="/account"
-                      onClick={closeCart}
-                      className="inline-flex items-center gap-1.5 text-caption font-semibold text-gold-800 hover:text-gold-700 underline underline-offset-4"
-                    >
-                      <Lock className="h-3.5 w-3.5" /> Login / Register Now &rarr;
-                    </Link>
-                  </div>
+                  <p className="text-caption text-faint mb-2">
+                    10% off, priority concierge & faster checkout.
+                  </p>
+                  <Link
+                    href="/account"
+                    onClick={closeCart}
+                    className="text-[10px] font-semibold uppercase tracking-[0.14em] text-accent hover:text-accent-hover transition-colors"
+                  >
+                    Sign in &nbsp;&rarr;
+                  </Link>
                 </div>
               )}
+
 
               {/* Cart Items */}
               <ul className="space-y-8" role="list" aria-label="Cart items">
@@ -350,19 +353,20 @@ export function CartDrawer({ freeShippingThreshold = '₹15,000' }: CartDrawerPr
             {/* Promo Code Form */}
             <div className="space-y-2">
               {appliedCoupon ? (
-                <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-md p-2.5 text-body-xs">
-                  <div className="flex items-center gap-2 text-emerald-800">
-                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                <div className="flex items-center justify-between bg-status-ok-bg border border-status-ok-border p-2.5 text-body-xs">
+                  <div className="flex items-center gap-2 text-status-ok-text">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
                     <span><strong className="uppercase">{appliedCoupon}</strong> — {couponLabel}</span>
                   </div>
                   <button
                     type="button"
                     onClick={removeCoupon}
-                    className="text-emerald-700 hover:text-red-600 text-caption font-bold"
+                    className="text-status-ok-text hover:text-status-danger-text text-caption font-bold transition-colors"
                   >
                     Remove
                   </button>
                 </div>
+
               ) : (
                 <form onSubmit={handleApplyCoupon} className="flex gap-2">
                   <input
@@ -561,37 +565,42 @@ interface FreeShippingProgressProps {
   freeShippingThreshold?: string;
 }
 
+/**
+ * Minimal free-shipping indicator — ultra-slim bar, no icons, quiet typography.
+ * Luxury principle: signal progress without gamified visual weight.
+ */
 function FreeShippingProgress({ subtotal, currencyCode, freeShippingThreshold = '₹15,000' }: FreeShippingProgressProps) {
   const FREE_SHIPPING_THRESHOLD = parseThreshold(freeShippingThreshold);
   const progress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
   const remaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
 
   return (
-    <div className="mt-8 pt-6 border-t border-ink/10">
-      <div className="flex items-center justify-between mb-2 gap-3">
-        <div className="flex items-center gap-2">
-          <Truck className="h-4 w-4 text-ink/40" aria-hidden="true" />
-          <span className="text-body-sm font-medium text-ink/80">
-            {progress >= 100 ? 'Complimentary shipping unlocked' : `Complimentary shipping unlocked at ${freeShippingThreshold}`}
-          </span>
-        </div>
-        {progress < 100 && (
-          <span className="text-body-sm font-medium text-ink tabular-nums whitespace-nowrap">
-            {formatMoney(remaining, currencyCode)} to go
-          </span>
-        )}
-      </div>
-      <div className="h-1 bg-ink/10 rounded-full overflow-hidden">
+    <div className="mt-6 pt-5 border-t border-ink/10">
+      {/* Slim progress track — h-0.5, not h-1 */}
+      <div
+        className="h-0.5 bg-ink/10 overflow-hidden mb-3"
+        role="progressbar"
+        aria-valuenow={progress}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Free shipping progress"
+      >
         <div
-          className="h-full bg-accent rounded-full transition-all duration-500"
+          className="h-full bg-accent transition-all duration-500 ease-expo"
           style={{ width: `${progress}%` }}
-          role="progressbar"
-          aria-valuenow={progress}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label="Free shipping progress"
         />
       </div>
+
+      {/* Status text — quiet, section-label scale */}
+      <p className="section-label text-faint">
+        {progress >= 100
+          ? 'Complimentary shipping applied'
+          : (
+            <>
+              {formatMoney(remaining, currencyCode)} away from complimentary shipping
+            </>
+          )}
+      </p>
     </div>
   );
 }
