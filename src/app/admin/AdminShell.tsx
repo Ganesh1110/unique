@@ -37,9 +37,15 @@ export default function AdminShell({ sessionEmail, children }: { sessionEmail: s
     router.refresh();
   };
 
+  const isPrintPage = pathname?.endsWith('/print') || pathname?.includes('/print');
+
+  if (isPrintPage) {
+    return <main className="min-h-screen bg-white">{children}</main>;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F6F0] font-sans text-neutral-900">
-      <header className="bg-neutral-950/95 backdrop-blur-md text-cream-50 sticky top-0 z-50 border-b border-neutral-800/80 shadow-md">
+      <header className="print:hidden bg-neutral-950/95 backdrop-blur-md text-cream-50 sticky top-0 z-50 border-b border-neutral-800/80 shadow-md">
         <div className="container h-15 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <Link href="/admin" className="flex items-center gap-2.5 font-heading text-heading-sm text-cream-50 group">
@@ -105,7 +111,7 @@ export default function AdminShell({ sessionEmail, children }: { sessionEmail: s
 
       <main className="flex-1">{children}</main>
 
-      <footer className="bg-neutral-950 text-neutral-400 py-6 border-t border-neutral-800 text-center text-caption">
+      <footer className="print:hidden bg-neutral-950 text-neutral-400 py-6 border-t border-neutral-800 text-center text-caption">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-2">
           <p>&copy; {new Date().getFullYear()} AURA Store Owner Management Suite. Confidential &amp; Encrypted System.</p>
           <div className="flex items-center gap-3 text-[11px] text-neutral-500">

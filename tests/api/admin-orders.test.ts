@@ -51,4 +51,19 @@ describe('admin orders mapping', () => {
     expect(order.lineItems[0].title).toBe('Large');
     scope.orderNumbers.push(orderBody.order.orderNumber);
   });
+
+  it('fetches a single order by ID for printable invoice view', async () => {
+    cookieStore.value = scope.sessionTokens[0];
+    const listRes = await listOrders();
+    const orders = await listRes.json();
+    expect(orders.length).toBeGreaterThan(0);
+    const targetOrder = orders[0];
+
+    const { GET: getOrder } = await import('@/app/api/admin/orders/[id]/route');
+    const res = await getOrder(req(`/api/admin/orders/${targetOrder.id}`, 'GET', undefined, scope.sessionTokens[0]), { params: { id: String(targetOrder.id) } });
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.orderNumber).toBe(targetOrder.orderNumber);
+    expect(body.id).toBe(targetOrder.id);
+  });
 });

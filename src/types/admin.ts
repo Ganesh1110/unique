@@ -75,6 +75,7 @@ export interface StoredOrderItem {
   title: string;
   image: string;
   quantity: number;
+  price?: number;
   variantTitle: string | null;
 }
 

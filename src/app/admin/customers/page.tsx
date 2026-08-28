@@ -29,7 +29,7 @@ export default function AdminCustomersPage() {
     fetch('/api/admin/orders')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        const orders: StoredOrder[] = data?.orders || [];
+        const orders: StoredOrder[] = Array.isArray(data) ? data : data?.orders || [];
         const customerMap = new Map<string, CustomerProfile>();
 
         orders.forEach((o) => {

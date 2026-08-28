@@ -28,9 +28,28 @@ export function parseAfter(after?: string): number {
 }
 
 export function toImage(json: Prisma.JsonValue | null): Image | null {
-  const parsed = parseJson<Record<string, unknown> | null>(json, null);
+  if (json == null) return null;
+  if (typeof json === 'string' && (json.startsWith('http') || json.startsWith('/') || json.startsWith('data:'))) {
+    return {
+      id: '',
+      url: json,
+      altText: null,
+      width: 1200,
+      height: 1500,
+    };
+  }
+  const parsed = parseJson<Record<string, unknown> | string | null>(json, null);
+  if (typeof parsed === 'string') {
+    return {
+      id: '',
+      url: parsed,
+      altText: null,
+      width: 1200,
+      height: 1500,
+    };
+  }
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
-  const o = parsed;
+  const o = parsed as Record<string, unknown>;
   if (typeof o.url !== 'string') return null;
   return {
     id: typeof o.id === 'string' ? o.id : '',
@@ -83,6 +102,12 @@ export function productRecordToProduct(p: DbProduct & { variants?: DbProductVari
   const max = prices.length ? Math.max(...prices) : Number(p.price);
   const totalInventory = liveVariants.reduce((s, v) => s + v.stock, 0);
   const currency = liveVariants[0]?.currencyCode || p.currencyCode;
+  const comparePrices = liveVariants
+    .map((v) => (v.compareAtPrice != null ? Number(v.compareAtPrice) : p.compareAtPrice != null ? Number(p.compareAtPrice) : null))
+    .filter((v): v is number => v !== null && v > 0);
+  const minCompare = comparePrices.length ? Math.min(...comparePrices) : p.compareAtPrice != null ? Number(p.compareAtPrice) : null;
+  const maxCompare = comparePrices.length ? Math.max(...comparePrices) : p.compareAtPrice != null ? Number(p.compareAtPrice) : null;
+
   const images = parseJson<Prisma.JsonValue[]>(p.images, []);
   const imageNodes = images.map((n) => toImage(n)).filter((n): n is Image => n !== null);
   const tags = parseJson<string[]>(p.tags, []);
@@ -101,11 +126,14 @@ export function productRecordToProduct(p: DbProduct & { variants?: DbProductVari
     availableForSale: liveVariants.some((v) => v.availableForSale && v.stock > 0),
     totalInventory,
     images: { edges: imageNodes.map((node) => ({ node })), pageInfo: { hasNextPage: false } },
-    featuredImage: toImage(p.featuredImage),
+    featuredImage: toImage(p.featuredImage) || imageNodes[0] || null,
     options: options.map((o, i) => ({ id: o.id || `${GID_PREFIX}/ProductOption/${p.id}-${i}`, name: o.name, values: o.values })),
     variants: { edges, pageInfo: { hasNextPage: false, hasPreviousPage: false } },
     priceRange: { minVariantPrice: { amount: min, currencyCode: currency }, maxVariantPrice: { amount: max, currencyCode: currency } },
-    compareAtPriceRange: null,
+    compareAtPriceRange: minCompare != null && maxCompare != null ? {
+      minVariantPrice: { amount: minCompare, currencyCode: currency },
+      maxVariantPrice: { amount: maxCompare, currencyCode: currency },
+    } : null,
     seo: { title: (seo.title as string) ?? null, description: (seo.description as string) ?? null },
     updatedAt: p.updatedAt.toISOString(),
     publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
